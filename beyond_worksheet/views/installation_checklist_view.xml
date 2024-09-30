@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="installation_checklist_action" model="ir.actions.act_window">
+        <field name="name">Installation Checklist</field>
+        <field name="res_model">installation.checklist</field>
+        <field name="view_mode">tree,kanban</field>
+    </record>
+
+    <record id="installation_checklist_view_tree" model="ir.ui.view">
+        <field name="name">installation.checklist.view.tree</field>
+        <field name="model">installation.checklist</field>
+        <field name="arch" type="xml">
+            <tree string="Installation Checklist" editable="bottom">
+                <field name="create_date"/>
+                <field name="checklist_item_id"/>
+                <field name="image" widget="image"/>
+                <field name="text"/>
+                <field name="task_id"/>
+                <field name="user_id"/>
+                <field name="location"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="installation_checklist_view_form" model="ir.ui.view">
+        <field name="name">installation.checklist.view.form</field>
+        <field name="model">installation.checklist</field>
+        <field name="arch" type="xml">
+            <form string="installation_checklist">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date"/>
+                            <field name="checklist_item_id"/>
+                            <field name="task_id"/>
+                            <field name="user_id"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="text"/>
+                            <field name="image" options="{&quot;size&quot;:[0,270]}" widget="image"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="installation_checklist_view_kanban" model="ir.ui.view">
+        <field name="name">installation.checklist.view.kanban</field>
+        <field name="model">installation.checklist</field>
+        <field name="arch" type="xml">
+            <kanban string="Installation Checklist">
+                <field name="id"/>
+                <field name="checklist_item_id"/>
+                <field name="text"/>
+                <field name="image"/>
+                <field name="create_date"/>
+                <field name="location"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="card oe_kanban_global_click p-0">
+                            <div class="o_squared_image">
+                                 <t t-if="record.image">
+                                    <img class="card-img-top" t-att-src="kanban_image('installation.checklist', 'image', record.id.raw_value)" t-att-alt="record.checklist_item_id.value"/>
+                                 </t>
+                                <br/>
+                                <t t-if="record.text">
+                                    <field name="text"/>
+                                </t>
+                            </div>
+                            <div class="card-body p-0">
+                                <h4 class="card-title p-2 m-0 bg-200">
+                                    <small><field name="create_date"/></small>
+                                </h4>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <menuitem id="installation_checklist_menu_action" action="installation_checklist_action"
+              parent="project.menu_project_config"/>
+
+</odoo>

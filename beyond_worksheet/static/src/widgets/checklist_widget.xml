@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="beyond_worksheet.Checklist" owl="1">
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        <div>
+            <t t-out="this.props.record.data.display_name"/>
+            <t t-field="this.props.record.data.checklist_item_ids.records"/>
+<!--            <t t-foreach="this.props.record.data.checklist_item_ids.records" t-as="checklist_item_id" t-key="checklist_item_id.name">-->
+<!--                <t t-out="checklist_item_ids.name"/>-->
+<!--            </t>-->
+        </div>
+
+<!--        <div t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave" t-att-class="this.style">-->
+<!--            <t t-if="!this.state.isHovered">-->
+<!--                <i class="fa fa-warning" t-if="this.props.record.data.expiring_synchronization_due_day &lt;= 3"/>-->
+<!--                Connected until <t t-out="this.props.record.data.expiring_synchronization_date.toFormat('MMM dd')"/>-->
+<!--            </t>-->
+<!--            <t t-elif="this.state.isHovered">-->
+<!--                <a class="oe_inline oe_kanban_action oe_kanban_action_a" href="#" t-on-click="extendConnection">Extend Connection</a>-->
+<!--            </t>-->
+<!--        </div>-->
+    </t>
+</templates>

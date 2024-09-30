@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="owner_signature_template">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+            <div class="card">
+                <div class="modal fade" id="clientSignModals" tabindex="-1"
+                     role="dialog"
+                     aria-labelledby="clientSignModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title"
+                                    id="clientSignModalLabel">Initial Client
+                                    Signature
+                                </h5>
+                                <button type="button" class="close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">x</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <t t-call="portal.signature_form">
+                                    <t t-set="call_url"
+                                       t-value="'/my/task/' + str(task.id) + '/signature/check'"/>
+                                    <t t-set="default_name"
+                                       t-value="task.partner_id.name"
+                                       t-if="task.partner_id"/>
+                                    <t t-set="default_name" t-value="' '"
+                                       t-if="not task.partner_id"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-auto mt8">
+                <a role="button" class="btn btn-primary"
+                   data-bs-toggle="modal" data-bs-target="#clientSignModals"
+                   href="#">
+                    <i class="fa fa-check"/>
+                    <t>Sign Contract</t>
+                </a>
+            </div>
+        </t>
+    </template>
+</odoo>

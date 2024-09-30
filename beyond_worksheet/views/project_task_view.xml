@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="project_task_view_form" model="ir.ui.view">
+        <field name="name">project.task.form.view</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Panel Serial Numbers" name="panel_ser_num" invisible="panel_count == 0">
+                    <group>
+                        <field name="panel_count"/>
+                    </group>
+                    <field name="panel_lot_ids">
+                        <tree string="Panel Serial Numbers">
+                            <field name="image"/>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="verification_time"/>
+                            <field name="state"/>
+                            <field name="company_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Inverter Serial Numbers" name="invet_ser_num" invisible="inverter_count == 0">
+                    <group>
+                        <field name="inverter_count"/>
+                    </group>
+                    <field name="inverter_lot_ids">
+                        <tree string="Inverter Serial Numbers">
+                            <field name="image"/>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="verification_time"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Battery Serial Numbers" name="battery_ser_num" invisible="battery_count == 0">
+                    <group>
+                        <field name="battery_count"/>
+                    </group>
+                    <field name="battery_lot_ids">
+                        <tree string="Battery Serial Numbers">
+                            <field name="image"/>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="verification_time"/>
+                            <field name="state"/>
+                            <field name="company_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Installation Checklist"
+                      name="installation_checklist">
+                        <group string="Picture of roof before installation">
+                            <field name="checklist_item_ids"/>
+                            <field name="checklist_item_ids" widget="many2many_tags"/>
+                        </group>
+                    <group>
+                        <field name="checklist"/>
+                        <widget name="checklist_widget"/>
+                    </group>
+<!--                        <group string="Panel model label">-->
+<!--                            <field name="checklist_ids_2" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Switch board opened">-->
+<!--                            <field name="checklist_ids_3" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Panels installed">-->
+<!--                            <field name="checklist_ids_4" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Inverter installed">-->
+<!--                            <field name="checklist_ids_5" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Certificated for electric safety">-->
+<!--                            <field name="checklist_ids_6" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Front of property">-->
+<!--                            <field name="checklist_ids_7" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Inverter model Label">-->
+<!--                            <field name="checklist_ids_8" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="HD conduit and support">-->
+<!--                            <field name="checklist_ids_9" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Roof penetration">-->
+<!--                            <field name="checklist_ids_10" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Racking system installed">-->
+<!--                            <field name="checklist_ids_11" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="Under array">-->
+<!--                            <field name="checklist_ids_12" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+<!--                        <group string="String voltage">-->
+<!--                            <field name="checklist_ids_13" mode="kanban" nolabel="1"/>-->
+<!--                        </group>-->
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

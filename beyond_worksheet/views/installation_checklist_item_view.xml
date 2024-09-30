@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="installation_checklist_item_action"
+            model="ir.actions.act_window">
+        <field name="name">Installation Checklist Item</field>
+        <field name="res_model">installation.checklist.item</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="installation_checklist_item_view_tree" model="ir.ui.view">
+        <field name="name">installation.checklist.view.tree</field>
+        <field name="model">installation.checklist.item</field>
+        <field name="arch" type="xml">
+            <tree string="Installation Checklist" editable="bottom">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="min_qty" invisible="type != 'img'"/>
+                <field name="compulsory"/>
+                <field name="task_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="installation_checklist_item_view_form" model="ir.ui.view">
+        <field name="name">installation.checklist.item.view.form</field>
+        <field name="model">installation.checklist.item</field>
+        <field name="arch" type="xml">
+            <form string="installation_checklist_item">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="min_qty" invisible="type != 'img'"/>
+                            <field name="compulsory"/>
+                            <field name="task_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <menuitem id="installation_checklist_item_menu_action"
+              action="installation_checklist_item_action"
+              parent="project.menu_project_config"/>
+</odoo>
