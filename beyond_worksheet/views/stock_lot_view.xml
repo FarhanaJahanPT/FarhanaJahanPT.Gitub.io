@@ -17,6 +17,7 @@
                         <field name="type"/>
                         <field name="verification_time"/>
                         <field name="state"/>
+                        <field name="location"/>
                     </group>
                 </group>
             </page>

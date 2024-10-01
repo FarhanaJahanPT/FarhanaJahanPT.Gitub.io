@@ -15,3 +15,4 @@ class StockLot(models.Model):
     verification_time = fields.Datetime(string='Verification Time')
     task_id = fields.Many2one('project.task')
     user_id = fields.Many2one('res.users', string='User')
+    location = fields.Text(string='Location')

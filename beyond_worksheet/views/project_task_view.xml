@@ -50,7 +50,10 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Installation Checklist" name="installation_checklist">
+                <page string="Installation Checklist" name="installation_checklist" invisible="x_studio_type_of_service != 'New Installation'">
+                    <widget name="checklist_widget"/>
+                </page>
+                <page string="Service Checklist" name="service_checklist" invisible="x_studio_type_of_service != 'Service'">
                     <widget name="checklist_widget"/>
                 </page>
             </xpath>

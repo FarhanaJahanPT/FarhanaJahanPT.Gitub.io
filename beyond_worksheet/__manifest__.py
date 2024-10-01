@@ -6,16 +6,17 @@
     'website': """""",
     'summary': '',
     'description': """""",
-    'depends': ['base','project', 'web', 'sale_project'],
+    'depends': ['base','project', 'web', 'sale_project', 'project_beyond_solar'],
     'data': [
         'security/ir.model.access.csv',
         'views/project_task_view.xml',
-        # 'views/worksheet_attendance_view.xml',
         'views/stock_lot_view.xml',
         'views/installation_checklist_view.xml',
         'views/installation_checklist_item_view.xml',
         'views/mail_message_view.xml',
         'views/owner_signature_templates.xml',
+        'views/service_checklist_view.xml',
+        'views/service_checklist_item_view.xml',
     ],
     'assets': {
         'web.assets_backend': [

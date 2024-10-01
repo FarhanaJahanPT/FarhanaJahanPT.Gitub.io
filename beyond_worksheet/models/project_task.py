@@ -31,10 +31,22 @@ class ProjectTask(models.Model):
     def get_checklist_values(self, vals):
         data = []
         checklist = []
-        checklist_ids = self.env['installation.checklist'].search([('task_ids', '=',vals)])
-        checklist_item_ids = self.env['installation.checklist.item'].search([('task_id', '=',vals)])
-        for checklist_id in checklist_ids:
-            data.append([checklist_id.id,checklist_id.name,checklist_id.type])
-        for checklist_item_id in checklist_item_ids:
-            checklist.append([checklist_item_id.checklist_id.id,checklist_item_id.create_date,checklist_item_id.location,checklist_item_id.text, checklist_item_id.image])
+        if self.browse(vals).x_studio_type_of_service == 'New Installation':
+            checklist_ids = self.env['installation.checklist'].search([('task_ids', '=',vals)])
+            checklist_item_ids = self.env['installation.checklist.item'].search([('task_id', '=',vals)])
+            for checklist_id in checklist_ids:
+                data.append([checklist_id.id,checklist_id.name,checklist_id.type])
+            for checklist_item_id in checklist_item_ids:
+                checklist.append([checklist_item_id.checklist_id.id,checklist_item_id.create_date,checklist_item_id.location,checklist_item_id.text, checklist_item_id.image])
+        elif self.browse(vals).x_studio_type_of_service == 'Service':
+            checklist_ids = self.env['service.checklist'].search([('task_ids', '=', vals)])
+            checklist_item_ids = self.env['service.checklist.item'].search([('task_id', '=', vals)])
+            for checklist_id in checklist_ids:
+                data.append([checklist_id.id, checklist_id.name, checklist_id.type])
+            for checklist_item_id in checklist_item_ids:
+                checklist.append([checklist_item_id.service_id.id,
+                                  checklist_item_id.create_date,
+                                  checklist_item_id.location,
+                                  checklist_item_id.text,
+                                  checklist_item_id.image])
         return data, checklist
