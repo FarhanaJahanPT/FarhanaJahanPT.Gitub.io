@@ -50,52 +50,8 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Installation Checklist"
-                      name="installation_checklist">
-                        <group string="Picture of roof before installation">
-                            <field name="checklist_item_ids"/>
-                            <field name="checklist_item_ids" widget="many2many_tags"/>
-                        </group>
-                    <group>
-                        <field name="checklist"/>
-                        <widget name="checklist_widget"/>
-                    </group>
-<!--                        <group string="Panel model label">-->
-<!--                            <field name="checklist_ids_2" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Switch board opened">-->
-<!--                            <field name="checklist_ids_3" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Panels installed">-->
-<!--                            <field name="checklist_ids_4" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Inverter installed">-->
-<!--                            <field name="checklist_ids_5" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Certificated for electric safety">-->
-<!--                            <field name="checklist_ids_6" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Front of property">-->
-<!--                            <field name="checklist_ids_7" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Inverter model Label">-->
-<!--                            <field name="checklist_ids_8" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="HD conduit and support">-->
-<!--                            <field name="checklist_ids_9" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Roof penetration">-->
-<!--                            <field name="checklist_ids_10" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Racking system installed">-->
-<!--                            <field name="checklist_ids_11" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="Under array">-->
-<!--                            <field name="checklist_ids_12" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
-<!--                        <group string="String voltage">-->
-<!--                            <field name="checklist_ids_13" mode="kanban" nolabel="1"/>-->
-<!--                        </group>-->
+                <page string="Installation Checklist" name="installation_checklist">
+                    <widget name="checklist_widget"/>
                 </page>
             </xpath>
         </field>

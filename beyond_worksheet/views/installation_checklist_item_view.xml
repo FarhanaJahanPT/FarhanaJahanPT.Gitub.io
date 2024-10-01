@@ -4,19 +4,21 @@
             model="ir.actions.act_window">
         <field name="name">Installation Checklist Item</field>
         <field name="res_model">installation.checklist.item</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,kanban</field>
     </record>
 
     <record id="installation_checklist_item_view_tree" model="ir.ui.view">
         <field name="name">installation.checklist.view.tree</field>
         <field name="model">installation.checklist.item</field>
         <field name="arch" type="xml">
-            <tree string="Installation Checklist" editable="bottom">
-                <field name="name"/>
-                <field name="type"/>
-                <field name="min_qty" invisible="type != 'img'"/>
-                <field name="compulsory"/>
-                <field name="task_ids" widget="many2many_tags"/>
+            <tree string="Installation Checklist Item" editable="bottom">
+                <field name="create_date"/>
+                <field name="checklist_id"/>
+                <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
+                <field name="text"/>
+                <field name="task_id"/>
+                <field name="user_id"/>
+                <field name="location"/>
             </tree>
         </field>
     </record>
@@ -29,15 +31,53 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="type"/>
-                            <field name="min_qty" invisible="type != 'img'"/>
-                            <field name="compulsory"/>
-                            <field name="task_ids" widget="many2many_tags"/>
+                            <field name="create_date"/>
+                            <field name="checklist_id"/>
+                            <field name="task_id"/>
+                            <field name="user_id"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="text"/>
+                            <field name="image" options="{&quot;size&quot;:[0,270]}" widget="image"/>
                         </group>
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+    <record id="installation_checklist_item_view_kanban" model="ir.ui.view">
+        <field name="name">installation.checklist.item.view.kanban</field>
+        <field name="model">installation.checklist.item</field>
+        <field name="arch" type="xml">
+            <kanban string="Installation Checklist Item">
+                <field name="id"/>
+                <field name="checklist_id"/>
+                <field name="text"/>
+                <field name="image"/>
+                <field name="create_date"/>
+                <field name="location"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="card oe_kanban_global_click p-0">
+                            <div class="o_squared_image">
+                                 <t t-if="record.image">
+                                    <img class="card-img-top" t-att-src="kanban_image('installation.checklist.item', 'image', record.id.raw_value)" t-att-alt="record.checklist_id.value"/>
+                                 </t>
+                                <br/>
+                                <t t-if="record.text">
+                                    <field name="text"/>
+                                </t>
+                            </div>
+                            <div class="card-body p-0">
+                                <h4 class="card-title p-2 m-0 bg-200">
+                                    <small><field name="create_date"/></small>
+                                </h4>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
     <menuitem id="installation_checklist_item_menu_action"
