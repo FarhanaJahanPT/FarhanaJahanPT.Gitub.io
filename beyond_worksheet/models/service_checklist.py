@@ -11,3 +11,4 @@ class ServiceChecklist(models.Model):
     type = fields.Selection([('img', 'Image/PDF'), ('text', 'Text')],string='Type', dfault='img')
     compulsory = fields.Boolean(string='Compulsory', dfault=False)
     min_qty = fields.Integer(string='Minimum Quantity', dfault=0)
+    is_selfie = fields.Boolean(string="Selfie", default=False)

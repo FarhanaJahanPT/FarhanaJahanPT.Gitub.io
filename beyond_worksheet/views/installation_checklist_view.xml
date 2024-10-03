@@ -13,6 +13,7 @@
             <tree string="Installation Checklist" editable="bottom">
                 <field name="name"/>
                 <field name="type"/>
+                <field name="is_selfie" invisible="type != 'img'"/>
                 <field name="min_qty" invisible="type != 'img'"/>
                 <field name="compulsory"/>
                 <field name="task_ids" widget="many2many_tags"/>
@@ -30,6 +31,7 @@
                         <group>
                             <field name="name"/>
                             <field name="type"/>
+                            <field name="is_selfie" invisible="type != 'img'"/>
                             <field name="min_qty" invisible="type != 'img'"/>
                             <field name="compulsory"/>
                             <field name="task_ids" widget="many2many_tags"/>
