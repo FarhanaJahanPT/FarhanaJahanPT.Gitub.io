@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="team_scheduling_cron" model="ir.cron">
+        <field name="name">Team Schedule Mail Notification</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="state">code</field>
+        <field name="code">model._send_team_notifications_cron()</field>
+        <field name="user_id" ref="base.user_root"/> <!-- Runs as the admin -->
+        <field name="interval_type">weeks</field> <!-- Interval type: week -->
+        <field name="interval_number">1</field> <!-- Runs once a week -->
+        <field name="numbercall">-1</field> <!-- Run indefinitely -->
+        <field name="doall" eval="False"/> <!-- If missed, don't catch up -->
+        <field name="active" eval="True"/> <!-- Active -->
+<!--        <field name="nextcall" eval="'2024-10-04 04:59:00'"/>-->
+        <field name="nextcall" eval="datetime.now(pytz.timezone('UTC')).strftime('%Y-%m-%d 23:59:00')" />
+    </record>
+</odoo>

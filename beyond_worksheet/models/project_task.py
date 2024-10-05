@@ -14,6 +14,24 @@ class ProjectTask(models.Model):
     panel_count = fields.Integer(string='Panel Count', compute='compute_order_count',store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='compute_order_count',store=True, default=0)
     battery_count = fields.Integer(string='Battery Count', compute='compute_order_count',store=True, default=0)
+    checklist_item_ids = fields.One2many('installation.checklist.item','task_id')
+    service_item_ids = fields.One2many('service.checklist.item','task_id')
+    is_checklist = fields.Boolean(string='Checklist Count', compute='compute_is_checklist', store=True, readonly=True)
+
+    @api.depends('checklist_item_ids', 'service_item_ids')
+    def compute_is_checklist(self):
+        for rec in self:
+            rec.is_checklist = False
+            order_line = rec.sale_order_id.order_line.product_id.categ_id.mapped('id')
+            if rec.x_studio_type_of_service == 'New Installation':
+                checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
+                if sum(checklist_ids) == len(rec.checklist_item_ids):
+                    rec.is_checklist = True
+            if rec.x_studio_type_of_service == 'Service':
+                checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
+                if sum(checklist_ids) == len(rec.service_item_ids):
+                    rec.is_checklist = True
+
 
     @api.depends('sale_order_id')
     def compute_order_count(self):
@@ -29,8 +47,9 @@ class ProjectTask(models.Model):
     def get_checklist_values(self, vals):
         data = []
         checklist = []
+        order_line = self.browse(vals).sale_order_id.order_line.product_id.categ_id.mapped('id')
         if self.browse(vals).x_studio_type_of_service == 'New Installation':
-            checklist_ids = self.env['installation.checklist'].search([('task_ids', '=',vals)])
+            checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)])
             checklist_item_ids = self.env['installation.checklist.item'].search([('task_id', '=',vals)])
             for checklist_id in checklist_ids:
                 data.append([checklist_id.id,checklist_id.name,checklist_id.type])
@@ -41,7 +60,7 @@ class ProjectTask(models.Model):
                                   checklist_item_id.text,
                                   checklist_item_id.image])
         elif self.browse(vals).x_studio_type_of_service == 'Service':
-            checklist_ids = self.env['service.checklist'].search([('task_ids', '=', vals)])
+            checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)])
             checklist_item_ids = self.env['service.checklist.item'].search([('task_id', '=', vals)])
             for checklist_id in checklist_ids:
                 data.append([checklist_id.id, checklist_id.name, checklist_id.type])
@@ -52,3 +71,6 @@ class ProjectTask(models.Model):
                                   checklist_item_id.text,
                                   checklist_item_id.image])
         return data, checklist
+
+    def _send_team_notifications_cron(self):
+        print('sssssssssssssssssssssss')

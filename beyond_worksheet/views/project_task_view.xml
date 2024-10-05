@@ -54,6 +54,11 @@
                     <widget name="checklist_widget"/>
                 </page>
                 <page string="Service Checklist" name="service_checklist" invisible="x_studio_type_of_service != 'Service'">
+                    <group>
+                        <field name="checklist_item_ids" widget="many2many_tags" invisible="1"/>
+                        <field name="service_item_ids" widget="many2many_tags" invisible="1"/>
+                        <field name="is_checklist" invisible="1"/>
+                    </group>
                     <widget name="checklist_widget"/>
                 </page>
             </xpath>
