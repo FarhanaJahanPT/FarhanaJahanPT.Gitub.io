@@ -5,6 +5,9 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@id='date_deadline_and_recurring_task']" position="after">
+                <field name="is_individual"/>
+            </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Panel Serial Numbers" name="panel_ser_num" invisible="panel_count == 0">
                     <group>
