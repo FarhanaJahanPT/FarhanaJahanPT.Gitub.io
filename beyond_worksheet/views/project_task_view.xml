@@ -8,12 +8,20 @@
             <xpath expr="//div[@id='date_deadline_and_recurring_task']" position="after">
                 <field name="is_individual"/>
             </xpath>
+            <xpath expr="//group[@name='project_details']" position="inside">
+                <field name="assigned_users"/>
+            </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="Panel Serial Numbers" name="panel_ser_num" invisible="panel_count == 0">
+                <page string="WorkSheet Application" name="work_sheet">
                     <group>
+                        <group>
+                            <field name="worksheet_sequence"/>
+                        </group>
+                    </group>
+                    <group string="Panel Serial Numbers" invisible="panel_count == 0">
                         <field name="panel_count"/>
                     </group>
-                    <field name="panel_lot_ids">
+                    <field name="panel_lot_ids" invisible="panel_count == 0">
                         <tree string="Panel Serial Numbers">
                             <field name="image"/>
                             <field name="name"/>
@@ -23,12 +31,10 @@
                             <field name="company_id" invisible="1"/>
                         </tree>
                     </field>
-                </page>
-                <page string="Inverter Serial Numbers" name="invet_ser_num" invisible="inverter_count == 0">
-                    <group>
+                    <group string="Inverter Serial Numbers" invisible="inverter_count == 0">
                         <field name="inverter_count"/>
                     </group>
-                    <field name="inverter_lot_ids">
+                    <field name="inverter_lot_ids" invisible="inverter_count == 0">
                         <tree string="Inverter Serial Numbers">
                             <field name="image"/>
                             <field name="name"/>
@@ -37,12 +43,10 @@
                             <field name="state"/>
                         </tree>
                     </field>
-                </page>
-                <page string="Battery Serial Numbers" name="battery_ser_num" invisible="battery_count == 0">
-                    <group>
+                    <group string="Battery Serial Numbers" invisible="battery_count == 0">
                         <field name="battery_count"/>
                     </group>
-                    <field name="battery_lot_ids">
+                    <field name="battery_lot_ids" invisible="battery_count == 0">
                         <tree string="Battery Serial Numbers">
                             <field name="image"/>
                             <field name="name"/>
@@ -52,19 +56,19 @@
                             <field name="company_id" invisible="1"/>
                         </tree>
                     </field>
-                </page>
-                <page string="Installation Checklist" name="installation_checklist" invisible="x_studio_type_of_service != 'New Installation'">
-                    <widget name="checklist_widget"/>
-                </page>
-                <page string="Service Checklist" name="service_checklist" invisible="x_studio_type_of_service != 'Service'">
-                    <group>
-                        <field name="checklist_item_ids" widget="many2many_tags" invisible="1"/>
-                        <field name="service_item_ids" widget="many2many_tags" invisible="1"/>
-                        <field name="is_checklist" invisible="1"/>
-                    </group>
+                    <group string="Installation Checklist" invisible="x_studio_type_of_service != 'New Installation'"/>
+                    <group string="Service Checklist" invisible="x_studio_type_of_service != 'Service'"/>
                     <widget name="checklist_widget"/>
                 </page>
             </xpath>
         </field>
     </record>
+
+<!--    <record id="project_task_view_form" model="ir.ui.view">-->
+<!--        <field name="name">project.task.form.view</field>-->
+<!--        <field name="model">project.task</field>-->
+<!--        <field name="inherit_id" ref="project_beyond_solar.view_task_form2"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--        </field>-->
+<!--    </record>-->
 </odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
-from odoo.fields import Date
-from odoo.tools.safe_eval import datetime
+from datetime import datetime, timedelta
+
+from odoo import api, fields, models, _
 
 
 class ProjectTask(models.Model):
@@ -20,6 +20,16 @@ class ProjectTask(models.Model):
     service_item_ids = fields.One2many('service.checklist.item','task_id', domain=[('service_id.selfie_type', '=', 'null')])
     is_checklist = fields.Boolean(string='Checklist', compute='compute_is_checklist', store=True, readonly=True)
     is_individual = fields.Boolean(string='Individual')
+    worksheet_sequence = fields.Char(string='Worksheet Reference', readonly=True,default=lambda self: _('New'), copy=False)
+    assigned_users = fields.Many2many('res.users', string='Assiged Users')
+
+    @api.model
+    def create(self, vals_list):
+        """Function to create sequence"""
+        for vals in vals_list:
+            if not vals.get('worksheet_sequence') or vals['worksheet_sequence'] == _('New'):
+                vals['worksheet_sequence'] = self.env['ir.sequence'].next_by_code('project.task') or _('New')
+        return super().create(vals_list)
 
     @api.depends('checklist_item_ids', 'service_item_ids', 'is_individual')
     def compute_is_checklist(self):
@@ -75,6 +85,25 @@ class ProjectTask(models.Model):
         return data, checklist
 
     def _send_team_notifications_cron(self):
-        print('sssssssssssssssssssssss')
-        # print(self.search([('planned_date_start', '<=', Date.today())]))
-        print(self.search([('id', '=', 26603)]).planned_date_start)
+        today = datetime.today()
+        next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
+        next_friday = next_monday + timedelta(days=4)
+        task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
+        for user in task_ids.x_studio_proposed_team:
+            task_id = task_ids.filtered(lambda e: e.x_studio_proposed_team == user)
+            if user.partner_id.email and user.is_internal_user == True:
+                email_values = {'email_to': user.partner_id.email,
+                                'email_from': user.company_id.email}
+                mail_template = self.env.ref('beyond_worksheet.worksheet_email_template')
+                mail_template.send_mail(task_id[:1].id, email_values=email_values,force_send=True)
+            elif user.partner_id.email:
+                email_values = {'email_to': user.partner_id.email,'email_from': user.company_id.email}
+                mail_template = self.env.ref('beyond_worksheet.external_worksheet_email_template')
+                mail_template.send_mail(task_id[:1].id,email_values=email_values,force_send=True)
+
+    def get_weekly_work(self,object):
+        today = datetime.today()
+        next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
+        next_friday = next_monday + timedelta(days=4)
+        task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date()), ('x_studio_proposed_team', '=', object.x_studio_proposed_team.id)])
+        return task_ids

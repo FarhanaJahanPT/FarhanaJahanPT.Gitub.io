@@ -19,6 +19,7 @@
         'views/service_checklist_view.xml',
         'views/service_checklist_item_view.xml',
         'views/res_users_view.xml',
+        'views/worksheet_weekly_mail.xml',
     ],
     'assets': {
         'web.assets_backend': [

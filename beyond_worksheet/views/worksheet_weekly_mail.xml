@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--Template to send demo mail template for the customer-->
+        <record id="worksheet_email_template" model="mail.template">
+            <field name="name">Upcoming Week Work Schedule</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="email_from"></field>
+            <field name="email_to"></field>
+            <field name="subject">Worksheet: Weekly Work Schedule</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <t t-set="task_ids" t-value="object.get_weekly_work(object)"/>
+
+                    <div style="justify-content: center;background-color: #714B67; padding:0.6rem;padding-left: 35px;text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                        <h2>
+                            Hi,
+                            <t t-out="object.x_studio_proposed_team.name"/>
+                        </h2>
+                        <div>
+                            <h3>
+                                This is to notify you about the assigned tasks for the upcoming week. Please find below the details:
+                            </h3>
+                        </div>
+                    <table style="height: 20%;width: 100%;border: 1px solid black;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid black;">Date</th>
+                            <th style="border: 1px solid black;">Task Description</th>
+                            <th style="border: 1px solid black;">Assigned Team Leader</th>
+                            <th style="border: 1px solid black;">Link to Task</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                        <t t-foreach="task_ids" t-as="task">
+                            <tr>
+                                <td style="border: 1px solid black;"><span t-field="task.planned_date_start"/></td>
+                                <td style="border: 1px solid black;"><span t-field="task.name"/></td>
+                                <td style="border: 1px solid black;"><span t-field="task.x_studio_proposed_team.name"/></td>
+                                <td style="border: 1px solid black;">
+                                    <a t-attf-href="/web?#id={{ task.id }}&amp;view_type=form&amp;model=project.task"
+                                       style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">Task</a>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    Regards,
+                    <br/>
+                    <t t-out="object.company_id.name"/>
+                    <br/>
+                </div>
+            </field>
+        </record>
+
+        <record id="external_worksheet_email_template" model="mail.template">
+            <field name="name">Upcoming Week Work Schedule</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="email_from"></field>
+            <field name="email_to"></field>
+            <field name="subject">Worksheet: Weekly Work Schedule</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <t t-set="task_ids" t-value="object.get_weekly_work(object)"/>
+
+                    <div style="justify-content: center;background-color: #714B67; padding:0.6rem;padding-left: 35px;text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                        <h2>
+                            Hi,
+                            <t t-out="object.x_studio_proposed_team.name"/>
+                        </h2>
+                        <div>
+                            <h3>
+                                This is to notify you about the assigned tasks for the upcoming week. Please find below the details:
+                            </h3>
+                        </div>
+                    <table style="height: 20%;width: 100%;border: 1px solid black;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid black;">Date</th>
+                            <th style="border: 1px solid black;">Task Description</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                        <t t-foreach="task_ids" t-as="task">
+                            <tr>
+                                <td style="border: 1px solid black;"><span t-field="task.planned_date_start"/></td>
+                                <td style="border: 1px solid black;"><span t-field="task.name"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    Regards,
+                    <br/>
+                    <t t-out="object.company_id.name"/>
+                    <br/>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
