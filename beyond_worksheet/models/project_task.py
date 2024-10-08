@@ -8,6 +8,7 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     worksheet_id = fields.Many2one('task.worksheet')
+    assigned_users = fields.Many2many('res.users', string='Assigned Users')
 
     def write(self, vals):
         res = super().write(vals)

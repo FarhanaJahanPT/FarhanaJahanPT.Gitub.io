@@ -47,9 +47,8 @@ class WorkSheet(models.Model):
     @api.depends('sale_id')
     def _compute_order_count(self):
         for rec in self:
-            order_line = rec.sale_id.order_line.filtered(lambda
-                                                             sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters')[
-                         :1]
+            order_line = rec.sale_id.order_line.filtered(
+                lambda sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters')[:1]
             rec.inverter_count = sum(order_line.mapped('product_uom_qty'))
             order_line = rec.sale_id.order_line.filtered(
                 lambda sol: sol.product_id.categ_id.name == 'Solar Panels')[:1]
@@ -59,7 +58,7 @@ class WorkSheet(models.Model):
             rec.battery_count = sum(order_line.mapped('product_uom_qty'))
 
 
-    @api.depends('checklist_item_ids', 'service_item_ids', 'is_individual')
+    @api.depends('checklist_item_ids', 'service_item_ids')
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False
