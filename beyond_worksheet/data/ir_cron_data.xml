@@ -11,6 +11,7 @@
         <field name="numbercall">-1</field> <!-- Run indefinitely -->
         <field name="doall" eval="False"/> <!-- If missed, don't catch up -->
         <field name="active" eval="True"/> <!-- Active -->
+<!--        <field name="nextcall" eval="'2024-10-04 04:59:00'"/>-->
         <field name="nextcall" eval="datetime.now(pytz.timezone('UTC')).strftime('%Y-%m-%d 23:59:00')" />
     </record>
 </odoo>

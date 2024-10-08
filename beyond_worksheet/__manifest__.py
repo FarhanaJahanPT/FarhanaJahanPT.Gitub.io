@@ -13,15 +13,16 @@
         'data/ir_sequence_data.xml',
         'views/project_task_view.xml',
         'views/stock_lot_view.xml',
+        'views/task_worksheet_views.xml',
         'views/installation_checklist_view.xml',
         'views/installation_checklist_item_view.xml',
         'views/mail_message_view.xml',
         'views/owner_signature_templates.xml',
-        'views/task_worksheet_views.xml',
         'views/service_checklist_view.xml',
         'views/service_checklist_item_view.xml',
         'views/res_users_view.xml',
         'views/worksheet_weekly_mail.xml',
+        'views/worksheet_attendance_view.xml',
     ],
     'assets': {
         'web.assets_backend': [

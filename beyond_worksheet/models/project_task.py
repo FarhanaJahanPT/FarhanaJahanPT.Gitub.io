@@ -92,21 +92,18 @@ class ProjectTask(models.Model):
         next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
         next_friday = next_monday + timedelta(days=4)
         task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
-        for user in task_ids.x_studio_proposed_team:
-            task_id = task_ids.filtered(lambda e: e.x_studio_proposed_team == user)
-            if user.partner_id.email and user.is_internal_user == True:
-                email_values = {'email_to': user.partner_id.email,
-                                'email_from': user.company_id.email}
+        for user in task_ids.assigned_users:
+            email_values = {'email_to': user.partner_id.email,
+                            'email_from': user.company_id.email}
+            if user.is_internal_user == True:
                 mail_template = self.env.ref('beyond_worksheet.worksheet_email_template')
-                mail_template.send_mail(task_id[:1].id, email_values=email_values,force_send=True)
-            elif user.partner_id.email:
-                email_values = {'email_to': user.partner_id.email,'email_from': user.company_id.email}
+            else:
                 mail_template = self.env.ref('beyond_worksheet.external_worksheet_email_template')
-                mail_template.send_mail(task_id[:1].id,email_values=email_values,force_send=True)
+            mail_template.send_mail(user.id, email_values=email_values,force_send=True)
 
     def get_weekly_work(self,object):
         today = datetime.today()
         next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
         next_friday = next_monday + timedelta(days=4)
-        task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date()), ('x_studio_proposed_team', '=', object.x_studio_proposed_team.id)])
+        task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date()), ('assigned_users', 'in', object.id)])
         return task_ids

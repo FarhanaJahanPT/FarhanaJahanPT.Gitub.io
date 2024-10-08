@@ -12,7 +12,7 @@
 
             </xpath>
             <xpath expr="//group[@name='project_details']" position="inside">
-                <field name="assigned_users"/>
+                <field name="assigned_users" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="WorkSheet Application" name="work_sheet">
@@ -67,11 +67,4 @@
         </field>
     </record>
 
-<!--    <record id="project_task_view_form" model="ir.ui.view">-->
-<!--        <field name="name">project.task.form.view</field>-->
-<!--        <field name="model">project.task</field>-->
-<!--        <field name="inherit_id" ref="project_beyond_solar.view_task_form2"/>-->
-<!--        <field name="arch" type="xml">-->
-<!--        </field>-->
-<!--    </record>-->
 </odoo>
