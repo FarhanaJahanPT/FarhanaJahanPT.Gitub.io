@@ -63,13 +63,13 @@ class WorkSheet(models.Model):
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False
-            order_line = rec.sale_order_id.order_line.product_id.categ_id.mapped('id')
-            if rec.x_studio_type_of_service == 'New Installation':
+            order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
+            if rec.task_id.x_studio_type_of_service == 'New Installation':
                 checklist_ids = self.env['installation.checklist'].search(
                     [('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
                 if sum(checklist_ids) == len(rec.checklist_item_ids):
                     rec.is_checklist = True
-            if rec.x_studio_type_of_service == 'Service':
+            if rec.task_id.x_studio_type_of_service == 'Service':
                 checklist_ids = self.env['service.checklist'].search(
                     [('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
                 if sum(checklist_ids) == len(rec.service_item_ids):
