@@ -21,7 +21,10 @@ class ProjectTask(models.Model):
     is_checklist = fields.Boolean(string='Checklist', compute='compute_is_checklist', store=True, readonly=True)
     is_individual = fields.Boolean(string='Individual')
     worksheet_sequence = fields.Char(string='Worksheet Reference', readonly=True,default=lambda self: _('New'), copy=False)
-    assigned_users = fields.Many2many('res.users', string='Assiged Users')
+    assigned_users = fields.Many2many('res.users', string='Assigned Users')
+    witness_signature = fields.Char(string="Witness Signature", copy=False)
+    witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
+
 
     @api.model
     def create(self, vals_list):

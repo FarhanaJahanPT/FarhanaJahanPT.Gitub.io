@@ -82,5 +82,5 @@
     </record>
     <menuitem id="service_checklist_item_menu_action"
               action="service_checklist_item_action"
-              parent="project.menu_project_config"/>
+              parent="task_worksheet_configuration_menu"/>
 </odoo>

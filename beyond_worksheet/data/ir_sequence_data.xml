@@ -3,7 +3,7 @@
     <data noupdate="1">
        <record id="worksheet_sequence" model="ir.sequence">
            <field name="name">Worksheet Sequence</field>
-           <field name="code">project.task</field>
+           <field name="code">task.worksheet</field>
            <field name="prefix">SV-%(year)s%(month)s</field>
            <field name="padding">3</field>
            <field name="company_id" eval="False"/>

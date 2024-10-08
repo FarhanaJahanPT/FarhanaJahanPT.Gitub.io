@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="task_worksheet_action" model="ir.actions.act_window">
+        <field name="name">Worksheet</field>
+        <field name="res_model">task.worksheet</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--    <record id="installation_checklist_item_view_tree" model="ir.ui.view">-->
+    <!--        <field name="name">installation.checklist.view.tree</field>-->
+    <!--        <field name="model">installation.checklist.item</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <tree string="Installation Checklist Item" editable="bottom">-->
+    <!--                <field name="create_date"/>-->
+    <!--                <field name="checklist_id"/>-->
+    <!--                <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>-->
+    <!--                <field name="text"/>-->
+    <!--                <field name="task_id"/>-->
+    <!--                <field name="user_id"/>-->
+    <!--                <field name="location"/>-->
+    <!--            </tree>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <record id="task_worksheet_view_form" model="ir.ui.view">
+        <field name="name">task.worksheet.view.form</field>
+        <field name="model">task.worksheet</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <!--                            <field name="name"/>-->
+                            <!--                            &lt;!&ndash;                            <field name="checklist_id"/>&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;                            <field name="task_id"/>&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;                            <field name="user_id"/>&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;                            <field name="location"/>&ndash;&gt;-->
+                        </group>
+                        <!--                        &lt;!&ndash;                        <group>&ndash;&gt;-->
+                        <!--                        &lt;!&ndash;                            <field name="text"/>&ndash;&gt;-->
+                        <!--                        &lt;!&ndash;                            <field name="image" options="{&quot;size&quot;:[0,270]}" widget="image"/>&ndash;&gt;-->
+                        <!--                        &lt;!&ndash;                        </group>&ndash;&gt;-->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <menuitem id="task_worksheet_root" sequence="7" name="Worksheet"/>
+    <menuitem id="task_worksheet_menu"
+              action="task_worksheet_action" name="Worksheet"
+              parent="task_worksheet_root"/>
+    <menuitem id="task_worksheet_configuration_menu"
+              action="task_worksheet_action" name="Settings"
+              parent="task_worksheet_root"/>
+</odoo>

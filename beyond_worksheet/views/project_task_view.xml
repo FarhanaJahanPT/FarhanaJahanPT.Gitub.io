@@ -7,6 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='date_deadline_and_recurring_task']" position="after">
                 <field name="is_individual"/>
+                <field name="witness_signature"/>
+                <field name="witness_signature_date"/>
+
             </xpath>
             <xpath expr="//group[@name='project_details']" position="inside">
                 <field name="assigned_users"/>
