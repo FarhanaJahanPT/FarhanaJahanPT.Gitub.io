@@ -5,12 +5,20 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="get_worksheet"
+                        icon="fa-check" invisible="not worksheet_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Worksheet</span>
+                    </div>
+                </button>
+            </div>
             <xpath expr="//div[@id='date_deadline_and_recurring_task']" position="after">
                 <field name="is_individual"/>
                 <field name="witness"/>
                 <field name="witness_signature"/>
                 <field name="witness_signature_date"/>
-
+                <field name="worksheet_id" invisible="1"/>
             </xpath>
             <xpath expr="//group[@name='project_details']" position="inside">
                 <field name="assigned_users" widget="many2many_tags"/>
