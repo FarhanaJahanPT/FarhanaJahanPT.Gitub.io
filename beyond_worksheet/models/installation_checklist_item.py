@@ -21,13 +21,3 @@ class InstallationChecklistItem(models.Model):
                 raise ValidationError("Image fields is required")
             if record.checklist_id.type == 'text' and not record.text and record.checklist_id.compulsory == True:
                 raise ValidationError("Text fields is required")
-
-    # @api.depends('task_id')
-    # def compute_count(self):
-    #     print('ssssssssssssssssssss')
-    #     for rec in self:
-    #         print(rec.task_id)
-    #         rec.task_id.checklist_count = rec.task_id.checklist_count+1
-    #
-    #
-    #

@@ -8,10 +8,13 @@
         <field name="name">worksheet.attendance.view.tree</field>
         <field name="model">worksheet.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Worksheet Attendance">
+            <tree string="Worksheet Attendance"  editable="bottom">
                 <field name="create_date"/>
-                <field name="type"/>
                 <field name="user_id"/>
+                <field name="type"/>
+                <field name="additional_service"/>
+                 <field name="task_id"/>
+                 <field name="worksheet_id"/>
                 <field name="location"/>
             </tree>
         </field>

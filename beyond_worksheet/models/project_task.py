@@ -24,6 +24,7 @@ class ProjectTask(models.Model):
     assigned_users = fields.Many2many('res.users', string='Assigned Users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
+    witness = fields.Char(string='Witness name')
 
 
     @api.model
@@ -101,9 +102,9 @@ class ProjectTask(models.Model):
                 mail_template = self.env.ref('beyond_worksheet.external_worksheet_email_template')
             mail_template.send_mail(user.id, email_values=email_values,force_send=True)
 
-    def get_weekly_work(self,object):
-        today = datetime.today()
-        next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
-        next_friday = next_monday + timedelta(days=4)
-        task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date()), ('assigned_users', 'in', object.id)])
-        return task_ids
+    # def get_weekly_work(self,object):
+    #     today = datetime.today()
+    #     next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
+    #     next_friday = next_monday + timedelta(days=4)
+    #     task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date()), ('assigned_users', 'in', object.id)])
+    #     return task_ids

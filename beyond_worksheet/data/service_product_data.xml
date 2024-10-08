@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="worksheet_product" model="product.product">
+        <field name="name">Worksheet Service Product</field>
+        <field name="detailed_type">service</field>
+        <field name="categ_id" ref="product.product_category_all"/> <!-- Reference to a product category -->
+        <field name="standard_price">1.0</field> <!-- Cost of the product -->
+        <field name="list_price">1.0</field> <!-- Sales price of the product -->
+        <field name="uom_id" ref="uom.product_uom_unit"/> <!-- Default unit of measure -->
+        <field name="uom_po_id" ref="uom.product_uom_unit"/> <!-- Purchase unit of measure -->
+    </record>
+</odoo>
