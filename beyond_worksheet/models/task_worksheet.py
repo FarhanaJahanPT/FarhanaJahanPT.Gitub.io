@@ -34,14 +34,16 @@ class WorkSheet(models.Model):
                                        domain=[('service_id.selfie_type', '=', 'null')])
     is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True, readonly=True)
     is_individual = fields.Boolean(string='Individual')
-    worksheet_sequence = fields.Char(string='Worksheet Reference', readonly=True, default=lambda self: _('New'),
-                                     copy=False)
+    # worksheet_sequence = fields.Char(string='Worksheet Reference', readonly=True, default=lambda self: _('New'),
+    #                                  copy=False)
     assigned_users = fields.Many2many('res.users', string='Assigned Users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
     x_studio_type_of_service = fields.Selection(string='Type of Service',
                                                 related='sale_id.x_studio_type_of_service', readonly=True)
     worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance')
+    invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
+
     @api.model_create_multi
     def create(self, vals_list):
         """Function to create sequence"""
@@ -78,6 +80,11 @@ class WorkSheet(models.Model):
                     [('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
                 if sum(checklist_ids) == len(rec.service_item_ids):
                     rec.is_checklist = True
+
+    def _compute_invoice_count(self):
+        """Function to count invoice"""
+        for record in self:
+            record.invoice_count = self.env['account.move'].search_count([('invoice_origin', '=', self.name)])
 
     def get_sale_order(self):
         self.ensure_one()
@@ -129,3 +136,16 @@ class WorkSheet(models.Model):
                     'invoice_line_ids': vals
                 }])
                 print(invoice)
+
+    def get_invoice(self):
+        """Smart button to view the Corresponding Invoices for the Worksheet"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoice',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move',
+            'target': 'current',
+            'domain': [('invoice_origin', '=', self.name)],
+            'context': {"create": False},
+        }

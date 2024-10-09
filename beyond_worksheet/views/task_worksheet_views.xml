@@ -42,6 +42,12 @@
                                 <span class="o_stat_text">Tasks</span>
                             </div>
                         </button>
+                        <button class="oe_stat_button" type="object" name="get_invoice"
+                                icon="fa-pencil-square-o" invisible="not invoice_count">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Invoices</span>
+                            </div>
+                        </button>
                     </div>
                     <h1>
                         <field name="name" readonly="1"/>
@@ -52,8 +58,8 @@
                             <field name="sale_id"/>
                             <field name="battery_count" invisible="1"/>
                             <field name="x_studio_type_of_service" invisible="1"/>
+                            <field name="invoice_count" invisible="1"/>
                             <field name="is_individual"/>
-                            <field name="worksheet_attendance_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook>
@@ -82,7 +88,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Battery Serial Numbers" invisible="battery_count == 0">-->
+                        <page string="Battery Serial Numbers" invisible="battery_count == 0">
                             <field name="battery_count" invisible="1"/>
                             <field name="battery_lot_ids" invisible="battery_count == 0">
                                 <tree string="Battery Serial Numbers">
@@ -94,7 +100,17 @@
                                     <field name="company_id" invisible="1"/>
                                 </tree>
                             </field>
-
+                        </page>
+                        <page string="Attendance Record" invisible="not is_individual">
+                            <field name="worksheet_attendance_ids">
+                                <tree string="Attendance Record">
+                                    <field name="create_date"/>
+                                    <field name="user_id"/>
+                                    <field name="type"/>
+                                    <field name="additional_service"/>
+                                    <field name="location"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="Installation Checklist"
                               invisible="x_studio_type_of_service != 'New Installation'"/>

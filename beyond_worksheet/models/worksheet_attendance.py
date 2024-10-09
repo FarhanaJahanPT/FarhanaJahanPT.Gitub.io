@@ -14,4 +14,3 @@ class WorksheetAttendance(models.Model):
     task_id = fields.Many2one('project.task', related="worksheet_id.task_id")
     worksheet_id = fields.Many2one('task.worksheet', string='Worksheet', required=True)
     additional_service = fields.Boolean(string='Additional Service')
-
