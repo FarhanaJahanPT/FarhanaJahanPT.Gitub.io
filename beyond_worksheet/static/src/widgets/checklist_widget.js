@@ -15,7 +15,7 @@ class Checklist extends Component {
         this.orm = useService("orm");
         onWillStart(async () => {
             var resId = this.props.record.evalContext.id
-            const action = await this.orm.call('project.task', 'get_checklist_values', [resId]);
+            const action = await this.orm.call('task.worksheet', 'get_checklist_values', [resId]);
             this.state.data.checklist = action[0]
             this.state.data.checklist_item = action[1]
         });

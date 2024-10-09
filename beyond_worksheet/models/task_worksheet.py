@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
+from email.policy import default
 
 from odoo import api, fields, models,_
 
@@ -10,10 +11,9 @@ class WorkSheet(models.Model):
     _inherit = 'mail.thread'
 
 
-
     name = fields.Char("Name", default=lambda self: _('New'))
     task_id = fields.Many2one('project.task', string='Task')
-    sale_id = fields.Many2one('sale.order', string='Sale Order')
+    sale_id = fields.Many2one('sale.order', string='Sale Order', related="task_id.sale_order_id")
 
     panel_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                     string='Panel Serial Number', domain=[('type', '=', 'panel')], readonly=True)
@@ -28,14 +28,13 @@ class WorkSheet(models.Model):
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
 
-    checklist_item_ids = fields.One2many('installation.checklist.item', 'task_id',
+    checklist_item_ids = fields.One2many('installation.checklist.item', 'worksheet_id',
                                          domain=[('checklist_id.selfie_type', '=', 'null')])
-    service_item_ids = fields.One2many('service.checklist.item', 'task_id',
+    service_item_ids = fields.One2many('service.checklist.item', 'worksheet_id',
                                        domain=[('service_id.selfie_type', '=', 'null')])
-    is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True, readonly=True)
+    is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True)
+    checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True)
     is_individual = fields.Boolean(string='Individual')
-    # worksheet_sequence = fields.Char(string='Worksheet Reference', readonly=True, default=lambda self: _('New'),
-    #                                  copy=False)
     assigned_users = fields.Many2many('res.users', string='Assigned Users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
@@ -64,20 +63,19 @@ class WorkSheet(models.Model):
             order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Storage')[:1]
             rec.battery_count = sum(order_line.mapped('product_uom_qty'))
 
-
-    @api.depends('checklist_item_ids', 'service_item_ids')
+    @api.depends('checklist_item_ids', 'service_item_ids', 'is_individual')
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False
             order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
-            if rec.task_id.x_studio_type_of_service == 'New Installation':
-                checklist_ids = self.env['installation.checklist'].search(
-                    [('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+            if rec.x_studio_type_of_service == 'New Installation':
+                checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+                rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.checklist_item_ids):
                     rec.is_checklist = True
-            if rec.task_id.x_studio_type_of_service == 'Service':
-                checklist_ids = self.env['service.checklist'].search(
-                    [('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+            if rec.x_studio_type_of_service == 'Service':
+                checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+                rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.service_item_ids):
                     rec.is_checklist = True
 
@@ -149,3 +147,33 @@ class WorkSheet(models.Model):
             'domain': [('invoice_origin', '=', self.name)],
             'context': {"create": False},
         }
+
+    @api.model
+    def get_checklist_values(self, vals):
+        data = []
+        checklist = []
+        order_line = self.browse(vals).sale_id.order_line.product_id.categ_id.mapped('id')
+        if self.browse(vals).x_studio_type_of_service == 'New Installation':
+            checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)])
+            checklist_item_ids = self.env['installation.checklist.item'].search([('worksheet_id', '=', vals)])
+            for checklist_id in checklist_ids:
+                data.append([checklist_id.id, checklist_id.name, checklist_id.type])
+            for checklist_item_id in checklist_item_ids:
+                checklist.append([checklist_item_id.checklist_id.id,
+                                  checklist_item_id.create_date,
+                                  checklist_item_id.location,
+                                  checklist_item_id.text,
+                                  checklist_item_id.image])
+        elif self.browse(vals).x_studio_type_of_service == 'Service':
+            checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)])
+            checklist_item_ids = self.env['service.checklist.item'].search([('worksheet_id', '=', vals)])
+            for checklist_id in checklist_ids:
+                data.append(
+                    [checklist_id.id, checklist_id.name, checklist_id.type])
+            for checklist_item_id in checklist_item_ids:
+                checklist.append([checklist_item_id.service_id.id,
+                                  checklist_item_id.create_date,
+                                  checklist_item_id.location,
+                                  checklist_item_id.text,
+                                  checklist_item_id.image])
+        return data, checklist

@@ -10,7 +10,7 @@ class ServiceChecklistItem(models.Model):
     image = fields.Image(string='Image', store=True)
     service_id = fields.Many2one('service.checklist', string='Type', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True)
-    task_id = fields.Many2one('project.task', required=True, domain=[('x_studio_type_of_service', '=', 'Service')])
+    worksheet_id = fields.Many2one('task.worksheet', required=True, domain=[('x_studio_type_of_service', '=', 'Service')])
     location = fields.Char(string='Location', required=True)
     text = fields.Text(string='Text')
 

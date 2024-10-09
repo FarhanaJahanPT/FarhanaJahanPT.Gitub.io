@@ -20,35 +20,6 @@ class ProjectTask(models.Model):
             self.worksheet_id = worksheet.id
         return res
 
-    @api.model
-    def get_checklist_values(self, vals):
-        data = []
-        checklist = []
-        order_line = self.browse(vals).sale_order_id.order_line.product_id.categ_id.mapped('id')
-        if self.browse(vals).x_studio_type_of_service == 'New Installation':
-            checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)])
-            checklist_item_ids = self.env['installation.checklist.item'].search([('task_id', '=', vals)])
-            for checklist_id in checklist_ids:
-                data.append([checklist_id.id, checklist_id.name, checklist_id.type])
-            for checklist_item_id in checklist_item_ids:
-                checklist.append([checklist_item_id.checklist_id.id,
-                                  checklist_item_id.create_date,
-                                  checklist_item_id.location,
-                                  checklist_item_id.text,
-                                  checklist_item_id.image])
-        elif self.browse(vals).x_studio_type_of_service == 'Service':
-            checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)])
-            checklist_item_ids = self.env['service.checklist.item'].search([('task_id', '=', vals)])
-            for checklist_id in checklist_ids:
-                data.append([checklist_id.id, checklist_id.name, checklist_id.type])
-            for checklist_item_id in checklist_item_ids:
-                checklist.append([checklist_item_id.service_id.id,
-                                  checklist_item_id.create_date,
-                                  checklist_item_id.location,
-                                  checklist_item_id.text,
-                                  checklist_item_id.image])
-        return data, checklist
-
     def _send_team_notifications_cron(self):
         today = datetime.today()
         next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
