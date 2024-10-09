@@ -8,8 +8,7 @@ from odoo import api, fields, models,_
 class WorkSheet(models.Model):
     _name = 'task.worksheet'
     _description = "Worksheet"
-    _inherit = 'mail.thread'
-
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char("Name", default=lambda self: _('New'))
     task_id = fields.Many2one('project.task', string='Task')
@@ -42,6 +41,8 @@ class WorkSheet(models.Model):
                                                 related='sale_id.x_studio_type_of_service', readonly=True)
     worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance')
     invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
+    is_testing_required = fields.Boolean("Testing needed")
+    is_ces_activity_created = fields.Boolean("CES Activity created")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -50,6 +51,18 @@ class WorkSheet(models.Model):
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('task.worksheet') or _('New')
         return super().create(vals_list)
+
+    def write(self, vals):
+        res = super().write(vals)
+        operation_team = self.env['hr.employee'].search(
+            [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+        if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
+            for member in operation_team:
+                self.sudo().activity_schedule(
+                    'mail.mail_activity_data_todo', fields.Datetime.now(),
+                    "Need To Generate CES", user_id=member.id)
+            self.is_ces_activity_created = True
+        return res
 
     @api.depends('sale_id')
     def _compute_order_count(self):
@@ -133,7 +146,6 @@ class WorkSheet(models.Model):
                     'invoice_date_due': today.date() + timedelta(days=5),
                     'invoice_line_ids': vals
                 }])
-                print(invoice)
 
     def get_invoice(self):
         """Smart button to view the Corresponding Invoices for the Worksheet"""

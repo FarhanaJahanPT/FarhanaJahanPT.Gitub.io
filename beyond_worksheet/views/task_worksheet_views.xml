@@ -61,11 +61,15 @@
                             <field name="invoice_count" invisible="1"/>
                             <field name="checklist_count" invisible="1"/>
                             <field name="is_individual"/>
+                            <field name="is_testing_required"/>
+                            <field name="is_ces_activity_created" invisible="1"/>
+                            <field name="panel_count" invisible="1"/>
+                            <field name="inverter_count" invisible="1"/>
+                            <field name="battery_count" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Panel Serial Numbers" name="panels" invisible="panel_count == 0">
-                            <field name="panel_count" invisible="1"/>
                             <field name="panel_lot_ids">
                                 <tree string="Panel Serial Numbers">
                                     <field name="image"/>
@@ -78,7 +82,6 @@
                             </field>
                         </page>
                         <page string="Inverter Serial Numbers" invisible="inverter_count == 0">
-                            <field name="inverter_count" invisible="1"/>
                             <field name="inverter_lot_ids" invisible="inverter_count == 0">
                                 <tree string="Inverter Serial Numbers">
                                     <field name="image"/>
@@ -90,7 +93,6 @@
                             </field>
                         </page>
                         <page string="Battery Serial Numbers" invisible="battery_count == 0">
-                            <field name="battery_count" invisible="1"/>
                             <field name="battery_lot_ids" invisible="battery_count == 0">
                                 <tree string="Battery Serial Numbers">
                                     <field name="image"/>
@@ -122,8 +124,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>
