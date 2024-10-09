@@ -5,6 +5,9 @@ from odoo import api, fields, models,_
 class WorkSheet(models.Model):
     _name = 'task.worksheet'
     _description = "Worksheet"
+    _inherit = 'mail.thread'
+
+
 
     name = fields.Char("Name", default=lambda self: _('New'))
     task_id = fields.Many2one('project.task', string='Task')
@@ -35,7 +38,8 @@ class WorkSheet(models.Model):
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
 
-
+    x_studio_type_of_service = fields.Selection(string='Type of Service',
+                                                related='sale_id.x_studio_type_of_service', readonly=True)
     @api.model_create_multi
     def create(self, vals_list):
         """Function to create sequence"""

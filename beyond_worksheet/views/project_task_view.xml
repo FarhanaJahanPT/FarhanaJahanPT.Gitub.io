@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="object" name="get_worksheet"
-                        icon="fa-check" invisible="not worksheet_id">
+                        icon="fa-calendar" invisible="not worksheet_id">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Worksheet</span>
                     </div>

@@ -22,12 +22,9 @@ class WorksheetAttendance(models.Model):
         monday = today - timedelta(days=today.weekday())
         friday = monday + timedelta(days=4)
         attendance_ids = self.search([('create_date', '>=', monday.date()),('create_date', '<=', friday.date()), ('type','!=', 'check_out')])
-        print(attendance_ids)
         for attendance in attendance_ids.user_id:
-            # print('uesers........................',attendance)
             service = attendance_ids.filtered(lambda w: w.user_id == attendance and w.type == 'check_in' and w.additional_service == False)
             additional = attendance_ids.filtered(lambda w: w.user_id == attendance and w.additional_service == True)
-            print('data................',', '.join(service.worksheet_id.mapped('name')))
             vals = []
             if service:
                 vals.append((0, 0,
@@ -45,7 +42,6 @@ class WorksheetAttendance(models.Model):
                                  'price_unit': 1,
                                  # 'price_unit': attendance.user_id.invoice_amount
                              }))
-            print('vals................',vals)
             # invoice = {
             #     'move_type': 'in_invoice',
             #     'partner_id': attendance.partner_id.id,

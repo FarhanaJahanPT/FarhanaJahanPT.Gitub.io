@@ -33,13 +33,13 @@
                         <button class="oe_stat_button" type="object" name="get_sale_order"
                                 icon="fa-dollar" invisible="not sale_id">
                             <div class="o_stat_info">
-                                <span class="o_stat_text">Sale Order</span>
+                                <span class="o_stat_text">Sale Orders</span>
                             </div>
                         </button>
                         <button class="oe_stat_button" type="object" name="get_task"
-                                icon="fa-check" invisible="not task_id">
+                                icon="fa-tasks" invisible="not task_id">
                             <div class="o_stat_info">
-                                <span class="o_stat_text">Task</span>
+                                <span class="o_stat_text">Tasks</span>
                             </div>
                         </button>
                     </div>
@@ -50,9 +50,60 @@
                         <group>
                             <field name="task_id"/>
                             <field name="sale_id"/>
+                            <field name="battery_count" invisible="1"/>
+                            <field name="x_studio_type_of_service" invisible="1"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Panel Serial Numbers" name="panels" invisible="panel_count == 0">
+                            <field name="panel_count" invisible="1"/>
+                            <field name="panel_lot_ids">
+                                <tree string="Panel Serial Numbers">
+                                    <field name="image"/>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="verification_time"/>
+                                    <field name="state"/>
+                                    <field name="company_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Inverter Serial Numbers" invisible="inverter_count == 0">
+                            <field name="inverter_count" invisible="1"/>
+                            <field name="inverter_lot_ids" invisible="inverter_count == 0">
+                                <tree string="Inverter Serial Numbers">
+                                    <field name="image"/>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="verification_time"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Battery Serial Numbers" invisible="battery_count == 0">-->
+                            <field name="battery_count" invisible="1"/>
+                            <field name="battery_lot_ids" invisible="battery_count == 0">
+                                <tree string="Battery Serial Numbers">
+                                    <field name="image"/>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="verification_time"/>
+                                    <field name="state"/>
+                                    <field name="company_id" invisible="1"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                        <page string="Installation Checklist"
+                              invisible="x_studio_type_of_service != 'New Installation'"/>
+                        <page string="Service Checklist" invisible="x_studio_type_of_service != 'Service'"/>
+                        <widget name="checklist_widget"/>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
