@@ -7,10 +7,10 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     is_internal_user = fields.Boolean(string='Internal User')
-    # invoice_amount =  fields.Monetary(string='Invoice amount', default=0)
-    # currency_id = fields.Many2one(comodel_name='res.currency',
-    #                               string="Company Currency",
-    #                               related='company_id.currency_id',)
+    invoice_amount =  fields.Monetary(string='Invoice amount', default=0)
+    currency_id = fields.Many2one(comodel_name='res.currency',
+                                  string="Company Currency",
+                                  related='company_id.currency_id',)
 
     def get_weekly_work(self,object):
         today = datetime.today()

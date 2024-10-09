@@ -52,6 +52,8 @@
                             <field name="sale_id"/>
                             <field name="battery_count" invisible="1"/>
                             <field name="x_studio_type_of_service" invisible="1"/>
+                            <field name="is_individual"/>
+                            <field name="worksheet_attendance_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook>

@@ -16,7 +16,7 @@
 
     <record id="rcti_invoice_cron" model="ir.cron">
         <field name="name">Generate site attendance invoice</field>
-        <field name="model_id" ref="model_worksheet_attendance"/>
+        <field name="model_id" ref="model_task_worksheet"/>
         <field name="state">code</field>
         <field name="code">model._generate_attendance_invoice_cron()</field>
         <field name="user_id" ref="base.user_root"/> <!-- Runs as the admin -->

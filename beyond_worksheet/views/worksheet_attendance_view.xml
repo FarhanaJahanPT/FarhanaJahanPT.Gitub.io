@@ -13,8 +13,8 @@
                 <field name="user_id"/>
                 <field name="type"/>
                 <field name="additional_service"/>
-                 <field name="task_id"/>
-                 <field name="worksheet_id"/>
+                <field name="worksheet_id"/>
+                <field name="task_id"/>
                 <field name="location"/>
             </tree>
         </field>
@@ -29,7 +29,7 @@
                         <group>
                             <field name="create_date"/>
                             <field name="type"/>
-                            <field name="task_id"/>
+<!--                            <field name="task_id"/>-->
                             <field name="user_id"/>
                             <field name="location"/>
                         </group>
