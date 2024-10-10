@@ -62,6 +62,7 @@
                             <field name="checklist_count" invisible="1"/>
                             <field name="is_individual"/>
                             <field name="is_testing_required"/>
+                            <field name="is_site_induction"/>
                             <field name="is_ces_activity_created" invisible="1"/>
                             <field name="panel_count" invisible="1"/>
                             <field name="inverter_count" invisible="1"/>
@@ -104,7 +105,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Attendance Record" invisible="not is_individual">
+                        <page string="Attendance Record" invisible="not worksheet_attendance_ids">
                             <field name="worksheet_attendance_ids">
                                 <tree string="Attendance Record">
                                     <field name="create_date"/>

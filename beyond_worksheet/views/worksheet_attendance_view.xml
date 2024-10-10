@@ -9,7 +9,7 @@
         <field name="model">worksheet.attendance</field>
         <field name="arch" type="xml">
             <tree string="Worksheet Attendance"  editable="bottom">
-                <field name="create_date"/>
+                <field name="datetime"/>
                 <field name="user_id"/>
                 <field name="type"/>
                 <field name="additional_service"/>
@@ -27,10 +27,10 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="create_date"/>
+                            <field name="datetime"/>
                             <field name="type"/>
-<!--                            <field name="task_id"/>-->
                             <field name="user_id"/>
+                            <field name="worksheet_id"/>
                             <field name="location"/>
                         </group>
                     </group>

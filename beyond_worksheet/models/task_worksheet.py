@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-from email.policy import default
 
 from odoo import api, fields, models,_
 
@@ -43,6 +42,7 @@ class WorkSheet(models.Model):
     invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
     is_testing_required = fields.Boolean("Testing needed")
     is_ces_activity_created = fields.Boolean("CES Activity created")
+    is_site_induction = fields.Boolean(string='Site Induction')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -54,8 +54,7 @@ class WorkSheet(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        operation_team = self.env['hr.employee'].search(
-            [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+        operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
         if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
             for member in operation_team:
                 self.sudo().activity_schedule(
@@ -80,6 +79,7 @@ class WorkSheet(models.Model):
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False
+            rec.checklist_count = 0
             order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
             if rec.x_studio_type_of_service == 'New Installation':
                 checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
@@ -123,30 +123,31 @@ class WorkSheet(models.Model):
         today = datetime.today()
         monday = today - timedelta(days=today.weekday())
         friday = monday + timedelta(days=4)
-        attendance_ids = self.env['worksheet.attendance'].search([('create_date', '>=', monday.date()),('create_date', '<=', friday.date())])
+        attendance_ids = self.env['worksheet.attendance'].search([('datetime', '>=', monday.date()),('datetime', '<=', friday.date())])
         for worksheet_id in attendance_ids.worksheet_id:
             if worksheet_id.is_individual:
-                service = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.type == 'check_in')
-                additional = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.additional_service == True)
-                vals = []
-                if service:
-                    vals.append((0, 0,{'name': "Services at {}".format(worksheet_id.name),
-                                     'quantity': 1,
-                                     'price_unit': service[:1].user_id.invoice_amount}))
-                if additional:
-                    vals.append((0, 0,{'name': "Additional service item at {}".format(worksheet_id.name),
-                                     'quantity': 1,
-                                     'price_unit': additional[:1].user_id.invoice_amount}))
-                invoice = self.env['account.move'].create([{
-                    'name': self.env['ir.sequence'].next_by_code('rcti.invoice'),
-                    'move_type': 'in_invoice',
-                    'partner_id': worksheet_id.worksheet_attendance_ids[:1].user_id.partner_id.id,
-                    'invoice_origin': worksheet_id.name,
-                    'date': worksheet_id.task_id.planned_date_begin,
-                    'invoice_date_due': today.date() + timedelta(days=5),
-                    'invoice_line_ids': vals
-                }])
-                print(invoice)
+                for user_id in worksheet_id.worksheet_attendance_ids.user_id:
+                    service = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.type == 'check_in' and w.user_id == user_id)
+                    additional = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.additional_service == True and w.user_id == user_id)
+                    vals = []
+                    if service:
+                        vals.append((0, 0,{'name': "Services at {}".format(worksheet_id.name),
+                                         'quantity': 1,
+                                         'price_unit': service[:1].user_id.invoice_amount}))
+                    if additional:
+                        vals.append((0, 0,{'name': "Additional service item at {}".format(worksheet_id.name),
+                                         'quantity': 1,
+                                         'price_unit': additional[:1].user_id.invoice_amount}))
+                    invoice = self.env['account.move'].create([{
+                        'name': self.env['ir.sequence'].next_by_code('rcti.invoice'),
+                        'move_type': 'in_invoice',
+                        'partner_id': user_id.partner_id.id,
+                        'invoice_origin': worksheet_id.name,
+                        'date': worksheet_id.task_id.planned_date_begin,
+                        'invoice_date_due': today.date() + timedelta(days=5),
+                        'invoice_line_ids': vals
+                    }])
+                    print(invoice)
 
     def get_invoice(self):
         """Smart button to view the Corresponding Invoices for the Worksheet"""
