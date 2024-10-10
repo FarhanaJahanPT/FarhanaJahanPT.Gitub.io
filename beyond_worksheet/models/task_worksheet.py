@@ -76,7 +76,7 @@ class WorkSheet(models.Model):
             order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Storage')[:1]
             rec.battery_count = sum(order_line.mapped('product_uom_qty'))
 
-    @api.depends('checklist_item_ids', 'service_item_ids', 'is_individual')
+    @api.depends('checklist_item_ids', 'service_item_ids')
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False
@@ -146,6 +146,7 @@ class WorkSheet(models.Model):
                     'invoice_date_due': today.date() + timedelta(days=5),
                     'invoice_line_ids': vals
                 }])
+                print(invoice)
 
     def get_invoice(self):
         """Smart button to view the Corresponding Invoices for the Worksheet"""
@@ -189,3 +190,24 @@ class WorkSheet(models.Model):
                                   checklist_item_id.text,
                                   checklist_item_id.image])
         return data, checklist
+
+    @api.constrains('panel_lot_ids', 'inverter_lot_ids', 'battery_lot_ids')
+    def get_delivered_items(self):
+        for rec in self:
+            move_ids = rec.sale_id.picking_ids.move_ids_without_package
+            move_line_ids = rec.sale_id.picking_ids.move_line_ids
+            lot_ids = self.env['stock.lot'].search([('worksheet_id', '=',rec.id)])
+            for lot_id in lot_ids:
+                if move_line_ids.lot_id not in lot_id:
+                    move_line_id = {'product_id':lot_id.product_id.id,
+                                    'lot_id': lot_id.id,
+                                    'quantity': 1,
+                                    'picking_id': rec.sale_id.picking_ids.id,
+                                    'move_id': move_ids.filtered(lambda w: w.product_id == lot_id.product_id)[:1].id,
+                                    'reference': rec.sale_id.picking_ids.name,
+                                    'location_id': rec.sale_id.picking_ids.location_id.id,
+                                    'location_dest_id': rec.sale_id.picking_ids.location_dest_id.id,
+                                    'state': 'assigned',
+                                    }
+                    move = move_line_ids.create(move_line_id)
+                    print(move)

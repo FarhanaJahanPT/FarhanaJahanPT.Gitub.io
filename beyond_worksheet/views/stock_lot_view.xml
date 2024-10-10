@@ -12,7 +12,7 @@
                         <field name="image" widget="image"/>
                     </group>
                     <group>
-                        <field name="task_id"/>
+                        <field name="worksheet_id"/>
                         <field name="user_id"/>
                         <field name="type"/>
                         <field name="verification_time"/>
