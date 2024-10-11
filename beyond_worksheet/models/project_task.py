@@ -25,7 +25,9 @@ class ProjectTask(models.Model):
         next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
         next_friday = next_monday + timedelta(days=4)
         task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
-        for user in task_ids.assigned_users:
+        user_ids = task_ids.assigned_users
+        user_ids += task_ids.x_studio_proposed_team
+        for user in user_ids:
             email_values = {'email_to': user.partner_id.email,
                             'email_from': user.company_id.email}
             if user.is_internal_user == True:
