@@ -9,6 +9,7 @@ class WorkSheet(models.Model):
     _description = "Worksheet"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    partner_id = fields.Many2one(string='Customer', related='task_id.partner_id')
     name = fields.Char("Name", default=lambda self: _('New'))
     task_id = fields.Many2one('project.task', string='Task')
     sale_id = fields.Many2one('sale.order', string='Sale Order', related="task_id.sale_order_id")
@@ -42,6 +43,13 @@ class WorkSheet(models.Model):
     invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
     is_testing_required = fields.Boolean("Testing needed")
     is_ces_activity_created = fields.Boolean("CES Activity created")
+
+    is_ccew = fields.Boolean('Is CCEW', compute='_compute_is_ccew')
+    ccew_sequence = fields.Char('Sequence')
+    ccew_file = fields.Binary(string='CCEW', related='task_id.x_studio_ccew', store=True)
+
+    electrical_license_number = fields.Char(
+        related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number')
     is_site_induction = fields.Boolean(string='Site Induction')
 
     @api.model_create_multi
@@ -56,11 +64,21 @@ class WorkSheet(models.Model):
         res = super().write(vals)
         operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
         if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
+            operation_team = self.env['hr.employee'].search(
+                [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
             for member in operation_team:
                 self.sudo().activity_schedule(
                     'mail.mail_activity_data_todo', fields.Datetime.now(),
                     "Need To Generate CES", user_id=member.id)
             self.is_ces_activity_created = True
+        if self.ccew_file and not self.ccew_sequence:
+            seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
+            license = '-' + str(self.electrical_license_number) + '/' + str(
+                self.task_id.x_studio_proposed_team.name) + '-'
+            self.ccew_sequence = seq.replace('--', license)
+
+            pass
+
         return res
 
     @api.depends('sale_id')
@@ -75,7 +93,15 @@ class WorkSheet(models.Model):
             order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Storage')[:1]
             rec.battery_count = sum(order_line.mapped('product_uom_qty'))
 
-    @api.depends('checklist_item_ids', 'service_item_ids')
+    @api.depends('partner_id', 'is_individual', 'is_testing_required')
+    def _compute_is_ccew(self):
+        for rec in self:
+            if rec.partner_id.state_id == self.env.ref('base.state_au_2'):
+                rec.is_ccew = True
+            else:
+                rec.is_ccew = False
+
+    @api.depends('checklist_item_ids', 'service_item_ids', 'is_individual')
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False

@@ -54,6 +54,7 @@
                     </h1>
                     <group>
                         <group>
+                            <field name="partner_id"/>
                             <field name="task_id"/>
                             <field name="sale_id"/>
                             <field name="battery_count" invisible="1"/>
@@ -61,7 +62,9 @@
                             <field name="invoice_count" invisible="1"/>
                             <field name="checklist_count"/>
                             <field name="is_individual"/>
+                            <field name="is_ccew"/>
                             <field name="is_testing_required"/>
+                            <field name="electrical_license_number"/>
                             <field name="is_site_induction"/>
                             <field name="is_ces_activity_created" invisible="1"/>
                             <field name="panel_count" invisible="1"/>
@@ -116,7 +119,16 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Installation Checklist" invisible="x_studio_type_of_service != 'New Installation'">
+                        <page string="CCEW" name="ccew" invisible="not is_ccew">
+                            <group>
+                                <group>
+                                    <field name="ccew_sequence"/>
+                                    <field name="ccew_file" widget="pdf_viewer" readonly="0"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Installation Checklist"
+                              invisible="x_studio_type_of_service != 'New Installation'">
                             <widget name="checklist_widget"/>
                         </page>
                         <page string="Service Checklist" invisible="x_studio_type_of_service != 'Service'">
