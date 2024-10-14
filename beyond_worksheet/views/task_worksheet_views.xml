@@ -59,7 +59,7 @@
                             <field name="battery_count" invisible="1"/>
                             <field name="x_studio_type_of_service" invisible="1"/>
                             <field name="invoice_count" invisible="1"/>
-                            <field name="checklist_count" invisible="1"/>
+                            <field name="checklist_count"/>
                             <field name="is_individual"/>
                             <field name="is_testing_required"/>
                             <field name="is_site_induction"/>

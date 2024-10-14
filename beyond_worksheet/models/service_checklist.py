@@ -16,3 +16,22 @@ class ServiceChecklist(models.Model):
         string='Selfie Type', default='null')
     category_ids = fields.Many2many('product.category', string='Category',
                                     required=True)
+
+    def get_checklist_count(self):
+        worksheet_ids = self.env['task.worksheet'].search([('x_studio_type_of_service', '=', 'Service')])
+        for rec in worksheet_ids:
+            rec.checklist_count = 0
+            order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
+            checklist_ids = self.search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+            rec.checklist_count = sum(checklist_ids)
+
+    def write(self, vals):
+        res = super(ServiceChecklist, self).write(vals)
+        self.get_checklist_count()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(ServiceChecklist, self).create(vals_list)
+        res.get_checklist_count()
+        return res
