@@ -70,14 +70,12 @@ class WorkSheet(models.Model):
                 self.sudo().activity_schedule(
                     'mail.mail_activity_data_todo', fields.Datetime.now(),
                     "Need To Generate CES", user_id=member.id)
-            self.is_ces_activity_created = True
+            self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
-            license = '-' + str(self.electrical_license_number) + '/' + str(
+            license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
                 self.task_id.x_studio_proposed_team.name) + '-'
             self.ccew_sequence = seq.replace('--', license)
-
-            pass
 
         return res
 
@@ -237,4 +235,3 @@ class WorkSheet(models.Model):
                                     'state': 'assigned',
                                     }
                     move = move_line_ids.create(move_line_id)
-                    print(move)
