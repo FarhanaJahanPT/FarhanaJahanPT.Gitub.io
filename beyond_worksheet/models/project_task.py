@@ -10,7 +10,8 @@ class ProjectTask(models.Model):
     worksheet_id = fields.Many2one('task.worksheet')
     assigned_users = fields.Many2many('res.users', string='Assigned Users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
-
+    witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
+    witness_name = fields.Char(string="Witness Name", copy=False)
 
     def write(self, vals):
         res = super().write(vals)
