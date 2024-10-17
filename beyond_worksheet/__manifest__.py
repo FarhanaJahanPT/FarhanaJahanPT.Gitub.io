@@ -11,7 +11,6 @@
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'data/ir_sequence_data.xml',
-        'data/service_product_data.xml',
         'data/hr_department_data.xml',
         'views/project_task_view.xml',
         'views/stock_lot_view.xml',

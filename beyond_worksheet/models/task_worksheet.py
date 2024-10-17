@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+import base64
+import re
 from datetime import datetime, timedelta
+import fitz
+import io
 
 from odoo import api, fields, models,_
+from odoo.modules.module import get_module_resource
 
 
 class WorkSheet(models.Model):
@@ -99,7 +104,7 @@ class WorkSheet(models.Model):
             else:
                 rec.is_ccew = False
 
-    @api.depends('checklist_item_ids', 'service_item_ids', 'is_individual')
+    @api.depends('checklist_item_ids', 'service_item_ids')
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False
@@ -235,3 +240,113 @@ class WorkSheet(models.Model):
                                     'state': 'assigned',
                                     }
                     move = move_line_ids.create(move_line_id)
+                    print(move)
+
+    def action_create_ccew(self):
+        unit_value_1 = ''
+        remaining_address_1 = ''
+        number_1 = ''
+        partner_shipping_id = self.sale_id.partner_shipping_id
+        address = partner_shipping_id.street
+        name = self.partner_id.name
+        print('aaaaaaaaaaaaaaaaaaaaaaa', self.partner_id.read())
+        if address:
+            words = address.split()
+            if "Unit" in words:
+                unit_index = words.index("Unit")
+                if unit_index + 1 < len(words):
+                    unit_value_1 = f"Unit {words[unit_index + 1]}"
+                    remaining_address_1 = ' '.join(words[unit_index + 2:])
+            elif any(char.isdigit() for char in address):
+                match = re.search(r'\d+', address)
+                if match:
+                    number_1 = match.group()
+                    remaining_address_1 = address.replace(number_1, "", 1).strip()
+            else:
+                remaining_address_1 = ' '.join(words)
+        print(unit_value_1,number_1,remaining_address_1)
+        if name:
+            words = [word.strip() for word in re.split(r'[\s\|]+', name) if word.strip()]
+            if len(words) > 1:
+                first_name = words[0]
+                last_name = words[-1]
+            else:
+                first_name = words[0]
+                last_name = ''
+            print('name...........:',first_name, '...........',last_name)
+
+        image_path = get_module_resource('beyond_worksheet','static/src/img/tick.png')
+        pdf_path = get_module_resource('beyond_worksheet','static/src/data/CCEW.pdf')
+        doc = fitz.open(pdf_path)
+        page = doc[0]
+
+        # Insert the any text
+        page.insert_text((440, 72), self.name, fontsize=10, color=(0, 0, 0))
+        page.insert_text((47, 180), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((47, 216), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((117, 216), unit_value_1, fontsize=10, color=(0, 0, 0))
+        page.insert_text((304, 216), number_1, fontsize=10, color=(0, 0, 0))
+        page.insert_text((436, 216), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((47,251), remaining_address_1, fontsize=10, color=(0, 0, 0))
+        page.insert_text((303,251), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((47,286), partner_shipping_id.city, fontsize=10, color=(0, 0, 0))
+        if partner_shipping_id.state_id:
+            page.insert_text((303,286), partner_shipping_id.state_id.code, fontsize=10, color=(0, 0, 0))
+        page.insert_text((475,286), partner_shipping_id.zip, fontsize=10, color=(0, 0, 0))
+        page.insert_text((47,323), '', fontsize=10, color=(0, 0, 0))
+        if self.task_id.x_studio_nmi:
+            page.insert_text((175,323), self.task_id.x_studio_nmi, fontsize=10, color=(0, 0, 0))
+        page.insert_text((276,323), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((392, 323), '', fontsize=10, color=(0, 0, 0))
+        if self.partner_id.id == partner_shipping_id.id:
+            rect = fitz.Rect(198, 343, 219, 359)
+            page.insert_image(rect, filename=image_path)
+        else:
+            address = self.partner_id.street
+            unit_value_1 = ''
+            remaining_address_1 = ''
+            number_1 = ''
+            if address:
+                words = address.split()
+                if "Unit" in words:
+                    unit_index = words.index("Unit")
+                    if unit_index + 1 < len(words):
+                        unit_value_1 = f"Unit {words[unit_index + 1]}"
+                        remaining_address_1 = ' '.join(words[unit_index + 2:])
+                elif any(char.isdigit() for char in address):
+                    match = re.search(r'\d+', address)
+                    if match:
+                        number_1 = match.group()
+                        remaining_address_1 = address.replace(number_1, "",
+                                                              1).strip()
+                else:
+                    remaining_address_1 = ' '.join(words)
+        page.insert_text((47, 390), first_name, fontsize=10, color=(0, 0, 0))
+        page.insert_text((301,390), last_name, fontsize=10, color=(0, 0, 0))
+        if self.partner_id.is_company:
+            page.insert_text((47,425), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((178,460), unit_value_1, fontsize=10, color=(0, 0, 0))
+        page.insert_text((301,460), number_1, fontsize=10, color=(0, 0, 0))
+        page.insert_text((47,495), remaining_address_1, fontsize=10, color=(0, 0, 0))
+        page.insert_text((301,495), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((47,530), self.partner_id.city, fontsize=10, color=(0, 0, 0))
+        if self.partner_id.state_id:
+            page.insert_text((301,530), self.partner_id.state_id.code, fontsize=10, color=(0, 0, 0))
+        page.insert_text((471,530), self.partner_id.zip, fontsize=10, color=(0, 0, 0))
+        page.insert_text((47,565), self.partner_id.email, fontsize=10, color=(0, 0, 0))
+        page.insert_text((375,565), '', fontsize=10, color=(0, 0, 0))
+        page.insert_text((471,565), self.partner_id.mobile if self.partner_id.mobile else self.partner_id.phone, fontsize=10, color=(0, 0, 0))
+        premises_types = {
+            'Residential': (110, 620, 130, 637),
+            'Commerical': (218, 620, 239, 637),
+            'Industrial': (311, 620, 333, 637)
+        }
+        premises_value = self.task_id.x_studio_3_type_of_premises
+        if premises_value in premises_types:
+            page.insert_image(premises_types[premises_value], filename=image_path)
+
+        pdf_stream = io.BytesIO()
+        doc.save(pdf_stream)
+        doc.close()
+        modified_pdf_content = base64.b64encode(pdf_stream.getvalue())
+        self.ccew_file = modified_pdf_content
