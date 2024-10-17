@@ -65,24 +65,24 @@ class WorkSheet(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('task.worksheet') or _('New')
         return super().create(vals_list)
 
-    def write(self, vals):
-        res = super().write(vals)
-        operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-        if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
-            operation_team = self.env['hr.employee'].search(
-                [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-            for member in operation_team:
-                self.sudo().activity_schedule(
-                    'mail.mail_activity_data_todo', fields.Datetime.now(),
-                    "Need To Generate CES", user_id=member.id)
-            self.is_ces_activity_created = True if operation_team else False
-        if self.ccew_file and not self.ccew_sequence:
-            seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
-            license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
-                self.task_id.x_studio_proposed_team.name) + '-'
-            self.ccew_sequence = seq.replace('--', license)
-
-        return res
+    # def write(self, vals):
+    #     res = super().write(vals)
+    #     operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+    #     if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
+    #         operation_team = self.env['hr.employee'].search(
+    #             [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+    #         for member in operation_team:
+    #             self.sudo().activity_schedule(
+    #                 'mail.mail_activity_data_todo', fields.Datetime.now(),
+    #                 "Need To Generate CES", user_id=member.id)
+    #         self.is_ces_activity_created = True if operation_team else False
+    #     if self.ccew_file and not self.ccew_sequence:
+    #         seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
+    #         license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
+    #             self.task_id.x_studio_proposed_team.name) + '-'
+    #         self.ccew_sequence = seq.replace('--', license)
+    #
+    #     return res
 
     @api.depends('sale_id')
     def _compute_order_count(self):
@@ -111,12 +111,12 @@ class WorkSheet(models.Model):
             rec.checklist_count = 0
             order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
             if rec.x_studio_type_of_service == 'New Installation':
-                checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+                checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
                 rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.checklist_item_ids):
                     rec.is_checklist = True
             if rec.x_studio_type_of_service == 'Service':
-                checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+                checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
                 rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.service_item_ids):
                     rec.is_checklist = True

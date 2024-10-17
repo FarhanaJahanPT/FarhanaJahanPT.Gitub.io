@@ -14,7 +14,7 @@
                 <field name="name"/>
                 <field name="type"/>
                 <field name="selfie_type" invisible="type != 'img'"/>
-                <field name="min_qty" invisible="type != 'img'"/>
+                <field name="min_qty" readonly="type != 'img'"/>
                 <field name="compulsory"/>
                 <field name="category_ids" widget="many2many_tags"/>
             </tree>
@@ -32,7 +32,7 @@
                             <field name="name"/>
                             <field name="type"/>
                             <field name="selfie_type" invisible="type != 'img'"/>
-                            <field name="min_qty" invisible="type != 'img'"/>
+                            <field name="min_qty" readonly="type != 'img'"/>
                             <field name="compulsory"/>
                             <field name="category_ids" widget="many2many_tags"/>
                         </group>
