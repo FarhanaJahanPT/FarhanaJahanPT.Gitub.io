@@ -24,6 +24,7 @@
         'views/res_users_view.xml',
         'views/worksheet_weekly_mail.xml',
         'views/worksheet_attendance_view.xml',
+        'views/product_template_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
