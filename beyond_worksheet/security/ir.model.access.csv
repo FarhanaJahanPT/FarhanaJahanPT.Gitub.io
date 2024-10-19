@@ -5,3 +5,4 @@ access_installation_checklist_item,access.installation.checklist.item,model_inst
 access_service_checklist_item,access.service.checklist.item,model_service_checklist_item,base.group_user,1,1,1,1
 access_task_worksheet,access.task.worksheet,model_task_worksheet,base.group_user,1,1,1,1
 access_worksheet_attendance,access.worksheet.attendance,model_worksheet_attendance,base.group_user,1,1,1,1
+access_worksheet_history,access.worksheet.history,model_worksheet_history,base.group_user,1,1,1,1
