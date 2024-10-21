@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Beyond Worksheet',
     'category': 'Project',
@@ -11,7 +12,6 @@
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'data/ir_sequence_data.xml',
-        'data/service_product_data.xml',
         'data/hr_department_data.xml',
         'views/project_task_view.xml',
         'views/stock_lot_view.xml',
@@ -26,6 +26,8 @@
         'views/res_users_view.xml',
         'views/worksheet_weekly_mail.xml',
         'views/worksheet_attendance_view.xml',
+        'views/product_template_views.xml',
+        'views/worksheet_history_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
+import base64
+import re
+import fitz
+import io
 from datetime import datetime, timedelta
 
+<<<<<<< HEAD
 from odoo import api, fields, models, _
 
 from odoo import models, fields
@@ -14,6 +19,10 @@ try:
 except ImportError:
     base64 = None
 from io import BytesIO
+=======
+from odoo import api, fields, models,_
+from odoo.modules.module import get_module_resource
+>>>>>>> e18c0250bc4efcfc8267ec51769d1ec0c86bf346
 
 
 class WorkSheet(models.Model):
@@ -21,50 +30,55 @@ class WorkSheet(models.Model):
     _description = "Worksheet"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    partner_id = fields.Many2one(string='Customer', related='task_id.partner_id')
+    partner_id = fields.Many2one(string='Customer', related='task_id.partner_id', tracking=True)
     name = fields.Char("Name", default=lambda self: _('New'))
-    task_id = fields.Many2one('project.task', string='Task')
-    sale_id = fields.Many2one('sale.order', string='Sale Order', related="task_id.sale_order_id")
+    task_id = fields.Many2one('project.task', string='Task', tracking=True)
+    sale_id = fields.Many2one('sale.order', string='Sale Order', related="task_id.sale_order_id", tracking=True)
 
     panel_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
-                                    string='Panel Serial Number', domain=[('type', '=', 'panel')], readonly=True)
+                                    string='Panel Serial Number', domain=[('type', '=', 'panel')], readonly=True, tracking=True)
 
     inverter_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                        string='Inverter Serial Number', domain=[('type', '=', 'inverter')],
-                                       readonly=True)
+                                       readonly=True, tracking=True)
     battery_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
-                                      string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
+                                      string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True, tracking=True)
 
+<<<<<<< HEAD
     attendance_qr_ids = fields.One2many('attendance.qr','worksheet_id')
 
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
+=======
+    panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0, tracking=True)
+    inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0, tracking=True)
+    battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0, tracking=True)
+>>>>>>> e18c0250bc4efcfc8267ec51769d1ec0c86bf346
 
     checklist_item_ids = fields.One2many('installation.checklist.item', 'worksheet_id',
-                                         domain=[('checklist_id.selfie_type', '=', 'null')])
+                                         domain=[('checklist_id.selfie_type', '=', 'null')], tracking=True)
     service_item_ids = fields.One2many('service.checklist.item', 'worksheet_id',
-                                       domain=[('service_id.selfie_type', '=', 'null')])
-    is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True)
-    checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True)
-    is_individual = fields.Boolean(string='Individual')
-    assigned_users = fields.Many2many('res.users', string='Assigned Users')
-    witness_signature = fields.Char(string="Witness Signature", copy=False)
-    witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
+                                       domain=[('service_id.selfie_type', '=', 'null')], tracking=True)
+    is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True, tracking=True)
+    checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True, tracking=True)
+    is_individual = fields.Boolean(string='Individual', tracking=True)
+    assigned_users = fields.Many2many('res.users', string='Assigned Users', tracking=True)
+    witness_signature = fields.Char(string="Witness Signature", copy=False, tracking=True)
+    witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False, tracking=True)
     x_studio_type_of_service = fields.Selection(string='Type of Service',
-                                                related='sale_id.x_studio_type_of_service', readonly=True)
-    worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance')
-    invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
-    is_testing_required = fields.Boolean("Testing needed")
-    is_ces_activity_created = fields.Boolean("CES Activity created")
-
-    is_ccew = fields.Boolean('Is CCEW', compute='_compute_is_ccew')
-    ccew_sequence = fields.Char('Sequence')
+                                                related='sale_id.x_studio_type_of_service', readonly=True, tracking=True)
+    worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance', tracking=True)
+    invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count', tracking=True)
+    is_testing_required = fields.Boolean("Testing needed", tracking=True)
+    is_ces_activity_created = fields.Boolean("CES Activity created", tracking=True)
+    is_ccew = fields.Boolean('Is CCEW', compute='_compute_is_ccew', tracking=True)
+    ccew_sequence = fields.Char('Sequence', tracking=True)
     ccew_file = fields.Binary(string='CCEW', related='task_id.x_studio_ccew', store=True)
-
     electrical_license_number = fields.Char(
-        related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number')
-    is_site_induction = fields.Boolean(string='Site Induction')
+        related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number', tracking=True)
+    is_site_induction = fields.Boolean(string='Site Induction', tracking=True)
+    worksheet_history_ids = fields.One2many('worksheet.history','worksheet_id')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -74,30 +88,39 @@ class WorkSheet(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('task.worksheet') or _('New')
         return super().create(vals_list)
 
-    def write(self, vals):
-        res = super().write(vals)
-        operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-        if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
-            operation_team = self.env['hr.employee'].search(
-                [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-            for member in operation_team:
-                self.sudo().activity_schedule(
-                    'mail.mail_activity_data_todo', fields.Datetime.now(),
-                    "Need To Generate CES", user_id=member.id)
-            self.is_ces_activity_created = True if operation_team else False
-        if self.ccew_file and not self.ccew_sequence:
-            seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
-            license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
-                self.task_id.x_studio_proposed_team.name) + '-'
-            self.ccew_sequence = seq.replace('--', license)
+    # def write(self, vals):
+    #     res = super().write(vals)
+    #     print(vals,'aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    #     operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+    #     if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
+    #         operation_team = self.env['hr.employee'].search(
+    #             [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+    #         for member in operation_team:
+    #             self.sudo().activity_schedule(
+    #                 'mail.mail_activity_data_todo', fields.Datetime.now(),
+    #                 "Need To Generate CES", user_id=member.id)
+    #         self.is_ces_activity_created = True if operation_team else False
+    #     if self.ccew_file and not self.ccew_sequence:
+    #         seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
+    #         license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
+    #             self.task_id.x_studio_proposed_team.name) + '-'
+    #         self.ccew_sequence = seq.replace('--', license)
+        # self.env['mail.message'].sudo().create([{
+        #     'author_id': self.env.user.partner_id.id,
+        #     'subtype_id': self.env.ref('mail.mt_comment').id,
+        #     'model': 'task.worksheet',
+        #     'res_id': self.id,
+        #     'date': datetime.now(),
+        #     'reply_to': False,
+        #     'body': 'aaaaaaaaaaaaaaaaaaa',
+        # }])
 
         return res
 
     @api.depends('sale_id')
     def _compute_order_count(self):
         for rec in self:
-            order_line = rec.sale_id.order_line.filtered(
-                lambda sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters')[:1]
+            order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters')[:1]
             rec.inverter_count = sum(order_line.mapped('product_uom_qty'))
             order_line = rec.sale_id.order_line.filtered(
                 lambda sol: sol.product_id.categ_id.name == 'Solar Panels')[:1]
@@ -113,19 +136,19 @@ class WorkSheet(models.Model):
             else:
                 rec.is_ccew = False
 
-    @api.depends('checklist_item_ids', 'service_item_ids', 'is_individual')
+    @api.depends('checklist_item_ids', 'service_item_ids')
     def _compute_is_checklist(self):
         for rec in self:
             rec.is_checklist = False
             rec.checklist_count = 0
             order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
             if rec.x_studio_type_of_service == 'New Installation':
-                checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+                checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
                 rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.checklist_item_ids):
                     rec.is_checklist = True
             if rec.x_studio_type_of_service == 'Service':
-                checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line), ('selfie_type', '=', 'null')]).mapped('min_qty')
+                checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
                 rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.service_item_ids):
                     rec.is_checklist = True
@@ -249,3 +272,189 @@ class WorkSheet(models.Model):
                                     'state': 'assigned',
                                     }
                     move = move_line_ids.create(move_line_id)
+                    print(move)
+
+    def action_create_ccew(self):
+        partner_shipping_id = self.sale_id.partner_shipping_id
+        if partner_shipping_id.state_id.code == 'NSW':
+            address = partner_shipping_id.street
+            name = self.partner_id.name
+            unit_value_1 = ''
+            remaining_address_1 = ''
+            number_1 = ''
+            if address:
+                words = address.split()
+                if "Unit" in words:
+                    unit_index = words.index("Unit")
+                    if unit_index + 1 < len(words):
+                        unit_value_1 = f"Unit {words[unit_index + 1]}"
+                        remaining_address_1 = ' '.join(words[unit_index + 2:])
+                elif any(char.isdigit() for char in address):
+                    match = re.search(r'\d+', address)
+                    if match:
+                        number_1 = match.group()
+                        remaining_address_1 = address.replace(number_1, "", 1).strip()
+                else:
+                    remaining_address_1 = ' '.join(words)
+            if name:
+                words = [word.strip() for word in re.split(r'[\s\|]+', name) if word.strip()]
+                if len(words) > 1:
+                    first_name = words[0]
+                    last_name = words[-1]
+                else:
+                    first_name = words[0]
+                    last_name = ''
+            image_path = get_module_resource('beyond_worksheet','static/src/img/tick.png')
+            pdf_path = get_module_resource('beyond_worksheet','static/src/data/CCEW.pdf')
+            doc = fitz.open(pdf_path)
+            page = doc[0]
+            # Insert the any text
+            page.insert_text((440, 72), self.name, fontsize=10, color=(0, 0, 0))
+            page.insert_text((47, 180), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((47, 216), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((117, 216), unit_value_1, fontsize=10, color=(0, 0, 0))
+            page.insert_text((304, 216), number_1, fontsize=10, color=(0, 0, 0))
+            page.insert_text((436, 216), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((47,251), remaining_address_1, fontsize=10, color=(0, 0, 0))
+            page.insert_text((303,251), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((47,286), partner_shipping_id.city, fontsize=10, color=(0, 0, 0))
+            if partner_shipping_id.state_id:
+                page.insert_text((303,286), partner_shipping_id.state_id.code, fontsize=10, color=(0, 0, 0))
+            page.insert_text((475,286), partner_shipping_id.zip, fontsize=10, color=(0, 0, 0))
+            page.insert_text((47,323), '', fontsize=10, color=(0, 0, 0))
+            if self.task_id.x_studio_nmi:
+                page.insert_text((175,323), self.task_id.x_studio_nmi, fontsize=10, color=(0, 0, 0))
+            page.insert_text((276,323), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((392, 323), '', fontsize=10, color=(0, 0, 0))
+            if self.partner_id.id == partner_shipping_id.id:
+                rect = fitz.Rect(198, 343, 219, 359)
+                page.insert_image(rect, filename=image_path)
+            else:
+                address = self.partner_id.street
+                unit_value_1 = ''
+                remaining_address_1 = ''
+                number_1 = ''
+                if address:
+                    words = address.split()
+                    if "Unit" in words:
+                        unit_index = words.index("Unit")
+                        if unit_index + 1 < len(words):
+                            unit_value_1 = f"Unit {words[unit_index + 1]}"
+                            remaining_address_1 = ' '.join(words[unit_index + 2:])
+                    elif any(char.isdigit() for char in address):
+                        match = re.search(r'\d+', address)
+                        if match:
+                            number_1 = match.group()
+                            remaining_address_1 = address.replace(number_1, "",1).strip()
+                    else:
+                        remaining_address_1 = ' '.join(words)
+            page.insert_text((47, 390), first_name, fontsize=10, color=(0, 0, 0))
+            page.insert_text((301,390), last_name, fontsize=10, color=(0, 0, 0))
+            if self.partner_id.is_company:
+                page.insert_text((47,425), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((178,460), unit_value_1, fontsize=10, color=(0, 0, 0))
+            page.insert_text((301,460), number_1, fontsize=10, color=(0, 0, 0))
+            page.insert_text((47,495), remaining_address_1, fontsize=10, color=(0, 0, 0))
+            page.insert_text((301,495), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((47,530), self.partner_id.city, fontsize=10, color=(0, 0, 0))
+            if self.partner_id.state_id:
+                page.insert_text((301,530), self.partner_id.state_id.code, fontsize=10, color=(0, 0, 0))
+            page.insert_text((471,530), self.partner_id.zip, fontsize=10, color=(0, 0, 0))
+            page.insert_text((47,565), self.partner_id.email, fontsize=10, color=(0, 0, 0))
+            page.insert_text((375,565), '', fontsize=10, color=(0, 0, 0))
+            page.insert_text((471,565), self.partner_id.mobile if self.partner_id.mobile else self.partner_id.phone, fontsize=10, color=(0, 0, 0))
+            premises_types = {
+                'Residential': (110, 620, 130, 637),
+                'Commerical': (218, 620, 239, 637),
+                'Industrial': (311, 620, 333, 637)
+            }
+            premises_value = self.task_id.x_studio_3_type_of_premises
+            if premises_value in premises_types:
+                page.insert_image(premises_types[premises_value], filename=image_path)
+            page.insert_image((199,658,219,674), filename=image_path)
+            inverter = self.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters' and sol.product_id.is_testing_required == True)[:1]
+            panel = self.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Solar Panels' and sol.product_id.is_testing_required == True)[:1]
+            battery = self.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Storage' and sol.product_id.is_testing_required == True)[:1]
+            page = doc[1]
+            if panel:
+                page.insert_image((43, 109, 63, 127.53), filename=image_path)
+                page.insert_text((249, 124), str(panel.product_uom_qty),fontsize=10, color=(0, 0, 0))
+                page.insert_text((366, 124), panel.product_id.name, fontsize=8,color=(0, 0, 0))
+            if inverter:
+                page.insert_text((249, 144), str(inverter.product_uom_qty),fontsize=10, color=(0, 0, 0))
+                page.insert_text((366, 144), inverter.product_id.name,fontsize=8, color=(0, 0, 0))
+            if battery:
+                page.insert_text((249, 163), str(battery.product_uom_qty),fontsize=10, color=(0, 0, 0))
+                page.insert_text((366, 163), battery.product_id.name,fontsize=8, color=(0, 0, 0))
+            page.insert_image((412,486,431,503), filename=image_path)
+            page.insert_image((412,508,431,523), filename=image_path)
+            if self.task_id.x_studio_proposed_team:
+                partner_id = self.task_id.x_studio_proposed_team.partner_id
+                address = partner_id.street
+                name = partner_id.name
+                if address:
+                    words = address.split()
+                    if "Unit" in words:
+                        unit_index = words.index("Unit")
+                        if unit_index + 1 < len(words):
+                            unit_value_1 = f"Unit {words[unit_index + 1]}"
+                            remaining_address_1 = ' '.join(words[unit_index + 2:])
+                    elif any(char.isdigit() for char in address):
+                        match = re.search(r'\d+', address)
+                        if match:
+                            number_1 = match.group()
+                            remaining_address_1 = address.replace(number_1, "",1).strip()
+                    else:
+                        remaining_address_1 = ' '.join(words)
+                if name:
+                    words = [word.strip() for word in re.split(r'[\s\|]+', name) if
+                             word.strip()]
+                    if len(words) > 1:
+                        first_name = words[0]
+                        last_name = words[-1]
+                    else:
+                        first_name = words[0]
+                        last_name = ''
+                page.insert_text((47,580), first_name, fontsize=10,color=(0, 0, 0))
+                page.insert_text((300,580), last_name, fontsize=10,color=(0, 0, 0))
+                page.insert_text((177,610), unit_value_1, fontsize=10,color=(0, 0, 0))
+                page.insert_text((300,610), number_1, fontsize=10,color=(0, 0, 0))
+                page.insert_text((47,639), remaining_address_1, fontsize=10,color=(0, 0, 0))
+                page.insert_text((47,668), partner_id.city, fontsize=10,color=(0, 0, 0))
+                page.insert_text((300,668), partner_id.state_id.code, fontsize=10,color=(0, 0, 0))
+                page.insert_text((470,668), partner_id.zip, fontsize=10,color=(0, 0, 0))
+                page.insert_text((47,697), partner_id.email, fontsize=10,color=(0, 0, 0))
+                page.insert_text((470,697), partner_id.mobile if partner_id.mobile else partner_id.phone, fontsize=10,color=(0, 0, 0))
+                page.insert_text((309,727), self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_number, fontsize=10,color=(0, 0, 0))
+                page.insert_text((451,727), str(self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_expiry_date), fontsize=10,color=(0, 0, 0))
+            page = doc[2]
+            page.insert_image((64,88,81,101), filename=image_path)
+            # page.insert_image((64,105,81,118), filename=image_path)
+            page.insert_image((64,122,81,136), filename=image_path)
+            page.insert_image((64,139,81,153), filename=image_path)
+            page.insert_image((64,156,81,169), filename=image_path)
+            # page.insert_image((63,173,81,186), filename=image_path)
+            page.insert_image((64,189,81,203), filename=image_path)
+            # page.insert_image((63,207,81,220), filename=image_path)
+            if self.task_id.date_deadline:
+                date_deadline = fields.Date.to_date(self.task_id.date_deadline)
+                page.insert_text((219,262), str(date_deadline), fontsize=10,color=(0, 0, 0))
+            if self.is_testing_required and self.task_id.x_studio_proposed_team:
+                page.insert_image((237,281,252,292), filename=image_path)
+                page.insert_text((47, 322), first_name, fontsize=10,color=(0, 0, 0))
+                page.insert_text((298, 322), last_name, fontsize=10,color=(0, 0, 0))
+                page.insert_text((176, 351), unit_value_1, fontsize=10,color=(0, 0, 0))
+                page.insert_text((298, 351), number_1, fontsize=10, color=(0, 0, 0))
+                page.insert_text((47, 380), remaining_address_1, fontsize=10,color=(0, 0, 0))
+                page.insert_text((47, 410), partner_id.city, fontsize=10,color=(0, 0, 0))
+                page.insert_text((298, 410), partner_id.state_id.code, fontsize=10,color=(0, 0, 0))
+                page.insert_text((469, 410), partner_id.zip, fontsize=10,color=(0, 0, 0))
+                page.insert_text((47, 438), partner_id.email, fontsize=10,color=(0, 0, 0))
+                page.insert_text((469, 438),partner_id.mobile if partner_id.mobile else partner_id.phone,fontsize=10, color=(0, 0, 0))
+                page.insert_text((309, 468),self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_number,fontsize=10, color=(0, 0, 0))
+                page.insert_text((452, 467),str(self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_expiry_date),fontsize=10, color=(0, 0, 0))
+            pdf_stream = io.BytesIO()
+            doc.save(pdf_stream)
+            doc.close()
+            modified_pdf_content = base64.b64encode(pdf_stream.getvalue())
+            self.ccew_file = modified_pdf_content

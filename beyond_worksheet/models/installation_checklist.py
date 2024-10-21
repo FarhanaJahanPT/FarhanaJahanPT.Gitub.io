@@ -19,7 +19,7 @@ class InstallationChecklist(models.Model):
         for rec in worksheet_ids:
             rec.checklist_count = 0
             order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
-            checklist_ids = self.search([('category_ids', 'in', order_line),('selfie_type', '=', 'null')]).mapped('min_qty')
+            checklist_ids = self.search([('category_ids', 'in', order_line)]).mapped('min_qty')
             rec.checklist_count = sum(checklist_ids)
 
     def write(self, vals):
