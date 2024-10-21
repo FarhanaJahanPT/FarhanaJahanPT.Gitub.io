@@ -12,7 +12,17 @@ class StockLot(models.Model):
     type = fields.Selection([('panel', 'Panel'), ('inverter', 'Inverter'),('battery', 'Battery'),
                              ],string='Type')
     verification_time = fields.Datetime(string='Verification Time')
-    # task_id = fields.Many2one('project.task')
     worksheet_id = fields.Many2one('task.worksheet')
     user_id = fields.Many2one('res.users', string='User')
     location = fields.Text(string='Location')
+
+    def write(self, vals):
+        res = super(StockLot, self).write(vals)
+        if self.worksheet_id and self.type:
+            self.env['worksheet.history'].create({
+                'worksheet_id': self.worksheet_id.id,
+                'user_id': self.user_id.id,
+                'changes': 'Updated Serial Number',
+                'details': '{} Serial Number ({}) has been updated successfully.'.format(self.type,self.name),
+            })
+        return res

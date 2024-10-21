@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
-import base64
 import re
 import fitz
 import io
 from datetime import datetime, timedelta
-
-<<<<<<< HEAD
-from odoo import api, fields, models, _
-
-from odoo import models, fields
-
 try:
     import qrcode
 except ImportError:
@@ -18,11 +11,8 @@ try:
     import base64
 except ImportError:
     base64 = None
-from io import BytesIO
-=======
 from odoo import api, fields, models,_
 from odoo.modules.module import get_module_resource
->>>>>>> e18c0250bc4efcfc8267ec51769d1ec0c86bf346
 
 
 class WorkSheet(models.Model):
@@ -36,30 +26,23 @@ class WorkSheet(models.Model):
     sale_id = fields.Many2one('sale.order', string='Sale Order', related="task_id.sale_order_id", tracking=True)
 
     panel_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
-                                    string='Panel Serial Number', domain=[('type', '=', 'panel')], readonly=True, tracking=True)
+                                    string='Panel Serial Number', domain=[('type', '=', 'panel')], readonly=True)
 
     inverter_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                        string='Inverter Serial Number', domain=[('type', '=', 'inverter')],
-                                       readonly=True, tracking=True)
+                                       readonly=True)
     battery_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
-                                      string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True, tracking=True)
+                                      string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
 
-<<<<<<< HEAD
     attendance_qr_ids = fields.One2many('attendance.qr','worksheet_id')
-
-    panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
-    inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
-    battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
-=======
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0, tracking=True)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0, tracking=True)
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0, tracking=True)
->>>>>>> e18c0250bc4efcfc8267ec51769d1ec0c86bf346
 
     checklist_item_ids = fields.One2many('installation.checklist.item', 'worksheet_id',
-                                         domain=[('checklist_id.selfie_type', '=', 'null')], tracking=True)
+                                         domain=[('checklist_id.selfie_type', '=', 'null')])
     service_item_ids = fields.One2many('service.checklist.item', 'worksheet_id',
-                                       domain=[('service_id.selfie_type', '=', 'null')], tracking=True)
+                                       domain=[('service_id.selfie_type', '=', 'null')])
     is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True, tracking=True)
     checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True, tracking=True)
     is_individual = fields.Boolean(string='Individual', tracking=True)
@@ -68,7 +51,7 @@ class WorkSheet(models.Model):
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False, tracking=True)
     x_studio_type_of_service = fields.Selection(string='Type of Service',
                                                 related='sale_id.x_studio_type_of_service', readonly=True, tracking=True)
-    worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance', tracking=True)
+    worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance')
     invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count', tracking=True)
     is_testing_required = fields.Boolean("Testing needed", tracking=True)
     is_ces_activity_created = fields.Boolean("CES Activity created", tracking=True)
@@ -78,7 +61,7 @@ class WorkSheet(models.Model):
     electrical_license_number = fields.Char(
         related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number', tracking=True)
     is_site_induction = fields.Boolean(string='Site Induction', tracking=True)
-    worksheet_history_ids = fields.One2many('worksheet.history','worksheet_id')
+    worksheet_history_ids = fields.One2many('worksheet.history','worksheet_id', readonly=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -86,7 +69,8 @@ class WorkSheet(models.Model):
         for vals in vals_list:
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('task.worksheet') or _('New')
-        return super().create(vals_list)
+        res = super(WorkSheet, self).create(vals_list)
+        return res
 
     # def write(self, vals):
     #     res = super().write(vals)
@@ -114,8 +98,7 @@ class WorkSheet(models.Model):
         #     'reply_to': False,
         #     'body': 'aaaaaaaaaaaaaaaaaaa',
         # }])
-
-        return res
+        # return res
 
     @api.depends('sale_id')
     def _compute_order_count(self):

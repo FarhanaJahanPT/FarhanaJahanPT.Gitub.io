@@ -21,3 +21,14 @@ class ServiceChecklistItem(models.Model):
                 raise ValidationError("Image fields is required")
             if record.service_id.type == 'text' and not record.text and record.service_id.compulsory == True:
                 raise ValidationError("Text fields is required")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(ServiceChecklistItem, self).create(vals_list)
+        self.env['worksheet.history'].create({
+            'worksheet_id': res.worksheet_id.id,
+            'user_id': res.user_id.id,
+            'changes': 'Updated Checklist',
+            'details': 'Service checklist ({}) has been updated successfully.'.format(res.service_id.name),
+        })
+        return res

@@ -63,7 +63,7 @@
                         <page string="Panel Serial Numbers" name="panels" invisible="panel_count == 0">
                             <field name="panel_lot_ids">
                                 <tree string="Panel Serial Numbers">
-                                    <field name="image"/>
+                                    <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
@@ -75,7 +75,7 @@
                         <page string="Inverter Serial Numbers" invisible="inverter_count == 0">
                             <field name="inverter_lot_ids" invisible="inverter_count == 0">
                                 <tree string="Inverter Serial Numbers">
-                                    <field name="image"/>
+                                    <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
@@ -86,7 +86,7 @@
                         <page string="Battery Serial Numbers" invisible="battery_count == 0">
                             <field name="battery_lot_ids" invisible="battery_count == 0">
                                 <tree string="Battery Serial Numbers">
-                                    <field name="image"/>
+                                    <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
@@ -119,20 +119,30 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="CCEW" name="ccew" invisible="not is_ccew">
-                            <group>
-                                <group>
-                                    <field name="ccew_sequence"/>
-                                    <field name="ccew_file" widget="pdf_viewer" readonly="0"/>
-                                </group>
-                            </group>
-                        </page>
                         <page string="Installation Checklist"
                               invisible="x_studio_type_of_service != 'New Installation'">
                             <widget name="checklist_widget"/>
                         </page>
                         <page string="Service Checklist" invisible="x_studio_type_of_service != 'Service'">
                             <widget name="checklist_widget"/>
+                        </page>
+                        <page string="CCEW" name="ccew" invisible="not is_ccew">
+                            <group>
+                                <group>
+                                    <field name="ccew_sequence"/>
+                                    <field name="ccew_file" widget="pdf_viewer" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="History" name="history">
+                             <field name="worksheet_history_ids">
+                                <tree string="History">
+                                    <field name="changes"/>
+                                    <field name="create_date"/>
+                                    <field name="user_id"/>
+                                    <field name="details"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>

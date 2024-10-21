@@ -21,3 +21,14 @@ class InstallationChecklistItem(models.Model):
                 raise ValidationError("Image fields is required")
             if record.checklist_id.type == 'text' and not record.text and record.checklist_id.compulsory == True:
                 raise ValidationError("Text fields is required")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(InstallationChecklistItem, self).create(vals_list)
+        self.env['worksheet.history'].create({
+            'worksheet_id': res.worksheet_id.id,
+            'user_id': res.user_id.id,
+            'changes': 'Updated Checklist',
+            'details': 'Installation checklist ({}) has been updated successfully.'.format(res.checklist_id.name),
+        })
+        return res
