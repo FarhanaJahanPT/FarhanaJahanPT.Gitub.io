@@ -1,7 +1,19 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
+
+from odoo import models, fields
+
+try:
+    import qrcode
+except ImportError:
+    qrcode = None
+try:
+    import base64
+except ImportError:
+    base64 = None
+from io import BytesIO
 
 
 class WorkSheet(models.Model):
@@ -22,6 +34,8 @@ class WorkSheet(models.Model):
                                        readonly=True)
     battery_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                       string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
+
+    attendance_qr_ids = fields.One2many('attendance.qr','worksheet_id')
 
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)

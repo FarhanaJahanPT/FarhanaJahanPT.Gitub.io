@@ -119,6 +119,19 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Attendance QR" name="attendance_qr">
+                            <field name="attendance_qr_ids">
+                                <tree editable="inline">
+                                    <field name="user_id"/>
+                                    <field name="worksheet_id" column_invisible="1"/>
+                                    <field name="qr_code" widget="image" class="oe_avatar"/>
+<!--                                    <button type="object" string="Generate QR" name="action_generate_qr_code" class="btn btn-primary"/>-->
+                                    <!--                                    <field name="verification_time"/>-->
+                                    <!--                                    <field name="state"/>-->
+                                    <!--                                    <field name="company_id" invisible="1"/>-->
+                                </tree>
+                            </field>
+                        </page>
                         <page string="CCEW" name="ccew" invisible="not is_ccew">
                             <group>
                                 <group>

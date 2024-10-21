@@ -20,6 +20,7 @@
         'views/installation_checklist_item_view.xml',
         'views/mail_message_view.xml',
         'views/owner_signature_templates.xml',
+        'views/worksheet_members_templates.xml',
         'views/service_checklist_view.xml',
         'views/service_checklist_item_view.xml',
         'views/res_users_view.xml',

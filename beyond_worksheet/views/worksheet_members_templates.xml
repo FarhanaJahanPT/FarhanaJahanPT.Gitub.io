@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="worksheet_members_template">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+            <div style="height: 80vh;display: flex;flex-direction: column;align-items: center;justify-content: center;">
+                <div class="text-center">
+                    <t t-esc="user"/>
+                    <a role="button" class="btn btn-primary text-white text-nowrap"
+                       style="background-color: #00d299; border-color: #00d299;"
+                       t-attf-href="/worksheet/members/checkin/{{user}}/{{worksheet}}">
+                        Check-in
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

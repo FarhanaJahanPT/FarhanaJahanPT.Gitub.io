@@ -9,3 +9,4 @@ from . import service_checklist_item
 from . import res_users
 from . import task_worksheet
 from . import worksheet_attendance
+from . import attendance_qr
