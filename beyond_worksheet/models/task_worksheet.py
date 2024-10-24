@@ -474,7 +474,14 @@ class WorkSheet(models.Model):
                 self.env['worksheet.history'].create({
                     'worksheet_id': self.id,
                     'user_id': self.env.user.id,
-                    'changes': 'Update Documents',
-                    'details': ' CCEW Documents has been updated successfully.',
+                    'changes': 'Create CCEW Documents',
+                    'details': ' CCEW Documents has been successfully created.',
+                })
+            else:
+                self.env['worksheet.history'].create({
+                    'worksheet_id': self.id,
+                    'user_id': self.env.user.id,
+                    'changes': 'Updated CCEW Documents',
+                    'details': ' CCEW Documents has been successfully Updated.',
                 })
             self.task_id.x_studio_ccew = modified_pdf_content
