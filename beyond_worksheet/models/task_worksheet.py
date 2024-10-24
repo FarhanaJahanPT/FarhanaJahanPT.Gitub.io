@@ -36,7 +36,6 @@ class WorkSheet(models.Model):
 
     attendance_qr_ids = fields.One2many('attendance.qr', 'worksheet_id')
 
-
     member_question_ids = fields.One2many('worksheet.member.question','worksheet_id')
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
@@ -49,7 +48,7 @@ class WorkSheet(models.Model):
     is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True)
     checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True)
     is_individual = fields.Boolean(string='Individual')
-    assigned_users = fields.Many2many('res.users', string='Assigned Users')
+    assigned_users = fields.Many2many('res.users', string='Assigned Users', related='task_id.assigned_users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
     x_studio_type_of_service = fields.Selection(string='Type of Service',
@@ -73,44 +72,68 @@ class WorkSheet(models.Model):
         for vals in vals_list:
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('task.worksheet') or _('New')
-        return super().create(vals_list)
+        res = super(WorkSheet, self).create(vals_list)
+        self.env['worksheet.history'].create({
+            'worksheet_id': res.id,
+            'user_id': self.env.user.id,
+            'changes': 'Create',
+            'details': ' Worksheet ({}) has been create successfully.'.format(res.name),
+        })
+        if res.task_id.x_studio_proposed_team:
+            self.env['worksheet.history'].create({
+                'worksheet_id': res.id,
+                'user_id': self.env.user.id,
+                'changes': 'Assigned Team Leader',
+                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(res.task_id.x_studio_proposed_team.name),
+            })
+        if res.task_id.assigned_users:
+            for user in res.task_id.assigned_users:
+                self.env['worksheet.history'].create({
+                    'worksheet_id': res.id,
+                    'user_id': self.env.user.id,
+                    'changes': 'Assigned Team Member',
+                    'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(user.name),
+                })
+        return res
 
-    # def write(self, vals):
-    #     res = super().write(vals)
-    #     print(vals,'aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-    #     operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-    #     if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
-    #         operation_team = self.env['hr.employee'].search(
-    #             [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-    #         for member in operation_team:
-    #             self.sudo().activity_schedule(
-    #                 'mail.mail_activity_data_todo', fields.Datetime.now(),
-    #                 "Need To Generate CES", user_id=member.id)
-    #         self.is_ces_activity_created = True if operation_team else False
-    #     if self.ccew_file and not self.ccew_sequence:
-    #         seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
-    #         license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
-    #             self.task_id.x_studio_proposed_team.name) + '-'
-    #         self.ccew_sequence = seq.replace('--', license)
-        # self.env['mail.message'].sudo().create([{
-        #     'author_id': self.env.user.partner_id.id,
-        #     'subtype_id': self.env.ref('mail.mt_comment').id,
-        #     'model': 'task.worksheet',
-        #     'res_id': self.id,
-        #     'date': datetime.now(),
-        #     'reply_to': False,
-        #     'body': 'aaaaaaaaaaaaaaaaaaa',
-        # }])
-
-        # return res
+    def write(self, vals):
+        res = super().write(vals)
+        operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+        if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
+            operation_team = self.env['hr.employee'].search(
+                [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
+            for member in operation_team:
+                self.sudo().activity_schedule(
+                    'mail.mail_activity_data_todo', fields.Datetime.now(),
+                    "Need To Generate CES", user_id=member.id)
+            self.is_ces_activity_created = True if operation_team else False
+        if self.ccew_file and not self.ccew_sequence:
+            seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
+            license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
+                self.task_id.x_studio_proposed_team.name) + '-'
+            self.ccew_sequence = seq.replace('--', license)
+            self.env['worksheet.history'].create({
+                'worksheet_id': self.id,
+                'user_id': self.env.user.id,
+                'changes': 'Update',
+                'details': ' CCEW sequence ({}) has been updated successfully.'.format(self.ccew_sequence),
+            })
+        for val in vals:
+            key = val
+            values = vals.get(val)
+            if isinstance(values,bool):
+                self.env['worksheet.history'].create({
+                    'worksheet_id': self.id,
+                    'user_id': self.env.user.id,
+                    'changes': 'Update',
+                    'details': ' {} has been enabled successfully.'.format(key) if values == True else ' {} has been disabled successfully.'.format(key),
+                })
+        return res
 
     @api.depends('sale_id')
     def _compute_order_count(self):
         for rec in self:
-            order_line = rec.sale_id.order_line.filtered(
-                lambda
-                    sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters')[
-                         :1]
+            order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters')[:1]
             rec.inverter_count = sum(order_line.mapped('product_uom_qty'))
             order_line = rec.sale_id.order_line.filtered(
                 lambda sol: sol.product_id.categ_id.name == 'Solar Panels')[:1]
@@ -447,4 +470,11 @@ class WorkSheet(models.Model):
             doc.save(pdf_stream)
             doc.close()
             modified_pdf_content = base64.b64encode(pdf_stream.getvalue())
-            self.ccew_file = modified_pdf_content
+            if not self.ccew_file:
+                self.env['worksheet.history'].create({
+                    'worksheet_id': self.id,
+                    'user_id': self.env.user.id,
+                    'changes': 'Update Documents',
+                    'details': ' CCEW Documents has been updated successfully.',
+                })
+            self.task_id.x_studio_ccew = modified_pdf_content

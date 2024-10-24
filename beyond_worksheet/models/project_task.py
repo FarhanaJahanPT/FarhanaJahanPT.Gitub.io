@@ -21,6 +21,27 @@ class ProjectTask(models.Model):
                 'sale_id': self.sale_order_id.id if self.sale_order_id else False
             })
             self.worksheet_id = worksheet.id
+        if self.worksheet_id:
+            for val in vals:
+                key = val
+                values = vals.get(val)
+                if key == 'assigned_users':
+                    for value in values:
+                        user = self.assigned_users.browse(value[1])
+                        if value[0] == 4:
+                            self.env['worksheet.history'].create({
+                                'worksheet_id': self.worksheet_id.id,
+                                'user_id': self.env.user.id,
+                                'changes': 'Assigned Team Member',
+                                'details': '({}) has been successfully added.'.format(user.name),
+                            })
+                        elif value[0] == 3:
+                            self.env['worksheet.history'].create({
+                                'worksheet_id': self.worksheet_id.id,
+                                'user_id': self.env.user.id,
+                                'changes': 'Removed Team Member',
+                                'details': '({}) has been successfully removed.'.format(user.name),
+                            })
         return res
 
     def _send_team_notifications_cron(self):
