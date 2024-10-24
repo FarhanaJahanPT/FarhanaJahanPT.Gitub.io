@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- templates/team_member_question.xml -->
+    <template id="portal_team_member_question" name="Single Team Member Question">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <h2>Answer the Question</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <form action="/my/questions/answer" method="POST">
+                            <input type="hidden" name="question_id" t-att-value="question.id"/>
+                            <input type="hidden" name="worksheet" t-att-value="worksheet"/>
+                            <input type="hidden" name="user" t-att-value="user"/>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="form-group">
+                                <label>
+                                    <t t-esc="question.name"/>
+                                </label>
+                                <input type="text" name="answer" class="form-control" placeholder="Enter your answer"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Submit Answer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- templates/completion_page.xml -->
+    <template id="portal_team_member_questions_done" name="Questions Completed">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <h2>All Questions Answered</h2>
+                <p>Thank you for answering all the questions.</p>
+            </div>
+        </t>
+    </template>
+</odoo>

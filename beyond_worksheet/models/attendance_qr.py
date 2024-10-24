@@ -30,7 +30,7 @@ class AttendanceQR(models.Model):
                     border=4,
                 )
                 qr.add_data(
-                    f'http://10.0.0.62:8017/my/worksheet/{self.user_id.id}/{self.worksheet_id.id}')
+                    f'http://10.0.10.41:8017/my/worksheet/{self.user_id.id}/{self.worksheet_id.id}')
                 # qr.add_data("Invoice No : ")
                 # qr.add_data(rec.name)
                 # qr.add_data(", Customer : ")
