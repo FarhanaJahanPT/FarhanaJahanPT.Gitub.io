@@ -9,5 +9,5 @@ class WorksheetMemberQuestion(models.Model):
     question_id = fields.Many2one('team.member.question',string='Question')
     answer = fields.Text('Answer')
     worksheet_id = fields.Many2one('task.worksheet',string='Worksheet')
-    user_id = fields.Many2one('res.users',string='Member')
+    member_id = fields.Many2one('team.member',string='Member')
     date = fields.Datetime('Date')

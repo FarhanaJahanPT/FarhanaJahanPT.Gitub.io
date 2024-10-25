@@ -7,10 +7,10 @@
                 <h2>Answer the Question</h2>
                 <div class="row">
                     <div class="col-12">
-                        <form action="/my/questions/answer" method="POST">
+                        <form action="/my/questions/answer">
                             <input type="hidden" name="question_id" t-att-value="question.id"/>
-                            <input type="hidden" name="worksheet" t-att-value="worksheet"/>
-                            <input type="hidden" name="user" t-att-value="user"/>
+                            <input type="hidden" name="worksheet_id" t-att-value="worksheet"/>
+                            <input type="hidden" name="member_id" t-att-value="member"/>
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="form-group">
                                 <label>
@@ -27,11 +27,11 @@
     </template>
 
     <!-- templates/completion_page.xml -->
-    <template id="portal_team_member_questions_done" name="Questions Completed">
+    <template id="portal_team_member_questions_done" name="Check-in Completed">
         <t t-call="portal.portal_layout">
             <div class="container">
-                <h2>All Questions Answered</h2>
-                <p>Thank you for answering all the questions.</p>
+                <h2>Check-in Completed</h2>
+                <p>Your check-in has been successfully completed. Thank you!</p>
             </div>
         </t>
     </template>

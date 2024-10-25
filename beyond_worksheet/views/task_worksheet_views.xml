@@ -13,6 +13,8 @@
             <form>
                 <header>
                     <button name="action_create_ccew" class="btn-primary" type="object" string="Create CCEW"/>
+                    <button name="action_generate_qr_code" class="btn-secondary" type="object" string="Generate QR"
+                            invisible="qr_code"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -37,6 +39,7 @@
                     </div>
                     <h1>
                         <field name="name" readonly="1"/>
+                        <field name="qr_code" widget="image" class="oe_avatar" nolabel="1" invisible="not qr_code"/>
                     </h1>
                     <group>
                         <group>
@@ -49,6 +52,10 @@
                             <field name="checklist_count"/>
                             <field name="is_individual"/>
                             <field name="is_ccew"/>
+                        </group>
+
+                        <group>
+                            <field name="team_member_ids" widget="many2many_tags"/>
                             <field name="is_testing_required"/>
                             <field name="electrical_license_number"/>
                             <field name="is_site_induction"/>
@@ -98,24 +105,21 @@
                         <page string="Attendance Record" invisible="not worksheet_attendance_ids">
                             <field name="worksheet_attendance_ids">
                                 <tree string="Attendance Record">
-                                    <field name="create_date"/>
-                                    <field name="user_id"/>
+                                    <field name="date"/>
+                                    <field name="member_id"/>
                                     <field name="type"/>
                                     <field name="additional_service"/>
                                     <field name="location"/>
                                 </tree>
                             </field>
                         </page>
-                        <page string="Attendance QR" name="attendance_qr">
-                            <field name="attendance_qr_ids">
-                                <tree editable="inline">
-                                    <field name="user_id"/>
-                                    <field name="worksheet_id" column_invisible="1"/>
-                                    <field name="qr_code" widget="image" class="oe_avatar"/>
-<!--                                    <button type="object" string="Generate QR" name="action_generate_qr_code" class="btn btn-primary"/>-->
-                                    <!--                                    <field name="verification_time"/>-->
-                                    <!--                                    <field name="state"/>-->
-                                    <!--                                    <field name="company_id" invisible="1"/>-->
+                        <page string="Member Questions" invisible="not member_question_ids">
+                            <field name="member_question_ids">
+                                <tree>
+                                    <field name="question_id"/>
+                                    <field name="answer"/>
+                                    <field name="date"/>
+                                    <field name="member_id"/>
                                 </tree>
                             </field>
                         </page>
@@ -135,7 +139,7 @@
                             </group>
                         </page>
                         <page string="History" name="history">
-                             <field name="worksheet_history_ids">
+                            <field name="worksheet_history_ids">
                                 <tree string="History">
                                     <field name="changes"/>
                                     <field name="create_date"/>

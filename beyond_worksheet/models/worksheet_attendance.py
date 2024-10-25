@@ -9,9 +9,9 @@ class WorksheetAttendance(models.Model):
     type = fields.Selection([('check_in', 'Check In'),
                              ('check_out', 'Check Out')], string='Type',
                             required=True)
-    datetime = fields.Datetime(string='Date', default=lambda self: fields.Datetime.now(), required=True)
+    date = fields.Datetime(string='Date', default=lambda self: fields.Datetime.now(), required=True)
     location = fields.Char(string='Location')
-    user_id = fields.Many2one('res.users', string='User', required=True)
+    member_id = fields.Many2one('team.member', string='User', required=True)
     task_id = fields.Many2one('project.task', related="worksheet_id.task_id")
     worksheet_id = fields.Many2one('task.worksheet', string='Worksheet', required=True)
     additional_service = fields.Boolean(string='Additional Service')

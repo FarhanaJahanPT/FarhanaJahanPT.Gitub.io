@@ -17,12 +17,16 @@ class OwnerSignature(http.Controller):
             return http.request.not_found()
         return request.render("beyond_worksheet.owner_signature_template", {'task': task, })
 
-    @http.route('/my/worksheet/<int:user_id>/<int:worksheet_id>/', type="http", auth="public", website=True,
+    @http.route('/my/worksheet/<int:worksheet_id>', type="http", auth="public", website=True,
                 sitemap=False)
-    def worksheet_members_portal(self, user_id, worksheet_id, **kw):
-
+    def worksheet_members_portal(self, worksheet_id, **kw):
         return request.render("beyond_worksheet.worksheet_members_template",
-                              {'user': user_id, 'worksheet': worksheet_id})
+                              {'worksheet': worksheet_id})
+
+    @http.route('/check/member', type='json', auth='public', methods=['POST'])
+    def check_member(self, member_id):
+        member = request.env['team.member'].sudo().search([('member_id', '=', member_id)], limit=1)
+        return {'exists': bool(member), 'member_id': member.id}
 
     @http.route('/worksheet/members/checkin/<int:user_id>/<int:worksheet_id>', type="http", auth="public", website=True,
                 sitemap=False)
@@ -48,27 +52,29 @@ class OwnerSignature(http.Controller):
             'force_refresh': True,
         }
 
-    @http.route(['/my/questions/<int:worksheet_id>/<int:user_id>'], type='http', auth="public", website=True)
-    def show_question(self, worksheet_id=None, user_id=None, **kwargs):
+    @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http', auth="public",
+                website=True)
+    def show_question(self, worksheet, member, **kwargs):
         # Fetch unanswered questions first
+        member_id = kwargs.get('member_id') if kwargs.get('member_id') else member
+        worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
         worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
-
-        # worksheet.member_question_ids.unlink()
-
+        check_in = worksheet.worksheet_attendance_ids.filtered(
+            lambda a: a.date.date() == fields.datetime.today().date())
+        if check_in:
+            return request.render('beyond_worksheet.portal_team_member_questions_done')
         questions = worksheet.member_question_ids.filtered(
-            lambda q: q.date.date() == fields.datetime.today().date() and q.user_id.id == int(user_id)).mapped('question_id')
-        if questions:
+            lambda q: q.date.date() == fields.datetime.today().date() and q.member_id.id == int(member_id)).mapped(
+            'question_id')
+        if questions and not check_in:
             questions = request.env['team.member.question'].sudo().search([('id', 'not in', questions.ids)], limit=1)
-        else:
+        elif not questions and not check_in:
             questions = request.env['team.member.question'].sudo().search([], limit=1)
 
-
-        # check_in = request.env['worksheet.attendance'].sudo().search([('user_id','=',int(user_id)),('datetime','=',fields.datetime.today()),('worksheet_id','=',worksheet_id)])
-        check_in = worksheet.worksheet_attendance_ids.filtered(lambda a:a.user_id.id == int(user_id) and a.datetime.date() ==fields.datetime.today())
         if not questions:
-            check_in = request.env['worksheet.attendance'].sudo().create({
+            request.env['worksheet.attendance'].sudo().create({
                 'type': 'check_in',
-                'user_id': user_id,
+                'member_id': member_id,
                 'worksheet_id': worksheet_id
             })
             # If all questions are answered, redirect to a thank you page
@@ -76,19 +82,18 @@ class OwnerSignature(http.Controller):
 
         # Show the next unanswered question
         return request.render('beyond_worksheet.portal_team_member_question', {
-            'question': questions[0], 'worksheet': worksheet_id, 'user': user_id
+            'question': questions[0], 'worksheet': worksheet_id, 'member': member_id
         })
 
-    @http.route(['/my/questions/answer'], type='http', methods=['POST'], auth="public", website=True)
+    @http.route(['/my/questions/answer'], type='http', auth="public", website=True)
     def submit_answer(self, **kwargs):
         # Get question and answer from the POST data
-
         request.env['worksheet.member.question'].sudo().create({
-            'question_id': kwargs.get('question_id'),
+            'question_id': int(kwargs.get('question_id')),
             'answer': kwargs.get('answer'),
-            'worksheet_id': kwargs.get('worksheet'),
-            'user_id': kwargs.get('user'),
+            'worksheet_id': int(kwargs.get('worksheet_id')),
+            'member_id': int(kwargs.get('member_id')),
             'date': fields.Datetime.today()
         })
         # Redirect to the next question or finish if no more questions
-        return request.redirect('/my/questions/%s/%s' % (kwargs.get('worksheet'), kwargs.get('user')))
+        return request.redirect('/my/questions/%s/%s' % (kwargs.get('worksheet_id'), kwargs.get('member_id')))

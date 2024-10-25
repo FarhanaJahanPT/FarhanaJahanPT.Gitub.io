@@ -11,7 +11,7 @@ try:
     import base64
 except ImportError:
     base64 = None
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 from odoo.modules.module import get_module_resource
 
 
@@ -34,9 +34,11 @@ class WorkSheet(models.Model):
     battery_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                       string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
 
-    attendance_qr_ids = fields.One2many('attendance.qr', 'worksheet_id')
+    team_member_ids = fields.Many2many('team.member', string='Members')
 
-    member_question_ids = fields.One2many('worksheet.member.question','worksheet_id')
+    qr_code = fields.Binary("QR Code", copy=False)
+
+    member_question_ids = fields.One2many('worksheet.member.question', 'worksheet_id')
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
@@ -166,6 +168,30 @@ class WorkSheet(models.Model):
                 if sum(checklist_ids) == len(rec.service_item_ids):
                     rec.is_checklist = True
 
+    def action_generate_qr_code(self):
+        for rec in self:
+            if qrcode and base64:
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    box_size=3,
+                    border=4,
+                )
+                qr.add_data(
+                    f'http://10.0.10.41:8017/my/worksheet/{self.id}')
+                # qr.add_data("Invoice No : ")
+                # qr.add_data(rec.name)
+                # qr.add_data(", Customer : ")
+                # qr.add_data(rec.partner_id.name)
+                # qr.add_data(", Amount Total : ")
+                # qr.add_data(rec.amount_total)
+                qr.make(fit=True)
+                img = qr.make_image()
+                temp = io.BytesIO()
+                img.save(temp, format="PNG")
+                qr_image = base64.b64encode(temp.getvalue())
+                self.qr_code = qr_image
+
     def _compute_invoice_count(self):
         """Function to count invoice"""
         for record in self:
@@ -221,7 +247,6 @@ class WorkSheet(models.Model):
                         'invoice_date_due': today.date() + timedelta(days=5),
                         'invoice_line_ids': vals
                     }])
-                    print(invoice)
 
     def get_invoice(self):
         """Smart button to view the Corresponding Invoices for the Worksheet"""
@@ -285,7 +310,6 @@ class WorkSheet(models.Model):
                                     'state': 'assigned',
                                     }
                     move = move_line_ids.create(move_line_id)
-                    print(move)
 
     def action_create_ccew(self):
         partner_shipping_id = self.sale_id.partner_shipping_id

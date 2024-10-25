@@ -7,7 +7,7 @@
     'website': """""",
     'summary': '',
     'description': """""",
-    'depends': ['base', 'project', 'web', 'sale_project', 'project_beyond_solar', 'hr','portal'],
+    'depends': ['base', 'project', 'web', 'sale_project', 'project_beyond_solar', 'hr', 'portal'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
@@ -17,6 +17,7 @@
         'views/stock_lot_view.xml',
         'views/task_worksheet_views.xml',
         'views/team_member_question_views.xml',
+        'views/team_member_views.xml',
         'views/installation_checklist_view.xml',
         'views/installation_checklist_item_view.xml',
         'views/mail_message_view.xml',
@@ -33,8 +34,11 @@
     ],
     'assets': {
         'web.assets_backend': [
-           'beyond_worksheet/static/src/widgets/checklist_widget.js',
+            'beyond_worksheet/static/src/widgets/checklist_widget.js',
             'beyond_worksheet/static/src/widgets/checklist_widget.xml'
+        ],
+        'web.assets_frontend': [
+            'beyond_worksheet/static/src/js/employee_check_in.js',
         ],
     },
     'installable': True,

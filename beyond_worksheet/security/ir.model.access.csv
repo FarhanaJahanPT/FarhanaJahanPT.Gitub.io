@@ -5,7 +5,7 @@ access_installation_checklist_item,access.installation.checklist.item,model_inst
 access_service_checklist_item,access.service.checklist.item,model_service_checklist_item,base.group_user,1,1,1,1
 access_task_worksheet,access.task.worksheet,model_task_worksheet,base.group_user,1,1,1,1
 access_worksheet_attendance,access.worksheet.attendance,model_worksheet_attendance,base.group_user,1,1,1,1
-access_attendance_qr,access.attendance.qr,model_attendance_qr,base.group_user,1,1,1,1
 access_team_member_question,access.team.member.question,model_team_member_question,base.group_user,1,1,1,1
 access_worksheet_history,access.worksheet.history,model_worksheet_history,base.group_user,1,1,1,1
 access_worksheet_member_question,access.worksheet.member.question,model_worksheet_member_question,base.group_user,1,1,1,1
+access_team_member,access.team.member,model_team_member,base.group_user,1,1,1,1
