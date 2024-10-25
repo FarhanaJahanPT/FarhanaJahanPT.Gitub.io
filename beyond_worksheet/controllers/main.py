@@ -60,7 +60,7 @@ class OwnerSignature(http.Controller):
         worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
         worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
         check_in = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == fields.datetime.today().date())
+            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(member_id))
         if check_in:
             return request.render('beyond_worksheet.portal_team_member_questions_done')
         questions = worksheet.member_question_ids.filtered(

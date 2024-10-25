@@ -21,7 +21,7 @@ class WorksheetAttendance(models.Model):
         res = super(WorksheetAttendance, self).create(vals_list)
         self.env['worksheet.history'].create({
             'worksheet_id': res.worksheet_id.id,
-            'user_id': res.user_id.id,
+            'user_id': res.create_uid.id,
             'changes': 'Attendance',
             'details': 'Check In Site Attendance has been updated successfully.' if res.type == 'check_in' else 'Check Out Site Attendance has been updated successfully.',
         })
