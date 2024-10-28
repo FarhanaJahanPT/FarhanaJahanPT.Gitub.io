@@ -33,6 +33,7 @@
                 <h2>Check-in Completed</h2>
                 <p>Your check-in has been successfully completed. Thank you!</p>
             </div>
+            <a t-attf-href="/team/member/checkout/{{worksheet}}/{{member}}">Check-out</a>
         </t>
     </template>
 </odoo>

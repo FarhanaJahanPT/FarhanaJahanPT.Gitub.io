@@ -60,9 +60,10 @@ class OwnerSignature(http.Controller):
         worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
         worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
         check_in = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(member_id))
+            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(member_id) and a.type == 'check_in')
         if check_in:
-            return request.render('beyond_worksheet.portal_team_member_questions_done')
+            return request.render('beyond_worksheet.portal_team_member_questions_done',
+                                  {'worksheet': worksheet_id, 'member': member_id})
         questions = worksheet.member_question_ids.filtered(
             lambda q: q.date.date() == fields.datetime.today().date() and q.member_id.id == int(member_id)).mapped(
             'question_id')
@@ -71,7 +72,7 @@ class OwnerSignature(http.Controller):
         elif not questions and not check_in:
             questions = request.env['team.member.question'].sudo().search([], limit=1)
 
-        if not questions:
+        if not questions and  not check_in:
             request.env['worksheet.attendance'].sudo().create({
                 'type': 'check_in',
                 'member_id': member_id,
@@ -97,3 +98,22 @@ class OwnerSignature(http.Controller):
         })
         # Redirect to the next question or finish if no more questions
         return request.redirect('/my/questions/%s/%s' % (kwargs.get('worksheet_id'), kwargs.get('member_id')))
+
+    @http.route('/team/member/checkout/<int:worksheet_id>/<int:member_id>', type='http', auth="public", website=True)
+    def member_checkout(self, worksheet_id, member_id, **kwargs):
+        # Implement any checkout logic here (e.g., marking the member as checked out).
+        # Optionally, you can retrieve and update data for the specific member.
+        worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
+        check_in = worksheet.worksheet_attendance_ids.filtered(
+            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(member_id) and a.type == 'check_in')
+        check_out = worksheet.worksheet_attendance_ids.filtered(
+            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(member_id) and a.type == 'check_out')
+        if check_in and not check_out:
+            request.env['worksheet.attendance'].sudo().create({
+                'type': 'check_out',
+                'member_id': member_id,
+                'worksheet_id': worksheet_id
+            })
+        # Render the checkout template
+        return request.render("beyond_worksheet.worksheet_members_template",
+                              {'worksheet': worksheet_id})

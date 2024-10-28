@@ -319,7 +319,6 @@ class WorkSheet(models.Model):
                                     'state': 'assigned',
                                     }
                     move = move_line_ids.sudo().create(move_line_id)
-                    print(move)
 
     def action_create_ccew(self):
         partner_shipping_id = self.sale_id.partner_shipping_id
