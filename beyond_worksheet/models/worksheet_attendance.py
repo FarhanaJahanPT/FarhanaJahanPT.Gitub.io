@@ -19,9 +19,10 @@ class WorksheetAttendance(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super(WorksheetAttendance, self).create(vals_list)
-        self.env['worksheet.history'].create({
+        self.env['worksheet.history'].sudo().create({
             'worksheet_id': res.worksheet_id.id,
             'user_id': res.create_uid.id,
+            'member_id': res.member_id.id if res.member_id else False,
             'changes': 'Attendance',
             'details': 'Check In Site Attendance has been updated successfully.' if res.type == 'check_in' else 'Check Out Site Attendance has been updated successfully.',
         })

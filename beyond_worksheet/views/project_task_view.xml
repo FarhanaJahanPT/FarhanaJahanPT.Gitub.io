@@ -20,9 +20,9 @@
 <!--                <field name="witness_signature_date"/>-->
                 <field name="worksheet_id" invisible="1"/>
             </xpath>
-            <xpath expr="//group[@name='project_details']" position="inside">
-                <field name="assigned_users" widget="many2many_tags"/>
-            </xpath>
+<!--            <xpath expr="//group[@name='project_details']" position="inside">-->
+<!--                <field name="assigned_users" widget="many2many_tags"/>-->
+<!--            </xpath>-->
 <!--            <xpath expr="//notebook" position="inside">-->
 <!--                <page string="WorkSheet Application" name="work_sheet">-->
 <!--                    <group>-->

@@ -9,7 +9,8 @@ class InstallationChecklistItem(models.Model):
 
     image = fields.Image(string='Image', store=True)
     checklist_id = fields.Many2one('installation.checklist', string='Type', required=True)
-    user_id = fields.Many2one('res.users', string='User', required=True)
+    user_id = fields.Many2one('res.users', string='User')
+    member_id = fields.Many2one('team.member', string='Team Member')
     worksheet_id = fields.Many2one('task.worksheet', required=True, domain=[('x_studio_type_of_service', '=', 'New Installation')])
     location = fields.Char(string='Location', required=True)
     text = fields.Text(string='Text')
@@ -25,9 +26,10 @@ class InstallationChecklistItem(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super(InstallationChecklistItem, self).create(vals_list)
-        self.env['worksheet.history'].create({
+        self.env['worksheet.history'].sudo().create({
             'worksheet_id': res.worksheet_id.id,
-            'user_id': res.user_id.id,
+            'user_id': res.user_id.id if res.user_id else False,
+            'member_id': res.member_id.id if res.member_id else False,
             'changes': 'Updated Checklist',
             'details': 'Installation checklist ({}) has been updated successfully.'.format(res.checklist_id.name),
         })

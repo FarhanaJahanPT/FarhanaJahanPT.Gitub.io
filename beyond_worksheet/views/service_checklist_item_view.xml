@@ -18,6 +18,7 @@
                 <field name="text"/>
                 <field name="worksheet_id"/>
                 <field name="user_id"/>
+                <field name="member_id"/>
                 <field name="location"/>
             </tree>
         </field>
@@ -35,6 +36,7 @@
                             <field name="service_id"/>
                             <field name="worksheet_id"/>
                             <field name="user_id"/>
+                            <field name="member_id"/>
                             <field name="location"/>
                         </group>
                         <group>

@@ -19,6 +19,17 @@ class AttendanceQR(models.Model):
     worksheet_id = fields.Many2one('task.worksheet', string='Worksheet')
     qr_code = fields.Binary("QR Code", compute='_compute_qr_code', store=True)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(AttendanceQR, self).create(vals_list)
+        self.env['worksheet.history'].sudo().create({
+            'worksheet_id': res.worksheet_id.id,
+            'user_id': self.env.user.id,
+            'changes': 'Generate QR',
+            'details': 'Attendance QR code has been successfully generated for the user ({}).'.format(res.user_id.name),
+        })
+        return res
+
     @api.depends('user_id')
     def _compute_qr_code(self):
         for rec in self:

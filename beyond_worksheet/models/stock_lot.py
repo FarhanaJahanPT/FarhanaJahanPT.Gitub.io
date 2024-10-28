@@ -14,14 +14,16 @@ class StockLot(models.Model):
     verification_time = fields.Datetime(string='Verification Time')
     worksheet_id = fields.Many2one('task.worksheet')
     user_id = fields.Many2one('res.users', string='User')
+    member_id = fields.Many2one('team.member', string='Team Member')
     location = fields.Text(string='Location')
 
     def write(self, vals):
         res = super(StockLot, self).write(vals)
         if self.worksheet_id and self.type:
-            self.env['worksheet.history'].create({
+            self.env['worksheet.history'].sudo().create({
                 'worksheet_id': self.worksheet_id.id,
-                'user_id': self.user_id.id,
+                'user_id': res.user_id.id if res.user_id else False,
+                'member_id': res.member_id.id if res.member_id else False,
                 'changes': 'Updated Serial Number',
                 'details': '{} Serial Number ({}) has been updated successfully.'.format(self.type,self.name),
             })

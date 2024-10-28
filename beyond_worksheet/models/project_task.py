@@ -8,7 +8,7 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     worksheet_id = fields.Many2one('task.worksheet')
-    assigned_users = fields.Many2many('res.users', string='Assigned Users')
+    # assigned_users = fields.Many2many('res.users', string='Assigned Users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
     witness_name = fields.Char(string="Witness Name", copy=False)
@@ -21,27 +21,6 @@ class ProjectTask(models.Model):
                 'sale_id': self.sale_order_id.id if self.sale_order_id else False
             })
             self.worksheet_id = worksheet.id
-        if self.worksheet_id:
-            for val in vals:
-                key = val
-                values = vals.get(val)
-                if key == 'assigned_users':
-                    for value in values:
-                        user = self.assigned_users.browse(value[1])
-                        if value[0] == 4:
-                            self.env['worksheet.history'].create({
-                                'worksheet_id': self.worksheet_id.id,
-                                'user_id': self.env.user.id,
-                                'changes': 'Assigned Team Member',
-                                'details': '({}) has been successfully added.'.format(user.name),
-                            })
-                        elif value[0] == 3:
-                            self.env['worksheet.history'].create({
-                                'worksheet_id': self.worksheet_id.id,
-                                'user_id': self.env.user.id,
-                                'changes': 'Removed Team Member',
-                                'details': '({}) has been successfully removed.'.format(user.name),
-                            })
         return res
 
     def _send_team_notifications_cron(self):
@@ -49,16 +28,18 @@ class ProjectTask(models.Model):
         next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
         next_friday = next_monday + timedelta(days=4)
         task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
-        user_ids = task_ids.assigned_users
-        user_ids += task_ids.x_studio_proposed_team
-        for user in user_ids:
+        for user in task_ids.x_studio_proposed_team:
             email_values = {'email_to': user.partner_id.email,
-                            'email_from': user.company_id.email}
-            if user.is_internal_user == True:
-                mail_template = self.env.ref('beyond_worksheet.worksheet_email_template')
-            else:
-                mail_template = self.env.ref('beyond_worksheet.external_worksheet_email_template')
+                            'email_from': self.env.company.email}
+            mail_template = self.env.ref('beyond_worksheet.worksheet_email_template')
             mail_template.send_mail(user.id, email_values=email_values,force_send=True)
+        if task_ids.worksheet_id:
+            member_ids = task_ids.worksheet_id.team_member_ids
+            for member in member_ids:
+                email_values = {'email_to': member.email,
+                                'email_from': self.env.company.email}
+                mail_template = self.env.ref('beyond_worksheet.external_worksheet_email_template')
+                mail_template.send_mail(member.id, email_values=email_values, force_send=True)
 
     def get_worksheet(self):
         self.ensure_one()

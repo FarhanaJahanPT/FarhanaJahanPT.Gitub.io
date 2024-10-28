@@ -18,5 +18,5 @@ class ResUsers(models.Model):
         next_friday = next_monday + timedelta(days=4)
         tasks = self.env['project.task'].search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
         task_ids = tasks.filtered(lambda w: w.x_studio_proposed_team == object)
-        task_ids += tasks.filtered(lambda w: object in w.assigned_users)
+        # task_ids += tasks.filtered(lambda w: object in w.assigned_users)
         return task_ids

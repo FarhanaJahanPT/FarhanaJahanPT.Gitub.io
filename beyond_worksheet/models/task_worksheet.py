@@ -50,7 +50,7 @@ class WorkSheet(models.Model):
     is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True)
     checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True)
     is_individual = fields.Boolean(string='Individual')
-    assigned_users = fields.Many2many('res.users', string='Assigned Users', related='task_id.assigned_users')
+    # assigned_users = fields.Many2many('res.users', string='Assigned Users', related='task_id.assigned_users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
     x_studio_type_of_service = fields.Selection(string='Type of Service',
@@ -75,27 +75,19 @@ class WorkSheet(models.Model):
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('task.worksheet') or _('New')
         res = super(WorkSheet, self).create(vals_list)
-        self.env['worksheet.history'].create({
+        self.env['worksheet.history'].sudo().create({
             'worksheet_id': res.id,
             'user_id': self.env.user.id,
             'changes': 'Create',
             'details': ' Worksheet ({}) has been create successfully.'.format(res.name),
         })
         if res.task_id.x_studio_proposed_team:
-            self.env['worksheet.history'].create({
+            self.env['worksheet.history'].sudo().create({
                 'worksheet_id': res.id,
                 'user_id': self.env.user.id,
                 'changes': 'Assigned Team Leader',
                 'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(res.task_id.x_studio_proposed_team.name),
             })
-        if res.task_id.assigned_users:
-            for user in res.task_id.assigned_users:
-                self.env['worksheet.history'].create({
-                    'worksheet_id': res.id,
-                    'user_id': self.env.user.id,
-                    'changes': 'Assigned Team Member',
-                    'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(user.name),
-                })
         return res
 
     def write(self, vals):
@@ -114,7 +106,7 @@ class WorkSheet(models.Model):
             license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
                 self.task_id.x_studio_proposed_team.name) + '-'
             self.ccew_sequence = seq.replace('--', license)
-            self.env['worksheet.history'].create({
+            self.env['worksheet.history'].sudo().create({
                 'worksheet_id': self.id,
                 'user_id': self.env.user.id,
                 'changes': 'Update',
@@ -124,12 +116,29 @@ class WorkSheet(models.Model):
             key = val
             values = vals.get(val)
             if isinstance(values,bool):
-                self.env['worksheet.history'].create({
+                self.env['worksheet.history'].sudo().create({
                     'worksheet_id': self.id,
                     'user_id': self.env.user.id,
                     'changes': 'Update',
                     'details': ' {} has been enabled successfully.'.format(key) if values == True else ' {} has been disabled successfully.'.format(key),
                 })
+            elif key == 'team_member_ids':
+                for value in values:
+                    user = self.team_member_ids.browse(value[1])
+                    if value[0] == 4:
+                        self.env['worksheet.history'].sudo().create({
+                            'worksheet_id': self.worksheet_id.id,
+                            'user_id': self.env.user.id,
+                            'changes': 'Assigned Team Member',
+                            'details': '({}) has been successfully added.'.format(user.name),
+                        })
+                    elif value[0] == 3:
+                        self.env['worksheet.history'].sudo().create({
+                            'worksheet_id': self.worksheet_id.id,
+                            'user_id': self.env.user.id,
+                            'changes': 'Removed Team Member',
+                            'details': '({}) has been successfully removed.'.format(user.name),
+                        })
         return res
 
     @api.depends('sale_id')
@@ -238,7 +247,7 @@ class WorkSheet(models.Model):
                         vals.append((0, 0,{'name': "Additional service item at {}".format(worksheet_id.name),
                                          'quantity': 1,
                                          'price_unit': additional[:1].user_id.invoice_amount}))
-                    invoice = self.env['account.move'].create([{
+                    invoice = self.env['account.move'].sudo().create([{
                         'name': self.env['ir.sequence'].next_by_code('rcti.invoice'),
                         'move_type': 'in_invoice',
                         'partner_id': user_id.partner_id.id,
@@ -309,7 +318,8 @@ class WorkSheet(models.Model):
                                     'location_dest_id': rec.sale_id.picking_ids.location_dest_id.id,
                                     'state': 'assigned',
                                     }
-                    move = move_line_ids.create(move_line_id)
+                    move = move_line_ids.sudo().create(move_line_id)
+                    print(move)
 
     def action_create_ccew(self):
         partner_shipping_id = self.sale_id.partner_shipping_id
@@ -495,14 +505,14 @@ class WorkSheet(models.Model):
             doc.close()
             modified_pdf_content = base64.b64encode(pdf_stream.getvalue())
             if not self.ccew_file:
-                self.env['worksheet.history'].create({
+                self.env['worksheet.history'].sudo().create({
                     'worksheet_id': self.id,
                     'user_id': self.env.user.id,
                     'changes': 'Create CCEW Documents',
                     'details': ' CCEW Documents has been successfully created.',
                 })
             else:
-                self.env['worksheet.history'].create({
+                self.env['worksheet.history'].sudo().create({
                     'worksheet_id': self.id,
                     'user_id': self.env.user.id,
                     'changes': 'Updated CCEW Documents',

@@ -14,6 +14,7 @@
                     <group>
                         <field name="worksheet_id"/>
                         <field name="user_id"/>
+                        <field name="member_id"/>
                         <field name="type"/>
                         <field name="verification_time"/>
                         <field name="state"/>
