@@ -14,7 +14,6 @@
                 <field name="user_id"/>
                 <field name="member_id"/>
                 <field name="details"/>
-                <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view" invisible="1"/>
                 <field name="worksheet_id" invisible="1"/>
             </tree>
         </field>

@@ -21,6 +21,16 @@ class ProjectTask(models.Model):
                 'sale_id': self.sale_order_id.id if self.sale_order_id else False
             })
             self.worksheet_id = worksheet.id
+            self.env['worksheet.notification'].sudo().create([{
+                'author_id': self.env.user.id,
+                'user_id': self.x_studio_proposed_team.id,
+                'model': 'task.worksheet',
+                'res_id': self.worksheet_id.id,
+                'date': datetime.now(),
+                'subject': 'Worksheet Assigned',
+                'body': '{} has been assigned to you for installation on the {}'.format(self.worksheet_id.name, self.planned_date_start),
+            }])
+
         return res
 
     def _send_team_notifications_cron(self):

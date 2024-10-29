@@ -11,4 +11,3 @@ class WorksheetHistory(models.Model):
     member_id = fields.Many2one('team.member', string='User')
     changes = fields.Char(string='Changes')
     details = fields.Text(string='Details')
-    image = fields.Image(string='Image', store=True)

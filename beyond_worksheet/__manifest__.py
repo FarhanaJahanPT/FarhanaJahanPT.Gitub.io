@@ -31,6 +31,7 @@
         'views/worksheet_attendance_view.xml',
         'views/product_template_views.xml',
         'views/worksheet_history_views.xml',
+        'views/worksheet_notification_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

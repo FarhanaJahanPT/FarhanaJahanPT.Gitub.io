@@ -508,8 +508,17 @@ class WorkSheet(models.Model):
                     'worksheet_id': self.id,
                     'user_id': self.env.user.id,
                     'changes': 'Create CCEW Documents',
-                    'details': ' CCEW Documents has been successfully created.',
+                    'details': 'CCEW Documents has been successfully created.',
                 })
+                self.env['worksheet.notification'].sudo().create([{
+                    'author_id': self.env.user.id,
+                    'user_id': self.task_id.x_studio_proposed_team.id,
+                    'model': 'task.worksheet',
+                    'res_id': self.id,
+                    'date': datetime.now(),
+                    'subject': 'Create CCEW Documents',
+                    'body': '{} CCEW Documents has been successfully created.'.format(self.name),
+                }])
             else:
                 self.env['worksheet.history'].sudo().create({
                     'worksheet_id': self.id,

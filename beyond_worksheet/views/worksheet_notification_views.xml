@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="worksheet_notification_action" model="ir.actions.act_window">
+        <field name="name">Worksheet Notification</field>
+        <field name="res_model">worksheet.notification</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="worksheet_notification_view_tree" model="ir.ui.view">
+        <field name="name">worksheet.notification.view.tree</field>
+        <field name="model">worksheet.notification</field>
+        <field name="arch" type="xml">
+            <tree string="Worksheet Notification">
+                <field name="date"/>
+                <field name="subject"/>
+                <field name="user_id"/>
+                <field name="model"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="worksheet_notification_view_form" model="ir.ui.view">
+        <field name="name">worksheet.notification.view.form</field>
+        <field name="model">worksheet.notification</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="author_id"/>
+                            <field name="user_id"/>
+                            <field name="subject"/>
+                            <field name="body"/>
+                        </group>
+                        <group>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                            <field name="is_read"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <menuitem id="worksheet_notification_menu" action="worksheet_notification_action"
+              parent="task_worksheet_configuration_menu"/>
+</odoo>

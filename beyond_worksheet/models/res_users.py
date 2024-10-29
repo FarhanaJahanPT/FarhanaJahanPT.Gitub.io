@@ -20,3 +20,28 @@ class ResUsers(models.Model):
         task_ids = tasks.filtered(lambda w: w.x_studio_proposed_team == object)
         # task_ids += tasks.filtered(lambda w: object in w.assigned_users)
         return task_ids
+
+    def write(self, vals):
+        res = super(ResUsers,self).write(vals)
+        if 'login' in vals:
+            self._notify_security_update(
+                _("Security Update: Login Changed"),
+                _("Your account login has been updated {}".format(datetime.now())),
+            )
+        if 'password' in vals:
+            self._notify_security_update(
+                _("Security Update: Password Changed"),
+                _("Your account password has been updated {}".format(datetime.now())),
+            )
+        return res
+
+    def _notify_security_update(self, subject, body):
+        self.env['worksheet.notification'].sudo().create([{
+            'author_id': self.env.user.id,
+            'user_id': self.id,
+            'model': 'res.users',
+            'res_id': self.id,
+            'date': datetime.now(),
+            'subject': subject,
+            'body': body,
+        }])
