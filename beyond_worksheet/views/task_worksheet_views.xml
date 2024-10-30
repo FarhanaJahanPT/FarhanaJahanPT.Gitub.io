@@ -12,7 +12,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_create_ccew" class="btn-primary" type="object" string="Create CCEW"/>
+                    <button name="action_create_ccew" class="btn-primary" type="object" string="Create CCEW" invisible="not is_ccew"/>
                     <button name="action_generate_qr_code" class="btn-secondary" type="object" string="Generate QR"
                             invisible="qr_code"/>
                 </header>

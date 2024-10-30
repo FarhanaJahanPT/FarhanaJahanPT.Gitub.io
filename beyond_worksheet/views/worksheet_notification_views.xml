@@ -43,6 +43,6 @@
             </form>
         </field>
     </record>
-    <menuitem id="worksheet_notification_menu" action="worksheet_notification_action"
-              parent="task_worksheet_configuration_menu"/>
+<!--    <menuitem id="worksheet_notification_menu" action="worksheet_notification_action"-->
+<!--              parent="task_worksheet_configuration_menu"/>-->
 </odoo>
