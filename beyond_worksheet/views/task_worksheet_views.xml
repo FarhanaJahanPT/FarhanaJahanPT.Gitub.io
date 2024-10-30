@@ -70,7 +70,7 @@
                         <page string="Panel Serial Numbers" name="panels" invisible="panel_count == 0">
                             <field name="panel_lot_ids">
                                 <tree string="Panel Serial Numbers">
-                                    <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
+                                    <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
@@ -82,22 +82,22 @@
                         <page string="Inverter Serial Numbers" invisible="inverter_count == 0">
                             <field name="inverter_lot_ids" invisible="inverter_count == 0">
                                 <tree string="Inverter Serial Numbers">
-                                    <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
+                                    <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
-<!--                                    <field name="state"/>-->
+                                    <!--                                    <field name="state"/>-->
                                 </tree>
                             </field>
                         </page>
                         <page string="Battery Serial Numbers" invisible="battery_count == 0">
                             <field name="battery_lot_ids" invisible="battery_count == 0">
                                 <tree string="Battery Serial Numbers">
-                                    <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
+                                    <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
-<!--                                    <field name="state"/>-->
+                                    <!--                                    <field name="state"/>-->
                                 </tree>
                             </field>
                         </page>
@@ -108,7 +108,15 @@
                                     <field name="member_id"/>
                                     <field name="type"/>
                                     <field name="additional_service"/>
-                                    <field name="location"/>
+                                    <field name="in_latitude"/>
+                                    <field name="in_longitude"/>
+                                    <button
+                                            name="action_view_maps"
+                                            type="object"
+                                            class="btn btn-link ps-0 pt-0 pb-2"
+                                            icon="oi-arrow-right"
+                                            string="View on Maps"
+                                            colspan="2"/>
                                 </tree>
                             </field>
                         </page>

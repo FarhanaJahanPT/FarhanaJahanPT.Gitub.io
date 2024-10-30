@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 
+def get_google_maps_url(latitude, longitude):
+    return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
+
 
 class WorksheetAttendance(models.Model):
     _name = 'worksheet.attendance'
@@ -15,6 +18,8 @@ class WorksheetAttendance(models.Model):
     task_id = fields.Many2one('project.task', related="worksheet_id.task_id")
     worksheet_id = fields.Many2one('task.worksheet', string='Worksheet', required=True)
     additional_service = fields.Boolean(string='Additional Service')
+    in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True)
+    in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -27,3 +32,11 @@ class WorksheetAttendance(models.Model):
             'details': 'Check In Site Attendance has been updated successfully.' if res.type == 'check_in' else 'Check Out Site Attendance has been updated successfully.',
         })
         return res
+
+    def action_view_maps(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': get_google_maps_url(self.in_latitude, self.in_longitude),
+            'target': 'new'
+        }

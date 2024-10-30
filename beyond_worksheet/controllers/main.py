@@ -4,9 +4,16 @@ from odoo.http import request
 from datetime import datetime
 from geopy.geocoders import Nominatim
 from odoo import fields
+import geocoder
+
 
 
 class OwnerSignature(http.Controller):
+
+    def get_location(self):
+        # Get the location using the IP
+        g = geocoder.ip('me')
+        return g.latlng
 
     @http.route('/my/task/<int:task_id>/signature', type="http", auth="public", website=True,
                 sitemap=False)
@@ -20,6 +27,7 @@ class OwnerSignature(http.Controller):
     @http.route('/my/worksheet/<int:worksheet_id>', type="http", auth="public", website=True,
                 sitemap=False)
     def worksheet_members_portal(self, worksheet_id, **kw):
+
         return request.render("beyond_worksheet.worksheet_members_template",
                               {'worksheet': worksheet_id})
 
@@ -55,6 +63,9 @@ class OwnerSignature(http.Controller):
     @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http', auth="public",
                 website=True)
     def show_question(self, worksheet, member, **kwargs):
+
+        location = self.get_location()
+
         # Fetch unanswered questions first
         member_id = kwargs.get('member_id') if kwargs.get('member_id') else member
         worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
@@ -76,7 +87,9 @@ class OwnerSignature(http.Controller):
             request.env['worksheet.attendance'].sudo().create({
                 'type': 'check_in',
                 'member_id': member_id,
-                'worksheet_id': worksheet_id
+                'worksheet_id': worksheet_id,
+                'in_latitude':location[0],
+                'in_longitude':location[1]
             })
             # If all questions are answered, redirect to a thank you page
             return request.render('beyond_worksheet.portal_team_member_questions_done')
