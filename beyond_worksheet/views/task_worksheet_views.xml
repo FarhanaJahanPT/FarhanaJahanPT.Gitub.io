@@ -86,7 +86,6 @@
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
-                                    <!--                                    <field name="state"/>-->
                                 </tree>
                             </field>
                         </page>
@@ -97,7 +96,6 @@
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="verification_time"/>
-                                    <!--                                    <field name="state"/>-->
                                 </tree>
                             </field>
                         </page>
