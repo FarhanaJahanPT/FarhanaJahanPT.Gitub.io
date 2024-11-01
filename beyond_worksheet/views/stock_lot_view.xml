@@ -3,26 +3,26 @@
     <record id="view_move_form_expiry" model="ir.ui.view">
         <field name="name">stock.production.lot.inherit.form</field>
         <field name="model">stock.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_form" />
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
         <field name="arch" type="xml">
-        <xpath expr="//page[@name='description']" position="after">
-            <page string="Worksheet" name="expiration_dates">
-                <group>
+            <xpath expr="//page[@name='description']" position="after">
+                <page string="Worksheet" name="expiration_dates">
                     <group>
-                        <field name="image" widget="image"/>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                        <group>
+                            <field name="worksheet_id"/>
+                            <field name="user_id"/>
+                            <field name="member_id"/>
+                            <field name="type"/>
+                            <field name="verification_time"/>
+                            <field name="state"/>
+                            <field name="location"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="worksheet_id"/>
-                        <field name="user_id"/>
-                        <field name="member_id"/>
-                        <field name="type"/>
-                        <field name="verification_time"/>
-                        <field name="state"/>
-                        <field name="location"/>
-                    </group>
-                </group>
-            </page>
-        </xpath>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>

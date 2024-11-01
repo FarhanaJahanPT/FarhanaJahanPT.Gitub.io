@@ -44,5 +44,4 @@
 
     <menuitem id="service_checklist_menu_action" action="service_checklist_action"
               parent="task_worksheet_configuration_menu"/>
-
 </odoo>

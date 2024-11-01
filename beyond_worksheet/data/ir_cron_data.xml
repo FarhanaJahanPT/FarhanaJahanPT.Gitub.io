@@ -11,7 +11,7 @@
         <field name="numbercall">-1</field> <!-- Run indefinitely -->
         <field name="doall" eval="False"/> <!-- If missed, don't catch up -->
         <field name="active" eval="True"/> <!-- Active -->
-        <field name="nextcall" eval="(DateTime.today() + relativedelta(weekday=4, hour=17, minute=59, second=0))" />
+        <field name="nextcall" eval="(DateTime.today() + relativedelta(weekday=4, hour=17, minute=59, second=0))"/>
     </record>
 
 <!--    <record id="rcti_invoice_cron" model="ir.cron">-->

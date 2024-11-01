@@ -24,25 +24,19 @@ class WorkSheet(models.Model):
     name = fields.Char("Name", default=lambda self: _('New'))
     task_id = fields.Many2one('project.task', string='Task')
     sale_id = fields.Many2one('sale.order', string='Sale Order', related="task_id.sale_order_id")
-
     panel_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                     string='Panel Serial Number', domain=[('type', '=', 'panel')], readonly=True)
-
     inverter_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                        string='Inverter Serial Number', domain=[('type', '=', 'inverter')],
                                        readonly=True)
     battery_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                       string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
-
     team_member_ids = fields.Many2many('team.member', string='Members')
-
     qr_code = fields.Binary("QR Code", copy=False)
-
     member_question_ids = fields.One2many('worksheet.member.question', 'worksheet_id')
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
-
     checklist_item_ids = fields.One2many('installation.checklist.item', 'worksheet_id',
                                          domain=[('checklist_id.selfie_type', '=', 'null')])
     service_item_ids = fields.One2many('service.checklist.item', 'worksheet_id',
@@ -50,18 +44,16 @@ class WorkSheet(models.Model):
     is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True)
     checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True)
     is_individual = fields.Boolean(string='Individual')
-    # assigned_users = fields.Many2many('res.users', string='Assigned Users', related='task_id.assigned_users')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
     x_studio_type_of_service = fields.Selection(string='Type of Service',
                                                 related='sale_id.x_studio_type_of_service', readonly=True)
     worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance')
     invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
-    is_testing_required = fields.Boolean("Testing needed")
-    is_ces_activity_created = fields.Boolean("CES Activity created")
-
-    is_ccew = fields.Boolean('Is CCEW', compute='_compute_is_ccew')
-    ccew_sequence = fields.Char('Sequence')
+    is_testing_required = fields.Boolean(string="Testing needed")
+    is_ces_activity_created = fields.Boolean(string="CES Activity created")
+    is_ccew = fields.Boolean(string='Is CCEW', compute='_compute_is_ccew')
+    ccew_sequence = fields.Char(string='Sequence')
     ccew_file = fields.Binary(string='CCEW', related='task_id.x_studio_ccew', store=True)
     electrical_license_number = fields.Char(
         related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number', tracking=True)

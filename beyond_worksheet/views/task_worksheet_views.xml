@@ -45,20 +45,19 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="task_id"/>
-                            <field name="sale_id"/>
+                            <field name="sale_id" invisible="1"/>
                             <field name="battery_count" invisible="1"/>
                             <field name="x_studio_type_of_service" invisible="1"/>
                             <field name="invoice_count" invisible="1"/>
-                            <field name="checklist_count"/>
-                            <field name="is_individual"/>
+                            <field name="checklist_count" invisible="1"/>
                             <field name="is_ccew"/>
+                            <field name="is_site_induction"/>
                         </group>
-
                         <group>
                             <field name="team_member_ids" widget="many2many_tags"/>
+                            <field name="is_individual"/>
                             <field name="is_testing_required"/>
                             <field name="electrical_license_number"/>
-                            <field name="is_site_induction"/>
                             <field name="is_ces_activity_created" invisible="1"/>
                             <field name="panel_count" invisible="1"/>
                             <field name="inverter_count" invisible="1"/>
@@ -107,8 +106,7 @@
                                     <field name="additional_service"/>
                                     <field name="in_latitude"/>
                                     <field name="in_longitude"/>
-                                    <button
-                                            name="action_view_maps"
+                                    <button name="action_view_maps"
                                             type="object"
                                             class="btn btn-link ps-0 pt-0 pb-2"
                                             icon="oi-arrow-right"

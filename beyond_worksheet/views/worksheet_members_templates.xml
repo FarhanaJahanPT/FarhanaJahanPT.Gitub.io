@@ -13,7 +13,7 @@
                         Employee ID
                     </label>
                     <input type="text" id="unique_member_id" name="unique_member_id" class="form-control"/>
-                    <div id="validation_message" style="color: red;"></div>
+                    <div id="validation_message" style="color: red;"/>
                     <div class="text-center">
                         <button type="submit" id="submit_button" class="btn btn-primary mt-3">Start</button>
                     </div>

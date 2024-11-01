@@ -17,28 +17,6 @@
         </field>
     </record>
 
-    <!--    <record id="installation_checklist_view_form" model="ir.ui.view">-->
-    <!--        <field name="name">installation.checklist.view.form</field>-->
-    <!--        <field name="model">installation.checklist</field>-->
-    <!--        <field name="arch" type="xml">-->
-    <!--            <form string="installation_checklist">-->
-    <!--                <sheet>-->
-    <!--                    <group>-->
-    <!--                        <group>-->
-    <!--                            <field name="name"/>-->
-    <!--                            <field name="type"/>-->
-    <!--                            <field name="selfie_type" invisible="type != 'img'"/>-->
-    <!--                            <field name="min_qty" invisible="type != 'img'"/>-->
-    <!--                            <field name="compulsory"/>-->
-    <!--&lt;!&ndash;                            <field name="task_ids" widget="many2many_tags"/>&ndash;&gt;-->
-    <!--                            <field name="category_ids" widget="many2many_tags"/>-->
-    <!--                        </group>-->
-    <!--                    </group>-->
-    <!--                </sheet>-->
-    <!--            </form>-->
-    <!--        </field>-->
-    <!--    </record>-->
     <menuitem id="team_member_question_menu" action="team_member_question_action"
               parent="task_worksheet_configuration_menu"/>
-
 </odoo>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class WorksheetNotification(models.Model):
@@ -11,7 +11,6 @@ class WorksheetNotification(models.Model):
     user_id = fields.Many2one('res.users', string='User')
     subject = fields.Char(string='subject')
     body = fields.Text(string='Description')
-    # model_id = fields.Many2one('ir.model', string='Model')
     model = fields.Char(string='Related Model')
     res_id = fields.Char(string='Related ID')
     is_read = fields.Boolean(string='Read', default=False)
