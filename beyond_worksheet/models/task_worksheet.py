@@ -92,14 +92,15 @@ class WorkSheet(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        operation_team = self.env['hr.employee'].search([('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-        if self.battery_count or self.inverter_count and self.is_testing_required and not self.is_ces_activity_created:
+        if (self.battery_count or self.inverter_count) and self.is_testing_required and not self.is_ces_activity_created:
             operation_team = self.env['hr.employee'].search(
                 [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
             for member in operation_team:
                 self.sudo().activity_schedule(
-                    'mail.mail_activity_data_todo', fields.Datetime.now(),
-                    "Need To Generate CES", user_id=member.id)
+                    activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
+                    date_deadline=fields.Datetime.now(),
+                    note=_('Need To Generate CES'),
+                    user_id=member.id)
             self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')

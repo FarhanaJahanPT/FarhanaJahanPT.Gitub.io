@@ -59,7 +59,6 @@
                             <field name="is_testing_required"/>
                             <field name="electrical_license_number"/>
                             <field name="is_site_induction"/>
-<!--                            <field name="assigned_users" widget="many2many_tags"/>-->
                             <field name="is_ces_activity_created" invisible="1"/>
                             <field name="panel_count" invisible="1"/>
                             <field name="inverter_count" invisible="1"/>
