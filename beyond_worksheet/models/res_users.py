@@ -35,10 +35,11 @@ class ResUsers(models.Model):
         return res
 
     def _notify_security_update(self, subject, body):
+        model_id = self.env['ir.model'].search([('model', '=', self._name)], limit=1).id
         self.env['worksheet.notification'].sudo().create([{
             'author_id': self.env.user.id,
             'user_id': self.id,
-            'model': 'res.users',
+            'model_id': model_id,
             'res_id': self.id,
             'date': datetime.now(),
             'subject': subject,

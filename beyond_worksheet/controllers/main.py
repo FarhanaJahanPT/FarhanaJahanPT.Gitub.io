@@ -17,12 +17,11 @@ class OwnerSignature(http.Controller):
     @http.route('/my/task/<int:task_id>/signature', type="http", auth="public",
                 website=True, sitemap=False)
     def owner_signature_forms(self, task_id, **kw):
-        if task_id:
-            task = request.env['project.task'].sudo().browse(int(task_id))
-        else:
+        task = request.env['project.task'].sudo().browse(int(task_id))
+        if not task.exists():
             return http.request.not_found()
         return request.render("beyond_worksheet.owner_signature_template",
-                              {'task': task, })
+                                  {'task': task, })
 
     @http.route('/my/worksheet/<int:worksheet_id>', type="http", auth="public",
                 website=True, sitemap=False)

@@ -120,14 +120,14 @@ class WorkSheet(models.Model):
                     user = self.team_member_ids.browse(value[1])
                     if value[0] == 4:
                         self.env['worksheet.history'].sudo().create({
-                            'worksheet_id': self.worksheet_id.id,
+                            'worksheet_id': self.id,
                             'user_id': self.env.user.id,
                             'changes': 'Assigned Team Member',
                             'details': '({}) has been successfully added.'.format(user.name),
                         })
                     elif value[0] == 3:
                         self.env['worksheet.history'].sudo().create({
-                            'worksheet_id': self.worksheet_id.id,
+                            'worksheet_id': self.id,
                             'user_id': self.env.user.id,
                             'changes': 'Removed Team Member',
                             'details': '({}) has been successfully removed.'.format(user.name),
@@ -502,10 +502,11 @@ class WorkSheet(models.Model):
                     'changes': 'Create CCEW Documents',
                     'details': 'CCEW Documents has been successfully created.',
                 })
+                model_id = self.env['ir.model'].search([('model', '=', self._name)], limit=1).id
                 self.env['worksheet.notification'].sudo().create([{
                     'author_id': self.env.user.id,
                     'user_id': self.task_id.x_studio_proposed_team.id,
-                    'model': 'task.worksheet',
+                    'model_id': model_id,
                     'res_id': self.id,
                     'date': datetime.now(),
                     'subject': 'Create CCEW Documents',

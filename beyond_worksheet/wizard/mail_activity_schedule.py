@@ -9,7 +9,7 @@ class MailActivitySchedule(models.TransientModel):
         self.env['worksheet.notification'].sudo().create([{
             'author_id': self.plan_on_demand_user_id.id,
             'user_id': self.activity_user_id.id,
-            'model': self.res_model,
+            'model_id': self.res_model_id.id,
             'res_id': self.res_ids,
             'date': self.date_deadline,
             'subject': 'Scheduled Activity',
