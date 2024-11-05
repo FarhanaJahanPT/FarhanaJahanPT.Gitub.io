@@ -5,7 +5,7 @@
             <t t-set="breadcrumbs_searchbar" t-value="False"/>
             <div style="height: 80vh;display: flex;flex-direction: column;align-items: center;justify-content: center;"
                  class="member_portal">
-                <form t-attf-action="/my/questions/{{worksheet}}/{{member_id}}" id="checkin_form">
+                <form t-attf-action="" id="checkin_form">
                     <input type="hidden" name="worksheet_id" t-att-value="worksheet" id="worksheet_id"/>
                     <input type="hidden" name="member_id" id="member"/>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>

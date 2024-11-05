@@ -11,6 +11,8 @@
                             <input type="hidden" name="question_id" t-att-value="question.id"/>
                             <input type="hidden" name="worksheet_id" t-att-value="worksheet"/>
                             <input type="hidden" name="member_id" t-att-value="member"/>
+                            <input type="hidden" name="latitude" t-att-value="latitude"/>
+                            <input type="hidden" name="longitude" t-att-value="longitude"/>
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="form-group">
                                 <label>

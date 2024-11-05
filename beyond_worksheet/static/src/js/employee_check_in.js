@@ -17,16 +17,26 @@ publicWidget.registry.MemberPortal = publicWidget.Widget.extend({
                         })
             if(result.exists == false){
                 $('#validation_message').text('Invalid Employee ID.');
-                console.log($('#member'))
                 $('#member').val(false);
                 $('#submit_button').prop('disabled', true);
             }
             else{
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            $('#checkin_form').attr('action', '/my/questions/' + $('#worksheet_id')[0].value+'/'+ result.member_id + '/' + position.coords.latitude + '/'+ position.coords.longitude);
+
+                        },
+                        (error) => {
+                            console.error("Error retrieving location:", error);
+                        }
+                    );
+                }
+                else{
+                    $('#checkin_form').attr('action', '/my/questions/' + $('#worksheet_id')[0].value+'/'+ result.member_id + '/' + 0 + '/'+ 0);
+                }
                 $('#validation_message').text('');
-                console.log('workseet',$('#worksheet_id')[0].value)
                 $('#submit_button').prop('disabled', false);
-                $('#checkin_form').attr('action', '/my/questions/' + $('#worksheet_id')[0].value+'/'+ result.member_id);
-                console.log('form',$('#checkin_form'))
                 $('#member').val(result.member_id);
             }
         }
