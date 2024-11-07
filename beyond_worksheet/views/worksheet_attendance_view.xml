@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="worksheet_attendance_action" model="ir.actions.act_window">
         <field name="name">Worksheet Attendance</field>
@@ -14,8 +15,14 @@
                 <field name="type"/>
                 <field name="additional_service"/>
                 <field name="worksheet_id"/>
-                <field name="task_id"/>
-                <field name="location"/>
+                <field name="in_latitude"/>
+                <field name="in_longitude"/>
+                <button name="action_view_maps"
+                    type="object"
+                    class="btn btn-link ps-0 pt-0 pb-2"
+                    icon="oi-arrow-right"
+                    string="View on Maps"
+                    colspan="2"/>
             </tree>
         </field>
     </record>
@@ -31,6 +38,7 @@
                             <field name="type"/>
                             <field name="member_id"/>
                             <field name="worksheet_id"/>
+                            <field name="task_id" invisible="1"/>
                             <field name="location"/>
                         </group>
                     </group>

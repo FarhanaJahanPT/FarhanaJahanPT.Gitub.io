@@ -178,14 +178,11 @@ class WorkSheet(models.Model):
                 box_size=3,
                 border=4,
             )
-            qr.add_data(
-                f'http://116.90.0.38:8017/my/worksheet/{self.id}')
-            # qr.add_data("Invoice No : ")
-            # qr.add_data(rec.name)
-            # qr.add_data(", Customer : ")
-            # qr.add_data(rec.partner_id.name)
-            # qr.add_data(", Amount Total : ")
-            # qr.add_data(rec.amount_total)
+            # qr.add_data(
+            #     f'http://116.90.0.38:8017/my/worksheet/{self.id}')
+            url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            qr.add_data(f'{url}/my/worksheet/{self.id}')
+            print(f'{url}/my/worksheet/{self.id}')
             qr.make(fit=True)
             img = qr.make_image()
             temp = io.BytesIO()
