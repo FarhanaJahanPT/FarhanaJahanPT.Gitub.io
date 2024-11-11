@@ -46,22 +46,25 @@
                             <field name="partner_id"/>
                             <field name="task_id"/>
                             <field name="sale_id" invisible="1"/>
-                            <field name="battery_count" invisible="1"/>
+                            <field name="site_address"/>
+                            <field name="scheduled_date"/>
                             <field name="x_studio_type_of_service" invisible="1"/>
-                            <field name="invoice_count" invisible="1"/>
-                            <field name="checklist_count" invisible="1"/>
-                            <field name="is_ccew"/>
-                            <field name="is_site_induction"/>
+                            <field name="is_ccew" invisible="1"/>
+                            <field name="is_site_induction" invisible="1"/>
+                            <field name="solar_panel_layout" widget="image"/>
                         </group>
                         <group>
+                            <field name="proposed_team_id"/>
                             <field name="team_member_ids" widget="many2many_tags"/>
-                            <field name="is_individual"/>
-                            <field name="is_testing_required"/>
+<!--                            <field name="is_individual"/>-->
+<!--                            <field name="is_testing_required"/>-->
                             <field name="electrical_license_number"/>
                             <field name="is_ces_activity_created" invisible="1"/>
                             <field name="panel_count" invisible="1"/>
                             <field name="inverter_count" invisible="1"/>
                             <field name="battery_count" invisible="1"/>
+                            <field name="invoice_count" invisible="1"/>
+                            <field name="checklist_count" invisible="1"/>
                         </group>
                     </group>
                     <notebook>

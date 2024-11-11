@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class ProjectTask(models.Model):
@@ -19,7 +19,18 @@ class ProjectTask(models.Model):
                 'sale_id': self.sale_order_id.id if self.sale_order_id else False
             })
             self.worksheet_id = worksheet.id
-            model_id = self.env['ir.model'].search([('model', '=', 'task.worksheet')],limit=1).id
+        return res
+
+    @api.constrains('x_studio_proposed_team')
+    def check_x_studio_proposed_team(self):
+        if self.worksheet_id:
+            self.env['worksheet.history'].sudo().create({
+                'worksheet_id': self.worksheet_id.id,
+                'user_id': self.env.user.id,
+                'changes': 'Assigned Team Leader',
+                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(self.x_studio_proposed_team.name),
+            })
+            model_id = self.env['ir.model'].search([('model', '=', 'task.worksheet')], limit=1).id
             self.env['worksheet.notification'].sudo().create([{
                 'author_id': self.env.user.id,
                 'user_id': self.x_studio_proposed_team.id,
@@ -27,9 +38,8 @@ class ProjectTask(models.Model):
                 'res_id': self.worksheet_id.id,
                 'date': datetime.now(),
                 'subject': 'Worksheet Assigned',
-                'body': '{} has been assigned to you for installation on the {}'.format(self.worksheet_id.name, self.planned_date_start),
+                'body': '{} has been assigned to you for installation on the {}'.format(self.name, self.planned_date_start),
             }])
-        return res
 
     def _send_team_notifications_cron(self):
         today = datetime.today()

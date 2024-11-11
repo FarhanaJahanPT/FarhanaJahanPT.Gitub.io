@@ -43,14 +43,13 @@ class WorkSheet(models.Model):
                                        domain=[('service_id.selfie_type', '=', 'null')])
     is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True)
     checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True)
-    is_individual = fields.Boolean(string='Individual')
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
     x_studio_type_of_service = fields.Selection(string='Type of Service',
                                                 related='sale_id.x_studio_type_of_service', readonly=True)
     worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance')
     invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
-    is_testing_required = fields.Boolean(string="Testing needed")
+    # is_testing_required = fields.Boolean(string="Testing needed")
     is_ces_activity_created = fields.Boolean(string="CES Activity created")
     is_ccew = fields.Boolean(string='Is CCEW', compute='_compute_is_ccew')
     ccew_sequence = fields.Char(string='Sequence')
@@ -59,6 +58,13 @@ class WorkSheet(models.Model):
         related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number', tracking=True)
     is_site_induction = fields.Boolean(string='Site Induction', tracking=True)
     worksheet_history_ids = fields.One2many('worksheet.history','worksheet_id', readonly=True)
+    site_address = fields.Char(string='Site Address', related='task_id.x_studio_site_address_1')
+    scheduled_date = fields.Datetime(string='Scheduled Date of Service', related='task_id.planned_date_start')
+    proposed_team_id = fields.Many2one('res.users',string='Assigned Installer', related='task_id.x_studio_proposed_team')
+    solar_panel_layout = fields.Binary('Solar Panel Layout', related='sale_id.x_studio_solar_panel_layout')
+    licence_expiry_date = fields.Date(string='Electrical Licence Expiry',
+                                      related='task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_expiry_date')
+
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -73,18 +79,30 @@ class WorkSheet(models.Model):
             'changes': 'Create',
             'details': ' Worksheet ({}) has been create successfully.'.format(res.name),
         })
-        if res.task_id.x_studio_proposed_team:
+        if res.proposed_team_id:
             self.env['worksheet.history'].sudo().create({
                 'worksheet_id': res.id,
-                'user_id': self.env.user.id,
+                'user_id': res.env.user.id,
                 'changes': 'Assigned Team Leader',
-                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(res.task_id.x_studio_proposed_team.name),
+                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(res.proposed_team_id.name),
             })
+            model_id = self.env['ir.model'].search(
+                [('model', '=', 'task.worksheet')], limit=1).id
+
+            self.env['worksheet.notification'].sudo().create([{
+                'author_id': res.env.user.id,
+                'user_id': res.proposed_team_id.id,
+                'model_id': model_id,
+                'res_id': res.id,
+                'date': datetime.now(),
+                'subject': 'Worksheet Assigned',
+                'body': '{} has been assigned to you for installation on the {}'.format(res.name, res.scheduled_date),
+            }])
         return res
 
     def write(self, vals):
         res = super().write(vals)
-        if (self.battery_count or self.inverter_count) and self.is_testing_required and not self.is_ces_activity_created:
+        if (self.battery_count or self.inverter_count) and not self.is_ces_activity_created:
             operation_team = self.env['hr.employee'].search(
                 [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
             for member in operation_team:
@@ -97,7 +115,7 @@ class WorkSheet(models.Model):
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
             license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
-                self.task_id.x_studio_proposed_team.name) + '-'
+                self.proposed_team_id.name) + '-'
             self.ccew_sequence = seq.replace('--', license)
             self.env['worksheet.history'].sudo().create({
                 'worksheet_id': self.id,
@@ -145,7 +163,7 @@ class WorkSheet(models.Model):
             order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Storage')[:1]
             rec.battery_count = sum(order_line.mapped('product_uom_qty'))
 
-    @api.depends('partner_id', 'is_individual', 'is_testing_required')
+    @api.depends('partner_id')
     def _compute_is_ccew(self):
         for rec in self:
             if rec.partner_id.state_id == self.env.ref('base.state_au_2'):
@@ -182,7 +200,6 @@ class WorkSheet(models.Model):
             #     f'http://116.90.0.38:8017/my/worksheet/{self.id}')
             url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             qr.add_data(f'{url}/my/worksheet/{self.id}')
-            print(f'{url}/my/worksheet/{self.id}')
             qr.make(fit=True)
             img = qr.make_image()
             temp = io.BytesIO()
@@ -223,7 +240,7 @@ class WorkSheet(models.Model):
         friday = monday + timedelta(days=4)
         attendance_ids = self.env['worksheet.attendance'].search([('datetime', '>=', monday.date()),('datetime', '<=', friday.date())])
         for worksheet_id in attendance_ids.worksheet_id:
-            if worksheet_id.is_individual:
+            if worksheet_id:
                 for user_id in worksheet_id.worksheet_attendance_ids.user_id:
                     service = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.type == 'check_in' and w.user_id == user_id)
                     additional = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.additional_service == True and w.user_id == user_id)
@@ -423,8 +440,8 @@ class WorkSheet(models.Model):
                 page.insert_text((366, 163), battery.product_id.name,fontsize=8, color=(0, 0, 0))
             page.insert_image((412,486,431,503), filename=image_path)
             page.insert_image((412,508,431,523), filename=image_path)
-            if self.task_id.x_studio_proposed_team:
-                partner_id = self.task_id.x_studio_proposed_team.partner_id
+            if self.proposed_team_id:
+                partner_id = self.proposed_team_id.partner_id
                 address = partner_id.street
                 name = partner_id.name
                 if address:
@@ -460,8 +477,8 @@ class WorkSheet(models.Model):
                 page.insert_text((470,668), partner_id.zip, fontsize=10,color=(0, 0, 0))
                 page.insert_text((47,697), partner_id.email, fontsize=10,color=(0, 0, 0))
                 page.insert_text((470,697), partner_id.mobile if partner_id.mobile else partner_id.phone, fontsize=10,color=(0, 0, 0))
-                page.insert_text((309,727), self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_number, fontsize=10,color=(0, 0, 0))
-                page.insert_text((451,727), str(self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_expiry_date), fontsize=10,color=(0, 0, 0))
+                page.insert_text((309,727), self.proposed_team_id.x_studio_nsw_contractor_licence_number, fontsize=10,color=(0, 0, 0))
+                page.insert_text((451,727), str(self.proposed_team_id.x_studio_nsw_contractor_licence_expiry_date), fontsize=10,color=(0, 0, 0))
             page = doc[2]
             page.insert_image((64,88,81,101), filename=image_path)
             # page.insert_image((64,105,81,118), filename=image_path)
@@ -474,7 +491,7 @@ class WorkSheet(models.Model):
             if self.task_id.date_deadline:
                 date_deadline = fields.Date.to_date(self.task_id.date_deadline)
                 page.insert_text((219,262), str(date_deadline), fontsize=10,color=(0, 0, 0))
-            if self.is_testing_required and self.task_id.x_studio_proposed_team:
+            if  self.proposed_team_id:
                 page.insert_image((237,281,252,292), filename=image_path)
                 page.insert_text((47, 322), first_name, fontsize=10,color=(0, 0, 0))
                 page.insert_text((298, 322), last_name, fontsize=10,color=(0, 0, 0))
@@ -486,8 +503,8 @@ class WorkSheet(models.Model):
                 page.insert_text((469, 410), partner_id.zip, fontsize=10,color=(0, 0, 0))
                 page.insert_text((47, 438), partner_id.email, fontsize=10,color=(0, 0, 0))
                 page.insert_text((469, 438),partner_id.mobile if partner_id.mobile else partner_id.phone,fontsize=10, color=(0, 0, 0))
-                page.insert_text((309, 468),self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_number,fontsize=10, color=(0, 0, 0))
-                page.insert_text((452, 467),str(self.task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_expiry_date),fontsize=10, color=(0, 0, 0))
+                page.insert_text((309, 468),self.proposed_team_id.x_studio_nsw_contractor_licence_number,fontsize=10, color=(0, 0, 0))
+                page.insert_text((452, 467),str(self.proposed_team_id.x_studio_nsw_contractor_licence_expiry_date),fontsize=10, color=(0, 0, 0))
             pdf_stream = io.BytesIO()
             doc.save(pdf_stream)
             doc.close()
@@ -502,7 +519,7 @@ class WorkSheet(models.Model):
                 model_id = self.env['ir.model'].search([('model', '=', self._name)], limit=1).id
                 self.env['worksheet.notification'].sudo().create([{
                     'author_id': self.env.user.id,
-                    'user_id': self.task_id.x_studio_proposed_team.id,
+                    'user_id': self.proposed_team_id.id,
                     'model_id': model_id,
                     'res_id': self.id,
                     'date': datetime.now(),

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from email.policy import default
+
 from odoo import api, fields, models
 
 
@@ -13,6 +15,7 @@ class InstallationChecklist(models.Model):
     selfie_type = fields.Selection([('check_in', 'Check In'), ('mid', 'Mid Time'), ('check_out', 'Check Out'), ('null', ' ')],
                                    string='Selfie Type', default='null')
     category_ids = fields.Many2many('product.category', string='Category', required=True)
+    is_spv_required = fields.Boolean(string='SPV Required', default=False)
 
     def get_checklist_count(self):
         worksheet_ids = self.env['task.worksheet'].search([('x_studio_type_of_service','=', 'New Installation')])
