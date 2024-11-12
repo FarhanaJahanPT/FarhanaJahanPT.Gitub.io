@@ -196,8 +196,6 @@ class WorkSheet(models.Model):
                 box_size=3,
                 border=4,
             )
-            # qr.add_data(
-            #     f'http://116.90.0.38:8017/my/worksheet/{self.id}')
             url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             qr.add_data(f'{url}/my/worksheet/{self.id}')
             qr.make(fit=True)
