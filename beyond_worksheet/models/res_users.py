@@ -11,6 +11,8 @@ class ResUsers(models.Model):
     currency_id = fields.Many2one(comodel_name='res.currency',
                                   string="Company Currency",
                                   related='company_id.currency_id',)
+    contract_license_ids = fields.One2many('electrical.contract.license','user_id')
+
 
     def get_weekly_work(self, object):
         today = datetime.today()
