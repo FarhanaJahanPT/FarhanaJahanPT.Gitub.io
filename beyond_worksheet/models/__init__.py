@@ -15,3 +15,4 @@ from . import wrokseet_member_question
 from . import product_template
 from . import worksheet_history
 from . import worksheet_notification
+from . import work_type

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="work_type_1" model="work.type">
+        <field name="name">STC-PV</field>
+    </record>
+    <record id="work_type_2" model="work.type">
+        <field name="name">PRC-BESS1</field>
+    </record>
+</odoo>

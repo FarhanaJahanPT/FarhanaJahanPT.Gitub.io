@@ -49,21 +49,23 @@ class WorkSheet(models.Model):
                                                 related='sale_id.x_studio_type_of_service', readonly=True)
     worksheet_attendance_ids = fields.One2many('worksheet.attendance', 'worksheet_id', string='Worksheet Attendance')
     invoice_count = fields.Integer(string="Invoice Count", compute='_compute_invoice_count', help='Total invoice count')
-    # is_testing_required = fields.Boolean(string="Testing needed")
     is_ces_activity_created = fields.Boolean(string="CES Activity created")
     is_ccew = fields.Boolean(string='Is CCEW', compute='_compute_is_ccew')
     ccew_sequence = fields.Char(string='Sequence')
     ccew_file = fields.Binary(string='CCEW', related='task_id.x_studio_ccew', store=True)
     electrical_license_number = fields.Char(
-        related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number', tracking=True)
+        related='task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_number')
+    licence_expiry_date = fields.Date(string='Electrical Licence Expiry',
+                                      related='task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_expiry_date')
     is_site_induction = fields.Boolean(string='Site Induction', tracking=True)
     worksheet_history_ids = fields.One2many('worksheet.history','worksheet_id', readonly=True)
     site_address = fields.Char(string='Site Address', related='task_id.x_studio_site_address_1')
     scheduled_date = fields.Datetime(string='Scheduled Date of Service', related='task_id.planned_date_start')
     proposed_team_id = fields.Many2one('res.users',string='Assigned Installer', related='task_id.x_studio_proposed_team')
     solar_panel_layout = fields.Binary('Solar Panel Layout', related='sale_id.x_studio_solar_panel_layout')
-    licence_expiry_date = fields.Date(string='Electrical Licence Expiry',
-                                      related='task_id.x_studio_proposed_team.x_studio_nsw_contractor_licence_expiry_date')
+    work_type_ids = fields.Many2many('work.type', string='Work Type', compute='compute_work_type_ids', store=True)
+    spv_state = fields.Selection([('valid', 'Valid'),('invalid', 'Invalid'), ('null', ' ')],
+                                 string='SPV', compute='compute_spv_state', store=True)
 
 
     @api.model_create_multi
@@ -151,6 +153,27 @@ class WorkSheet(models.Model):
                             'details': '({}) has been successfully removed.'.format(user.name),
                         })
         return res
+
+    @api.depends('sale_id')
+    def compute_work_type_ids(self):
+        for rec in self:
+            rec.work_type_ids = None
+            if rec.sale_id._get_stc_values('total') != 0:
+                rec.work_type_ids =[(4, self.env.ref('beyond_worksheet.work_type_1').id)]
+            if rec.sale_id._get_prc_values('total') != 0:
+                rec.work_type_ids = [(4, self.env.ref('beyond_worksheet.work_type_2').id)]
+
+    @api.depends('panel_lot_ids.state', 'is_site_induction')
+    def compute_spv_state(self):
+        for rec in self:
+            any_invalid = any(panel.state == 'invalid' for panel in rec.panel_lot_ids)
+            all_verified = all(panel.state == 'verified' for panel in rec.panel_lot_ids)
+            if any_invalid:
+                rec.spv_state = 'invalid'
+            elif all_verified:
+                rec.spv_state = 'valid'
+            else:
+                rec.spv_state = 'null'
 
     @api.depends('sale_id')
     def _compute_order_count(self):
@@ -531,4 +554,5 @@ class WorkSheet(models.Model):
                     'changes': 'Updated CCEW Documents',
                     'details': ' CCEW Documents has been successfully Updated.',
                 })
+            self.ccew_file = None
             self.task_id.x_studio_ccew = modified_pdf_content

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="work_type_action" model="ir.actions.act_window">
+        <field name="name">Work Type</field>
+        <field name="res_model">work.type</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="work_type_view_tree" model="ir.ui.view">
+        <field name="name">work.type.view.tree</field>
+        <field name="model">work.type</field>
+        <field name="arch" type="xml">
+            <tree string="Work Type" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="work_type_menu" action="work_type_action"
+              parent="task_worksheet_configuration_menu"/>
+</odoo>

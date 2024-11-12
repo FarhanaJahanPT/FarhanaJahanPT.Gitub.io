@@ -56,9 +56,12 @@
                         <group>
                             <field name="proposed_team_id"/>
                             <field name="team_member_ids" widget="many2many_tags"/>
+                            <field name="work_type_ids" widget="many2many_tags"/>
 <!--                            <field name="is_individual"/>-->
 <!--                            <field name="is_testing_required"/>-->
+                            <field name="spv_state"/>
                             <field name="electrical_license_number"/>
+                            <field name="licence_expiry_date"/>
                             <field name="is_ces_activity_created" invisible="1"/>
                             <field name="panel_count" invisible="1"/>
                             <field name="inverter_count" invisible="1"/>

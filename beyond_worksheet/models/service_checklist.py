@@ -15,6 +15,7 @@ class ServiceChecklist(models.Model):
                                    string='Selfie Type', default='null')
     category_ids = fields.Many2many('product.category', string='Category',
                                     required=True)
+    is_spv_required = fields.Boolean(string='SPV Required', default=False)
 
     def get_checklist_count(self):
         worksheet_ids = self.env['task.worksheet'].search([('x_studio_type_of_service', '=', 'Service')])

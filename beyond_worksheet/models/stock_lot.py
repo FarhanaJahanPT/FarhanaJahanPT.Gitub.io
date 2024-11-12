@@ -22,8 +22,8 @@ class StockLot(models.Model):
         if self.worksheet_id and self.type:
             self.env['worksheet.history'].sudo().create({
                 'worksheet_id': self.worksheet_id.id,
-                'user_id': res.user_id.id if res.user_id else False,
-                'member_id': res.member_id.id if res.member_id else False,
+                'user_id': self.user_id.id if self.user_id else False,
+                'member_id': self.member_id.id if self.member_id else False,
                 'changes': 'Updated Serial Number',
                 'details': '{} Serial Number ({}) has been updated successfully.'.format(self.type,self.name),
             })

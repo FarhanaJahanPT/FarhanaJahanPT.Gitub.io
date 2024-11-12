@@ -13,6 +13,7 @@
         'data/ir_cron_data.xml',
         'data/ir_sequence_data.xml',
         'data/hr_department_data.xml',
+        'data/work_type_data.xml',
         'views/project_task_views.xml',
         'views/stock_lot_views.xml',
         'views/task_worksheet_views.xml',
@@ -32,6 +33,7 @@
         'views/product_template_views.xml',
         'views/worksheet_history_views.xml',
         'views/worksheet_notification_views.xml',
+        'views/work_type_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
