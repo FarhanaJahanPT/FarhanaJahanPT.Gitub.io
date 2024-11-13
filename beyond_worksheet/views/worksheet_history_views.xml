@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="worksheet_history_action" model="ir.actions.act_window">
         <field name="name">Worksheet History</field>
@@ -38,7 +39,7 @@
             </form>
         </field>
     </record>
-    <menuitem id="worksheet_history_menu_action"
-              action="worksheet_history_action"
-              parent="task_worksheet_configuration_menu"/>
+<!--    <menuitem id="worksheet_history_menu_action"-->
+<!--              action="worksheet_history_action"-->
+<!--              parent="task_worksheet_configuration_menu"/>-->
 </odoo>

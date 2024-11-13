@@ -53,9 +53,6 @@ class WorkSheet(models.Model):
     is_ccew = fields.Boolean(string='Is CCEW', compute='_compute_is_ccew')
     ccew_sequence = fields.Char(string='Sequence')
     ccew_file = fields.Binary(string='CCEW', related='task_id.x_studio_ccew', store=True)
-    electrical_license_number = fields.Char(
-        related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number', tracking=True)
-    is_site_induction = fields.Boolean(string='Site Induction')
     worksheet_history_ids = fields.One2many('worksheet.history','worksheet_id', readonly=True)
     site_address = fields.Char(string='Site Address', related='task_id.x_studio_site_address_1')
     scheduled_date = fields.Datetime(string='Scheduled Date of Service', related='task_id.planned_date_start')
@@ -118,11 +115,11 @@ class WorkSheet(models.Model):
 
     def _compute_installation_type(self):
         for rec in self:
-            if rec.task_id.x_studio_has_existing_system_installed == 'Yes' and rec.task_id.x_studio_type_of_service == 'New Installation':
+            if rec.task_id.x_studio_has_existing_system_installed == 'Yes' and rec.x_studio_type_of_service == 'New Installation':
                 rec.installation_type = 'additional_system'
-            elif rec.task_id.x_studio_has_existing_system_installed == 'No' and rec.task_id.x_studio_type_of_service == 'New Installation':
+            elif rec.task_id.x_studio_has_existing_system_installed == 'No' and rec.x_studio_type_of_service == 'New Installation':
                 rec.installation_type = 'first_time'
-            elif rec.task_id.x_studio_type_of_service == 'Replacement':
+            elif rec.x_studio_type_of_service == 'Replacement':
                 rec.installation_type = 'replacement'
             else:
                 rec.installation_type = False
@@ -141,7 +138,8 @@ class WorkSheet(models.Model):
             self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
-            license = '-' + (str(self.electrical_license_number) + '/' if self.electrical_license_number else '' ) + str(
+            license_id = self.proposed_team_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
+            license = '-' + (str(license_id.number) + '/' if license_id else '' ) + str(
                 self.proposed_team_id.name) + '-'
             self.ccew_sequence = seq.replace('--', license)
             self.env['worksheet.history'].sudo().create({
@@ -153,7 +151,7 @@ class WorkSheet(models.Model):
         for val in vals:
             key = val
             values = vals.get(val)
-            if isinstance(values,bool):
+            if isinstance(values,bool) and key != 'ccew_file':
                 self.env['worksheet.history'].sudo().create({
                     'worksheet_id': self.id,
                     'user_id': self.env.user.id,
@@ -526,8 +524,10 @@ class WorkSheet(models.Model):
                 page.insert_text((470,668), partner_id.zip, fontsize=10,color=(0, 0, 0))
                 page.insert_text((47,697), partner_id.email, fontsize=10,color=(0, 0, 0))
                 page.insert_text((470,697), partner_id.mobile if partner_id.mobile else partner_id.phone, fontsize=10,color=(0, 0, 0))
-                page.insert_text((309,727), self.proposed_team_id.x_studio_nsw_contractor_licence_number, fontsize=10,color=(0, 0, 0))
-                page.insert_text((451,727), str(self.proposed_team_id.x_studio_nsw_contractor_licence_expiry_date), fontsize=10,color=(0, 0, 0))
+                license_id = self.proposed_team_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
+                if license_id:
+                    page.insert_text((309,727), license_id.number, fontsize=10,color=(0, 0, 0))
+                    page.insert_text((451,727), str(license_id.expiry_date), fontsize=10,color=(0, 0, 0))
             page = doc[2]
             page.insert_image((64,88,81,101), filename=image_path)
             # page.insert_image((64,105,81,118), filename=image_path)
@@ -552,8 +552,9 @@ class WorkSheet(models.Model):
                 page.insert_text((469, 410), partner_id.zip, fontsize=10,color=(0, 0, 0))
                 page.insert_text((47, 438), partner_id.email, fontsize=10,color=(0, 0, 0))
                 page.insert_text((469, 438),partner_id.mobile if partner_id.mobile else partner_id.phone,fontsize=10, color=(0, 0, 0))
-                page.insert_text((309, 468),self.proposed_team_id.x_studio_nsw_contractor_licence_number,fontsize=10, color=(0, 0, 0))
-                page.insert_text((452, 467),str(self.proposed_team_id.x_studio_nsw_contractor_licence_expiry_date),fontsize=10, color=(0, 0, 0))
+                if license_id:
+                    page.insert_text((309, 468),license_id.number,fontsize=10, color=(0, 0, 0))
+                    page.insert_text((452, 467),str(license_id.expiry_date),fontsize=10, color=(0, 0, 0))
             pdf_stream = io.BytesIO()
             doc.save(pdf_stream)
             doc.close()

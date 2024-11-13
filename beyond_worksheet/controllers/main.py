@@ -51,10 +51,8 @@ class OwnerSignature(http.Controller):
         }
 
     @http.route(['/my/questions/<int:worksheet>/<int:member>/<float:latitude>/<float:longitude>'], type='http',
-                auth="public",
-                website=True)
+                auth="public", website=True)
     def show_question(self, worksheet, member, latitude, longitude, **kwargs):
-
         # Fetch unanswered questions first
         member_id = kwargs.get('member_id') if kwargs.get('member_id') else member
         worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
@@ -93,7 +91,6 @@ class OwnerSignature(http.Controller):
     def submit_answer(self, **kwargs):
         worksheet = int(kwargs.get('worksheet_id'))
         member = int(kwargs.get('member_id'))
-
         # Get question and answer from the POST data
         request.env['worksheet.member.question'].sudo().create({
             'question_id': int(kwargs.get('question_id')),
