@@ -55,11 +55,11 @@ class WorkSheet(models.Model):
     ccew_file = fields.Binary(string='CCEW', related='task_id.x_studio_ccew', store=True)
     electrical_license_number = fields.Char(
         related='task_id.x_studio_proposed_team.x_studio_act_electrical_licence_number', tracking=True)
-    is_site_induction = fields.Boolean(string='Site Induction', tracking=True)
+    is_site_induction = fields.Boolean(string='Site Induction')
     worksheet_history_ids = fields.One2many('worksheet.history','worksheet_id', readonly=True)
     site_address = fields.Char(string='Site Address', related='task_id.x_studio_site_address_1')
     scheduled_date = fields.Datetime(string='Scheduled Date of Service', related='task_id.planned_date_start')
-    date_deadline = fields.Datetime(string='Scheduled Date of Service1', related='task_id.date_deadline')
+    date_deadline = fields.Datetime(related='task_id.date_deadline')
     proposed_team_id = fields.Many2one('res.users',string='Assigned Installer', related='task_id.x_studio_proposed_team')
     solar_panel_layout = fields.Binary('Solar Panel Layout', related='sale_id.x_studio_solar_panel_layout')
     licence_expiry_date = fields.Date(string='Electrical Licence Expiry', compute="_compute_license_expiry_date")
@@ -114,7 +114,6 @@ class WorkSheet(models.Model):
                 license = contract_licenses.filtered(lambda l: l.type == 'act')
             else:
                 license = False
-
             rec.licence_expiry_date = license.expiry_date if license else False
 
     def _compute_installation_type(self):
@@ -189,15 +188,18 @@ class WorkSheet(models.Model):
             if rec.sale_id._get_prc_values('total') != 0:
                 rec.work_type_ids = [(4, self.env.ref('beyond_worksheet.work_type_2').id)]
 
-    @api.depends('panel_lot_ids.state', 'is_site_induction')
+    @api.depends('panel_lot_ids.state')
     def compute_spv_state(self):
         for rec in self:
-            any_invalid = any(panel.state == 'invalid' for panel in rec.panel_lot_ids)
-            all_verified = all(panel.state == 'verified' for panel in rec.panel_lot_ids)
-            if any_invalid:
-                rec.spv_state = 'invalid'
-            elif all_verified:
-                rec.spv_state = 'valid'
+            if rec.panel_lot_ids:
+                any_invalid = any(panel.state == 'invalid' for panel in rec.panel_lot_ids)
+                all_verified = all(panel.state == 'verified' for panel in rec.panel_lot_ids)
+                if any_invalid:
+                    rec.spv_state = 'invalid'
+                elif all_verified:
+                    rec.spv_state = 'valid'
+                else:
+                    rec.spv_state = 'null'
             else:
                 rec.spv_state = 'null'
 
