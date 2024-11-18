@@ -58,6 +58,7 @@ class WorkSheet(models.Model):
     scheduled_date = fields.Datetime(string='Scheduled Date of Service', related='task_id.planned_date_start')
     date_deadline = fields.Datetime(related='task_id.date_deadline')
     proposed_team_id = fields.Many2one('res.users',string='Assigned Installer', related='task_id.x_studio_proposed_team')
+    team_lead_id = fields.Many2one('team.member', string='Assigned Installer', related='task_id.team_lead_id')
     solar_panel_layout = fields.Binary('Solar Panel Layout', related='sale_id.x_studio_solar_panel_layout')
     licence_expiry_date = fields.Date(string='Electrical Licence Expiry', compute="_compute_license_expiry_date")
     installation_type = fields.Selection([('first_time','First Time Installation'),('additional_system','Additional System'),('replacement','Replacement')],compute="_compute_installation_type")

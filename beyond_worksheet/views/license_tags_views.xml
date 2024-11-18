@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="license_tags_action" model="ir.actions.act_window">
+        <field name="name">License Tags</field>
+        <field name="res_model">license.tags</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="license_tags_view_tree" model="ir.ui.view">
+        <field name="name">license.tags.view.tree</field>
+        <field name="model">license.tags</field>
+        <field name="arch" type="xml">
+            <tree string="License Tags" editable="bottom">
+                <field name="name"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="license_tags_menu" action="license_tags_action"
+              parent="task_worksheet_configuration_menu"/>
+</odoo>

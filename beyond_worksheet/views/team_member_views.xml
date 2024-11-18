@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="team_member_action" model="ir.actions.act_window">
-        <field name="name">Team Member</field>
+        <field name="name">Teams</field>
         <field name="res_model">team.member</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -24,19 +24,47 @@
         <field name="model">team.member</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_create_employee" class="btn-primary" type="object" string="Create Employee"
+                            invisible="employee_id"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
+                            <field name="employee_id"/>
                             <field name="member_id"/>
                             <field name="name"/>
                         </group>
                         <group>
+                            <field name="type"/>
                             <field name="mobile"/>
                             <field name="email"/>
                             <field name="country_id"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Licence and Accreditations"
+                              name="license">
+                            <field name="contract_license_ids">
+                                <tree string="Electrical License"
+                                      editable="inline">
+                                    <field name="type"/>
+                                    <field name="number"/>
+                                    <field name="expiry_date"/>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                    <field name="document"/>
+                                    <!--                                    <field name="document" widget="image"/>-->
+                                    <field name="team_id" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>

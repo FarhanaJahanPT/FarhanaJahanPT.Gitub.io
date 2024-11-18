@@ -11,4 +11,5 @@ access_worksheet_member_question,access.worksheet.member.question,model_workshee
 access_team_member,access.team.member,model_team_member,base.group_user,1,1,1,1
 access_worksheet_notification,access.worksheet.notification,model_worksheet_notification,base.group_user,1,1,1,1
 access_electrical_contract_license,access.electrical.contract.license,model_electrical_contract_license,base.group_user,1,1,1,1
+access_license_tags,accesslicense.tags,model_license_tags,base.group_user,1,1,1,1
 access_work_type,access.work.type,model_work_type,base.group_user,1,1,1,1

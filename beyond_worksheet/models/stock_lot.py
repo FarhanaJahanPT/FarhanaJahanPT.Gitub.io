@@ -16,6 +16,7 @@ class StockLot(models.Model):
     user_id = fields.Many2one('res.users', string='User')
     member_id = fields.Many2one('team.member', string='Team Member')
     location = fields.Text(string='Location')
+    categ_id = fields.Many2one('product.category', related='product_id.categ_id')
 
     def write(self, vals):
         res = super(StockLot, self).write(vals)

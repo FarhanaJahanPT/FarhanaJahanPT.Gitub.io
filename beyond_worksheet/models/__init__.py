@@ -17,3 +17,4 @@ from . import worksheet_history
 from . import worksheet_notification
 from . import electrical_contract_license
 from . import work_type
+from . import license_tags

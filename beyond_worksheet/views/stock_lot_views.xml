@@ -13,6 +13,7 @@
                         </group>
                         <group>
                             <field name="worksheet_id"/>
+                            <field name="categ_id"/>
                             <field name="user_id"/>
                             <field name="member_id"/>
                             <field name="type"/>

@@ -16,6 +16,9 @@
             <xpath expr="//div[@id='date_deadline_and_recurring_task']" position="after">
                 <field name="worksheet_id" invisible="1"/>
             </xpath>
+            <xpath expr="//field[@name='x_studio_proposed_team']" position="after">
+                <field name="team_lead_id"/>
+            </xpath>
         </field>
     </record>
 </odoo>
