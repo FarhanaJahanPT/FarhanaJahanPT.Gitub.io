@@ -6,6 +6,7 @@ from odoo import api, fields, models
 class TeamMember(models.Model):
     _name = 'team.member'
     _description = 'Team member'
+    _rec_name = 'name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     employee_id = fields.Many2one('hr.employee', string='Employee')
@@ -22,13 +23,25 @@ class TeamMember(models.Model):
         ('uniq_member_id', 'UNIQUE(member_id)', 'This Member ID is already Exist'),
     ]
 
+    # def get_weekly_work(self, object):
+    #     today = datetime.today()
+    #     next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
+    #     next_friday = next_monday + timedelta(days=4)
+    #     tasks = self.env['project.task'].search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
+    #     task_ids = tasks.filtered(lambda w: object in w.worksheet_id.team_member_ids)
+    #     return task_ids
+
     def get_weekly_work(self, object):
         today = datetime.today()
         next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
         next_friday = next_monday + timedelta(days=4)
-        tasks = self.env['project.task'].search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
-        task_ids = tasks.filtered(lambda w: object in w.worksheet_id.team_member_ids)
+        tasks = self.env['project.task'].search(
+            [('planned_date_start', '>=', next_monday.date()),
+             ('planned_date_start', '<=', next_friday.date())])
+        task_ids = tasks.filtered(lambda w: w.team_lead_id == object)
+        task_ids += tasks.filtered(lambda w: object in w.worksheet_id.team_member_ids)
         return task_ids
+
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):

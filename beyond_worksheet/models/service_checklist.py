@@ -16,6 +16,18 @@ class ServiceChecklist(models.Model):
     category_ids = fields.Many2many('product.category', string='Category',
                                     required=True)
     is_spv_required = fields.Boolean(string='SPV Required', default=False)
+    icon = fields.Selection([('fa fa-user-circle-o', 'fa fa-user-circle-o'),
+                             ('fa fa-barcode', 'fa fa-barcode'),
+                             ('fa fa-camera', 'fa fa-camera'),
+                             ('fa fa-calendar', 'fa fa-calendar'),
+                             ('fa fa-pencil-square-o', 'fa fa-pencil-square-o'),
+                             ('fa fa-file-text-o', 'fa fa-file-text-o'),
+                             ('fa fa-file-text', 'fa fa-file-text'),
+                             ('fa fa-battery-full', 'fa fa-battery-full'),
+                             ], string='Icon')
+    group = fields.Selection(
+        [('on_site', 'Onsite Data'), ('prc', 'PRC Onsite Data')],
+        string='Group', default='on_site', required=True)
 
     def get_checklist_count(self):
         worksheet_ids = self.env['task.worksheet'].search([('x_studio_type_of_service', '=', 'Service')])

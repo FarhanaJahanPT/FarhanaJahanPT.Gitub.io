@@ -79,19 +79,18 @@ class WorkSheet(models.Model):
             'changes': 'Create',
             'details': ' Worksheet ({}) has been create successfully.'.format(res.name),
         })
-        if res.proposed_team_id:
+        if res.team_lead_id:
             self.env['worksheet.history'].sudo().create({
                 'worksheet_id': res.id,
                 'user_id': res.env.user.id,
                 'changes': 'Assigned Team Leader',
-                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(res.proposed_team_id.name),
+                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(res.team_lead_id.name),
             })
             model_id = self.env['ir.model'].search(
                 [('model', '=', 'task.worksheet')], limit=1).id
-
             self.env['worksheet.notification'].sudo().create([{
                 'author_id': res.env.user.id,
-                'user_id': res.proposed_team_id.id,
+                'team_id': res.team_lead_id.id,
                 'model_id': model_id,
                 'res_id': res.id,
                 'date': datetime.now(),
@@ -105,7 +104,7 @@ class WorkSheet(models.Model):
             nsw_ref = rec.env.ref('base.state_au_2').code
             act_ref = rec.env.ref('base.state_au_1').code
             state_code = rec.partner_id.state_id.code
-            contract_licenses = rec.proposed_team_id.contract_license_ids
+            contract_licenses = rec.team_lead_id.contract_license_ids
             if state_code == nsw_ref:
                 license = contract_licenses.filtered(lambda l: l.type == 'nsw')
             elif state_code == act_ref:
@@ -139,9 +138,9 @@ class WorkSheet(models.Model):
             self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
-            license_id = self.proposed_team_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
+            license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
             license = '-' + (str(license_id.number) + '/' if license_id else '' ) + str(
-                self.proposed_team_id.name) + '-'
+                self.team_lead_id.name) + '-'
             self.ccew_sequence = seq.replace('--', license)
             self.env['worksheet.history'].sudo().create({
                 'worksheet_id': self.id,
@@ -354,6 +353,48 @@ class WorkSheet(models.Model):
                                   checklist_item_id.image])
         return data, checklist
 
+    @api.model
+    def get_overview_values(self,vals):
+        data = []
+        checklist = []
+        serial_number = []
+        serial_count = []
+        record = self.browse(vals)
+        serial_count.append([record.panel_count,len(record.panel_lot_ids)])
+        serial_count.append([record.inverter_count,len(record.inverter_lot_ids)])
+        serial_count.append([record.battery_count,len(record.battery_lot_ids)])
+        order_line =record.sale_id.order_line.product_id.categ_id.mapped('id')
+        if record.x_studio_type_of_service == 'New Installation':
+            checklist_ids = self.env['installation.checklist'].search(
+                [('category_ids', 'in', order_line)])
+            checklist_item_ids = self.env['installation.checklist.item'].search([('worksheet_id', '=', vals)])
+            for checklist_id in checklist_ids:
+                total = 0
+                for checklist_item_id in checklist_item_ids:
+                    if checklist_item_id.checklist_id.id == checklist_id.id:
+                        total += 1
+                data.append([checklist_id.id,checklist_id.icon, checklist_id.name, checklist_id.group, checklist_id.min_qty,total,checklist_id.type,])
+            for checklist_item_id in checklist_item_ids:
+                checklist.append([checklist_item_id.checklist_id.id,
+                                  checklist_item_id.create_date,
+                                  checklist_item_id.location,
+                                  checklist_item_id.text,
+                                  checklist_item_id.image])
+        elif record.x_studio_type_of_service == 'Service':
+            checklist_ids = self.env['service.checklist'].search(
+                [('category_ids', 'in', order_line)])
+            checklist_item_ids = self.env['service.checklist.item'].search(
+                [('worksheet_id', '=', vals)])
+            for checklist_id in checklist_ids:
+                data.append([checklist_id.id,checklist_id.icon, checklist_id.name, checklist_id.group, checklist_id.type])
+            for checklist_item_id in checklist_item_ids:
+                checklist.append([checklist_item_id.service_id.id,
+                                  checklist_item_id.create_date,
+                                  checklist_item_id.location,
+                                  checklist_item_id.text,
+                                  checklist_item_id.image])
+        return data, serial_count, checklist
+
     @api.constrains('panel_lot_ids', 'inverter_lot_ids', 'battery_lot_ids')
     def get_delivered_items(self):
         for rec in self:
@@ -488,10 +529,10 @@ class WorkSheet(models.Model):
                 page.insert_text((366, 163), battery.product_id.name,fontsize=8, color=(0, 0, 0))
             page.insert_image((412,486,431,503), filename=image_path)
             page.insert_image((412,508,431,523), filename=image_path)
-            if self.proposed_team_id:
-                partner_id = self.proposed_team_id.partner_id
+            if self.team_lead_id.employee_id:
+                partner_id = self.team_lead_id.employee_id.address_id
                 address = partner_id.street
-                name = partner_id.name
+                name = self.team_lead_id.name
                 if address:
                     words = address.split()
                     if "Unit" in words:
@@ -523,9 +564,9 @@ class WorkSheet(models.Model):
                 page.insert_text((47,668), partner_id.city, fontsize=10,color=(0, 0, 0))
                 page.insert_text((300,668), partner_id.state_id.code, fontsize=10,color=(0, 0, 0))
                 page.insert_text((470,668), partner_id.zip, fontsize=10,color=(0, 0, 0))
-                page.insert_text((47,697), partner_id.email, fontsize=10,color=(0, 0, 0))
-                page.insert_text((470,697), partner_id.mobile if partner_id.mobile else partner_id.phone, fontsize=10,color=(0, 0, 0))
-                license_id = self.proposed_team_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
+                page.insert_text((47,697), self.team_lead_id.email, fontsize=10,color=(0, 0, 0))
+                page.insert_text((470,697), self.team_lead_id.mobile, fontsize=10,color=(0, 0, 0))
+                license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
                 if license_id:
                     page.insert_text((309,727), license_id.number, fontsize=10,color=(0, 0, 0))
                     page.insert_text((451,727), str(license_id.expiry_date), fontsize=10,color=(0, 0, 0))
@@ -541,7 +582,7 @@ class WorkSheet(models.Model):
             if self.task_id.date_deadline:
                 date_deadline = fields.Date.to_date(self.task_id.date_deadline)
                 page.insert_text((219,262), str(date_deadline), fontsize=10,color=(0, 0, 0))
-            if  self.proposed_team_id:
+            if  self.team_lead_id:
                 page.insert_image((237,281,252,292), filename=image_path)
                 page.insert_text((47, 322), first_name, fontsize=10,color=(0, 0, 0))
                 page.insert_text((298, 322), last_name, fontsize=10,color=(0, 0, 0))
@@ -551,8 +592,8 @@ class WorkSheet(models.Model):
                 page.insert_text((47, 410), partner_id.city, fontsize=10,color=(0, 0, 0))
                 page.insert_text((298, 410), partner_id.state_id.code, fontsize=10,color=(0, 0, 0))
                 page.insert_text((469, 410), partner_id.zip, fontsize=10,color=(0, 0, 0))
-                page.insert_text((47, 438), partner_id.email, fontsize=10,color=(0, 0, 0))
-                page.insert_text((469, 438),partner_id.mobile if partner_id.mobile else partner_id.phone,fontsize=10, color=(0, 0, 0))
+                page.insert_text((47, 438), self.team_lead_id.email, fontsize=10,color=(0, 0, 0))
+                page.insert_text((469, 438),self.team_lead_id.mobile,fontsize=10, color=(0, 0, 0))
                 if license_id:
                     page.insert_text((309, 468),license_id.number,fontsize=10, color=(0, 0, 0))
                     page.insert_text((452, 467),str(license_id.expiry_date),fontsize=10, color=(0, 0, 0))
@@ -570,7 +611,7 @@ class WorkSheet(models.Model):
                 model_id = self.env['ir.model'].search([('model', '=', self._name)], limit=1).id
                 self.env['worksheet.notification'].sudo().create([{
                     'author_id': self.env.user.id,
-                    'user_id': self.proposed_team_id.id,
+                    'team_id': self.team_lead_id.id,
                     'model_id': model_id,
                     'res_id': self.id,
                     'date': datetime.now(),

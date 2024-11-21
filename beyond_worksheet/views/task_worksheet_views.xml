@@ -56,7 +56,7 @@
                             <field name="is_ccew" invisible="1"/>
                         </group>
                         <group>
-                            <field name="proposed_team_id"/>
+                            <field name="proposed_team_id" invisible="1"/>
                             <field name="team_lead_id"/>
                             <field name="team_member_ids" widget="many2many_tags"/>
                             <field name="work_type_ids" widget="many2many_tags"/>
@@ -76,6 +76,9 @@
                         </group>
                     </group>
                     <notebook>
+                        <page string="Overview" name="overview">
+                            <widget name="overview_widget"/>
+                        </page>
                         <page string="Panel Serial Numbers" name="panels" invisible="panel_count == 0">
                             <field name="panel_lot_ids">
                                 <tree string="Panel Serial Numbers">

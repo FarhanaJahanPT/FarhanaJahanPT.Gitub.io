@@ -1,0 +1,29 @@
+.circular-progress {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: conic-gradient(#4caf50 75%, #e0e0e0 75%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.circular-progress .inner-circle {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.circular-progress .inner-circle .percentage {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+}

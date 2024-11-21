@@ -14,7 +14,7 @@ class ProjectTask(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if self.x_studio_confirmed_with_customer and self.x_studio_proposed_team and self.date_deadline and self.planned_date_start and not self.worksheet_id:
+        if self.x_studio_confirmed_with_customer and self.team_lead_id and self.date_deadline and self.planned_date_start and not self.worksheet_id:
             worksheet = self.worksheet_id.create({
                 'task_id': self.id,
                 'sale_id': self.sale_order_id.id if self.sale_order_id else False
@@ -22,43 +22,48 @@ class ProjectTask(models.Model):
             self.worksheet_id = worksheet.id
         return res
 
-    @api.constrains('x_studio_proposed_team')
-    def check_x_studio_proposed_team(self):
+    @api.constrains('team_lead_id')
+    def check_team_lead_id(self):
         if self.worksheet_id:
             self.env['worksheet.history'].sudo().create({
                 'worksheet_id': self.worksheet_id.id,
                 'user_id': self.env.user.id,
                 'changes': 'Assigned Team Leader',
-                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(self.x_studio_proposed_team.name),
+                'details': 'Worksheet assigned to ({}) has been successfully updated.'.format(self.team_lead_id.name),
             })
             model_id = self.env['ir.model'].search([('model', '=', 'task.worksheet')], limit=1).id
             self.env['worksheet.notification'].sudo().create([{
                 'author_id': self.env.user.id,
-                'user_id': self.x_studio_proposed_team.id,
+                # 'user_id': self.x_studio_proposed_team.id,
+                'team_id': self.team_lead_id.id,
                 'model_id': model_id,
                 'res_id': self.worksheet_id.id,
                 'date': datetime.now(),
                 'subject': 'Worksheet Assigned',
-                'body': '{} has been assigned to you for installation on the {}'.format(self.name, self.planned_date_start),
+                'body': '{} has been assigned to you for installation on {}'.format(self.name, self.planned_date_start),
             }])
 
     def _send_team_notifications_cron(self):
         today = datetime.today()
         next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
         next_friday = next_monday + timedelta(days=4)
-        task_ids = self.search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
-        for user in task_ids.x_studio_proposed_team:
-            email_values = {'email_to': user.partner_id.email,
-                            'email_from': self.env.company.email}
-            mail_template = self.env.ref('beyond_worksheet.worksheet_email_template')
-            mail_template.send_mail(user.id, email_values=email_values,force_send=True)
+        task_ids = self.search(
+            [('planned_date_start', '>=', next_monday.date()),
+             ('planned_date_start', '<=', next_friday.date())])
         if task_ids.worksheet_id:
-            member_ids = task_ids.worksheet_id.team_member_ids
-            for member in member_ids:
-                email_values = {'email_to': member.email,
+            member_ids = task_ids.worksheet_id.team_lead_id
+            member_ids += task_ids.worksheet_id.team_member_ids
+            for member_id in member_ids:
+                email_values = {'email_to': member_id.email,
                                 'email_from': self.env.company.email}
-                mail_template = self.env.ref('beyond_worksheet.external_worksheet_email_template')
-                mail_template.send_mail(member.id, email_values=email_values, force_send=True)
+                if member_id.employee_id:
+                    mail_template = self.env.ref(
+                        'beyond_worksheet.worksheet_email_template')
+                else:
+                    mail_template = self.env.ref(
+                        'beyond_worksheet.external_worksheet_email_template')
+                mail_template.send_mail(member_id.id, email_values=email_values,
+                                        force_send=True)
 
     def get_worksheet(self):
         self.ensure_one()

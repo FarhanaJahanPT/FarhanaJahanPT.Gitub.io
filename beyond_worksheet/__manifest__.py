@@ -39,8 +39,11 @@
     ],
     'assets': {
         'web.assets_backend': [
+            'beyond_worksheet/static/src/widgets/overview_widget.css',
             'beyond_worksheet/static/src/widgets/checklist_widget.js',
-            'beyond_worksheet/static/src/widgets/checklist_widget.xml'
+            'beyond_worksheet/static/src/widgets/overview_widget.js',
+            'beyond_worksheet/static/src/widgets/checklist_widget.xml',
+            'beyond_worksheet/static/src/widgets/overview_widget.xml',
         ],
         'web.assets_frontend': [
             'beyond_worksheet/static/src/js/employee_check_in.js',

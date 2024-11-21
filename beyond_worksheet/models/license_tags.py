@@ -6,7 +6,7 @@ class LicenseTags(models.Model):
     _name = "license.tags"
     _description = "License Tags"
 
-    name = fields.Char(string='Name')
+    name = fields.Char(string='Name', required=True)
     type = fields.Selection([('nsw', 'NSW Contractor License'),
                              ('act', 'ACT Electrician License'),
                              ('driver_licence', 'Drivers Licence'),

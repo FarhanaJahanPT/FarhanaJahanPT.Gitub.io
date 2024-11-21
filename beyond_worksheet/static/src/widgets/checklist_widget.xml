@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div t-if="checklist_item_id[2] == 'img'">
-                    <div class="">
+                    <div>
                         <t t-foreach="this.state.data.checklist_item"
                            t-as="checklist_item" t-key="checklist_item[1]">
                             <div t-if="checklist_item_id[0] == checklist_item[0]"

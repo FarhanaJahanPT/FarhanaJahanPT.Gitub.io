@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="beyond_worksheet.Overview" owl="1">
+        <div>
+            <div class="g-col-sm-2">
+                <t t-set="serial_count" t-value="this.state.data.serial_count"/>
+                <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
+                    Onsite Data
+                </div>
+                <table style="width: 100%;border-collapse: separate; border-spacing: 0 25px;">
+                    <t t-foreach="this.state.data.overview" t-as="overview"
+                       t-key="overview[0]">
+                        <t t-if="overview[3] == 'on_site'">
+                            <tr>
+                                <td>
+                                    <a t-on-click="() => this.checklist(overview)">
+                                        <div t-att-class="overview[1]"/>
+                                        <t t-if="overview[1] == false">
+                                            <div class="fa fa-picture-o me-2"/>
+                                        </t>
+                                        <span t-out="overview[2]"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <t t-if="overview[5] >= overview[4]">
+                                        Completed
+                                    </t>
+                                    <t t-else="">
+                                        <span t-out="overview[5]"/>
+                                        done,
+                                        <span t-out="overview[4] - overview[5]"/>
+                                        images remaining
+                                    </t>
+                                </td>
+                                <td>a</td>
+                                <td>
+                                    <div class="circular-progress"
+                                         t-attf-style="background: conic-gradient(#4caf50 0% {{(overview[5] / overview[4]) * 100}}%, #e0e0e0 0% 100%)">
+                                        <div class="inner-circle">
+                                            <span class="percentage"/>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                    <tr t-if="serial_count[0][0]">
+                        <td>
+                            <div class="fa fa-barcode"/>
+                            Panel serial
+                        </td>
+                        <td>
+                            <t t-if="serial_count[0][1] >= serial_count[0][0]">
+                                Completed
+                            </t>
+                            <t t-else="">
+                                <span t-out="serial_count[0][1]"/>
+                                done,
+                                <span t-out="serial_count[0][0] - serial_count[0][1]"/>
+                                images remaining
+                            </t>
+                        </td>
+                        <td>bbbbbbbbbbbbbbbbbbbb</td>
+                        <td>
+                            <div class="circular-progress"
+                                 t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[0][1] / serial_count[0][0]) * 100}}%, #e0e0e0 0% 100%)">
+                                <div class="inner-circle">
+                                    <span class="percentage"/>
+                                    <!--<span t-out="(serial_count[0][1] / serial_count[0][0]) * 100"/>%-->
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr t-if="serial_count[1][0]">
+                        <td>
+                            <div class="fa fa-barcode"/>
+                            Inverter serial
+                        </td>
+                        <td>
+                            <t t-if="serial_count[1][1] >= serial_count[1][0]">
+                                Completed
+                            </t>
+                            <t t-else="">
+                                <span t-out="serial_count[1][1]"/>
+                                done,
+                                <span t-out="serial_count[1][0] - serial_count[1][1]"/>
+                                images remaining
+                            </t>
+                        </td>
+                        <td>c</td>
+                        <td>
+                            <div class="circular-progress"
+                                 t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[1][1] / serial_count[1][0]) * 100}}%, #e0e0e0 0% 100%)">
+                                <div class="inner-circle">
+                                    <span class="percentage"/>
+                                    <!--  <span t-out="(serial_count[1][1] / serial_count[1][0]) * 100"/>%-->
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="g-col-sm-2">
+                <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
+                    PRC Onsite Data
+                </div>
+                <table style="width: 100%;border-collapse: separate; border-spacing: 0 25px;">
+                    <tr t-if="serial_count[2][0]">
+                        <td>
+                            <div class="fa fa-barcode"/>
+                            Battery serial
+                        </td>
+                        <td>
+                            <t t-if="serial_count[2][1] >= serial_count[2][0]">
+                                Completed
+                            </t>
+                            <t t-else="">
+                                <span t-out="serial_count[2][1]"/>
+                                done,
+                                <span t-out="serial_count[2][0] - serial_count[2][1]"/>
+                                images remaining
+                            </t>
+                        </td>
+                        <td>bbbbbbbbbbbbbbbbbbbb</td>
+                        <td>
+                            <div class="circular-progress"
+                                 t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[2][1] / serial_count[2][0]) * 100}}%, #e0e0e0 0% 100%)">
+                                <div class="inner-circle">
+                                    <span class="percentage"/>
+                                    <!--                                    <span t-out="(serial_count[2][1] / serial_count[2][0]) * 100"/>%-->
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <t t-foreach="this.state.data.overview" t-as="overview"
+                       t-key="overview[0]">
+                        <t t-if="overview[3] == 'prc'">
+                            <tr>
+                                <td>
+                                    <div t-att-class="overview[1]"/>
+                                    <t t-if="overview[1] == false">
+                                        <div class="fa fa-picture-o"/>
+                                    </t>
+                                    <span t-out="overview[2]"/>
+                                </td>
+                                <td>
+                                    <t t-if="overview[5] >= overview[4]">
+                                        Completed
+                                    </t>
+                                    <t t-else="">
+                                        <span t-out="overview[5]"/>
+                                        done,
+                                        <span t-out="overview[4] - overview[5]"/>
+                                        images remaining
+                                    </t>
+                                </td>
+                                <td>aaaaaaaaaaaaaaaaaaaaaaaa</td>
+                                <td>
+                                    <div class="circular-progress"
+                                         t-attf-style="background: conic-gradient(#4caf50 0% {{(overview[5] / overview[4]) * 100}}%, #e0e0e0 0% 100%)">
+                                        <div class="inner-circle">
+                                            <span class="percentage"/>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

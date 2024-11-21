@@ -11,6 +11,7 @@
         <field name="model">service.checklist</field>
         <field name="arch" type="xml">
             <tree string="Service Checklist" editable="bottom">
+                <field name="icon"/>
                 <field name="name"/>
                 <field name="type"/>
                 <field name="selfie_type" invisible="type != 'img'"/>
@@ -18,6 +19,7 @@
                 <field name="compulsory"/>
                 <field name="is_spv_required"/>
                 <field name="category_ids" widget="many2many_tags"/>
+                <field name="group"/>
             </tree>
         </field>
     </record>

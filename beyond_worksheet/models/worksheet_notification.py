@@ -14,3 +14,4 @@ class WorksheetNotification(models.Model):
     model_id = fields.Many2one('ir.model', 'Related Model')
     res_id = fields.Char(string='Related ID')
     is_read = fields.Boolean(string='Read', default=False)
+    team_id = fields.Many2one('team.member', string='Team')

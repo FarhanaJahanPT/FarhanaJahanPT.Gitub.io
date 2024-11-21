@@ -11,16 +11,6 @@ class ResUsers(models.Model):
     currency_id = fields.Many2one(comodel_name='res.currency',
                                   string="Company Currency",
                                   related='company_id.currency_id',)
-    contract_license_ids = fields.One2many('electrical.contract.license','user_id')
-
-
-    def get_weekly_work(self, object):
-        today = datetime.today()
-        next_monday = today + timedelta(days=(7 - today.weekday()) % 7)
-        next_friday = next_monday + timedelta(days=4)
-        tasks = self.env['project.task'].search([('planned_date_start', '>=', next_monday.date()),('planned_date_start', '<=', next_friday.date())])
-        task_ids = tasks.filtered(lambda w: w.x_studio_proposed_team == object)
-        return task_ids
 
     def write(self, vals):
         res = super(ResUsers,self).write(vals)
