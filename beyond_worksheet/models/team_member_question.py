@@ -17,3 +17,16 @@ class TeamMemberQuestion(models.Model):
     sequence = fields.Integer(string='Sequence')
     name = fields.Text(string='Question')
     answer = fields.Char(string='Answer')
+
+class SurveyQuestion(models.Model):
+    _inherit = 'survey.question'
+
+    # is_from_worksheet = fields.Boolean(related='survey_id.is_from_worksheet', store=True)
+    is_from_worksheet_questions = fields.Boolean(default=False)
+
+class SurveySurvey(models.Model):
+    _inherit = 'survey.survey'
+
+    team_member_id = fields.Many2one('team.member')
+    worksheet_id = fields.Many2one('task.worksheet')
+    is_from_worksheet = fields.Boolean(default=False)

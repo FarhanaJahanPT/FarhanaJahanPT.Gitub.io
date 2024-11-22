@@ -126,6 +126,11 @@
                                             icon="oi-arrow-right"
                                             string="View on Maps"
                                             colspan="2"/>
+                                    <button name="action_view_answers"
+                                            type="object"
+                                            class="btn btn-primary"
+                                            string="View Responses"
+                                            colspan="2"/>
                                 </tree>
                             </field>
                         </page>

@@ -7,7 +7,7 @@
     'website': """""",
     'summary': '',
     'description': """""",
-    'depends': ['base', 'project', 'web', 'sale_project', 'project_beyond_solar', 'hr', 'portal'],
+    'depends': ['base', 'project', 'web', 'sale_project', 'project_beyond_solar', 'hr', 'portal','survey'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
@@ -47,6 +47,9 @@
         ],
         'web.assets_frontend': [
             'beyond_worksheet/static/src/js/employee_check_in.js',
+        ],
+        'survey.survey_assets': [
+            'beyond_worksheet/static/src/js/worsheet_member_check_in.js',
         ],
     },
     'installable': True,

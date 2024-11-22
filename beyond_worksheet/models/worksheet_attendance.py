@@ -20,6 +20,8 @@ class WorksheetAttendance(models.Model):
     additional_service = fields.Boolean(string='Additional Service')
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True)
+    survey_id = fields.Many2one('survey.survey')
+    user_input_id = fields.Many2one('survey.user_input')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -40,3 +42,18 @@ class WorksheetAttendance(models.Model):
             'url': get_google_maps_url(self.in_latitude, self.in_longitude),
             'target': 'new'
         }
+    def action_view_answers(self):
+        print("action view answerws",self.read())
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Responses',
+            'view_mode': 'form',
+            'res_model': 'survey.user_input',
+            'res_id': self.user_input_id.id,
+            'target': 'new',
+        }
+
+    @api.model
+    def create(self, vals):
+        return super(WorksheetAttendance, self.sudo()).create(vals)

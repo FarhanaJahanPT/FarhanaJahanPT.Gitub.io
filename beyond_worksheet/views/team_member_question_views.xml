@@ -5,6 +5,48 @@
         <field name="res_model">team.member.question</field>
         <field name="view_mode">tree</field>
     </record>
+    <record model="ir.ui.view" id="worksheet_question_tree">
+        <field name="name">Tree view for survey question</field>
+        <field name="model">survey.question</field>
+        <field name="priority" eval="99"/>
+        <field name="arch" type="xml">
+            <tree string="Survey Question">
+                <field name="title"/>
+                <field name="question_type"/>
+                <field name="constr_mandatory" optional="1"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="worksheet_question_form">
+        <field name="name">Worksheet Question Form</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">true</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_worksheet_question">
+        <field name="name">Team Member Question</field>
+        <field name="res_model">survey.question</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[Command.clear(),
+            Command.create({'view_mode': 'tree', 'view_id': ref('worksheet_question_tree')}),
+            Command.create({'view_mode': 'form', 'view_id': ref('worksheet_question_form')})]"/>
+        <!--        <field name="search_view_id" ref="survey.survey_question_search"/>-->
+        <field name="context">{'default_is_from_worksheet_questions':True}</field>
+        <field name="domain">[('is_page', '=', False),('is_from_worksheet_questions','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Questions yet!
+            </p>
+            <p>
+                Come back once you have added questions to your Surveys.
+            </p>
+        </field>
+    </record>
+
 
     <record id="team_member_question_view_tree" model="ir.ui.view">
         <field name="name">team.member.question.view.tree</field>
@@ -17,6 +59,8 @@
         </field>
     </record>
 
-    <menuitem id="team_member_question_menu" action="team_member_question_action"
+<!--    <menuitem id="team_member_question_menu" action="team_member_question_action"-->
+<!--              parent="task_worksheet_configuration_menu"/>-->
+    <menuitem id="team_member_question_menup" action="action_worksheet_question"
               parent="task_worksheet_configuration_menu"/>
 </odoo>
