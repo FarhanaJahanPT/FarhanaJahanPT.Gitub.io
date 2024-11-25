@@ -70,8 +70,7 @@ class OwnerSignature(http.Controller):
             return False
 
     @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http',
-                auth="public",
-                website=True)
+                auth="public", website=True)
     def show_question(self, worksheet, member, **kwargs):
         # Fetch unanswered questions first
         member_id = kwargs.get('member_id') if kwargs.get('member_id') else member

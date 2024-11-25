@@ -7,7 +7,7 @@
     'website': """""",
     'summary': '',
     'description': """""",
-    'depends': ['base', 'project', 'web', 'sale_project', 'project_beyond_solar', 'hr', 'portal','survey'],
+    'depends': ['base', 'project', 'web', 'sale_project', 'project_beyond_solar', 'hr', 'portal', 'documents_project', 'survey'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
@@ -15,6 +15,7 @@
         'data/hr_department_data.xml',
         'data/work_type_data.xml',
         'data/license_tags_data.xml',
+        'data/documents_document_data.xml',
         'views/project_task_views.xml',
         'views/stock_lot_views.xml',
         'views/task_worksheet_views.xml',
@@ -36,6 +37,7 @@
         'views/worksheet_notification_views.xml',
         'views/work_type_views.xml',
         'views/license_tags_views.xml',
+        'views/documents_document_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
@@ -44,6 +46,7 @@
             'beyond_worksheet/static/src/widgets/overview_widget.js',
             'beyond_worksheet/static/src/widgets/checklist_widget.xml',
             'beyond_worksheet/static/src/widgets/overview_widget.xml',
+            'beyond_worksheet/static/src/views/documents_inspector.xml'
         ],
         'web.assets_frontend': [
             'beyond_worksheet/static/src/js/employee_check_in.js',

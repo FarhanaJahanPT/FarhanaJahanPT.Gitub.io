@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="document_view_kanban" model="ir.ui.view">
+        <field name="name">
+            documents.document.view.kanban.inherit
+        </field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="team_id"/>
+                <field name="location" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

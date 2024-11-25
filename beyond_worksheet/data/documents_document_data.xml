@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="documents_project_folder_Worksheet" model="documents.folder">
+        <field name="name">Worksheet</field>
+        <field name="parent_folder_id" ref="documents_project.documents_project_folder"/>
+    </record>
+<!--    <record id="documents_project_rule_worksheet" model="documents.workflow.rule" forcecreate="0">-->
+<!--            <field name="sequence">5</field>-->
+<!--            <field name="name">Create a Worksheet</field>-->
+<!--            <field name="activity_option">True</field>-->
+<!--&lt;!&ndash;            <field name="excluded_tag_ids" eval="[Command.link(ref('documents_project_status_deprecated'))]"/>&ndash;&gt;-->
+<!--            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>-->
+<!--            <field name="create_model">task.worksheet</field>-->
+<!--            <field name="condition_type">domain</field>-->
+<!--            <field name="domain" eval="[('res_model', '!=', 'task.worksheet')]"/>-->
+<!--            <field name="domain_folder_id" ref="documents_folder_template_Worksheet"/>-->
+<!--        </record>-->
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t name="documents.DocumentsInspector.documentsInfo.inherit"
+       t-inherit="documents.DocumentsInspector.documentsInfo"
+       t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='nbPreviews === 1']" position="after">
+            <t t-call="documents.DocumentsInspector.field">
+                <t t-set="fieldName" t-translation="off">team_id</t>
+                <t t-set="additionalProps"
+                   t-value="{canOpen: false, canCreate: false, canCreateEdit: false, canQuickCreate: false}"/>
+            </t>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_model_container')]" position="after">
+            <tr>
+            <td class="o_inspector_label align-middle">
+                <label t-att-title="records[0].data.res_model_name"
+                       class="o_inspector_model_name" style="overflow: visible;">
+                    <i class="o_documents_model_color fa fa-map-marker me-2"/>
+                    <t t-esc="records[0].data.location"/>
+                </label>
+            </td>
+            </tr>
+        </xpath>
+    </t>
+</templates>

@@ -33,4 +33,16 @@ class InstallationChecklistItem(models.Model):
             'changes': 'Updated Checklist',
             'details': 'Installation checklist ({}) has been updated successfully.'.format(res.checklist_id.name),
         })
+        if res.checklist_id.type == 'img':
+            self.env['documents.document'].create({
+                'owner_id': res.user_id.id if res.user_id else False,
+                'team_id': res.member_id.id if res.member_id else False,
+                'datas': res.image,
+                'name': res.checklist_id.name,
+                'location': res.location,
+                # 'file_extension': 'png',
+                'folder_id': self.env.ref('beyond_worksheet.documents_project_folder_Worksheet').id,
+                'res_model': 'task.worksheet',
+                'res_id': res.worksheet_id.id,
+            })
         return res

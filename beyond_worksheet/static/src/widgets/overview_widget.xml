@@ -14,7 +14,7 @@
                             <tr>
                                 <td>
                                     <a t-on-click="() => this.checklist(overview)">
-                                        <div t-att-class="overview[1]"/>
+                                        <div t-att-class="overview[1]" class="me-2"/>
                                         <t t-if="overview[1] == false">
                                             <div class="fa fa-picture-o me-2"/>
                                         </t>
@@ -138,9 +138,9 @@
                         <t t-if="overview[3] == 'prc'">
                             <tr>
                                 <td>
-                                    <div t-att-class="overview[1]"/>
+                                    <div t-att-class="overview[1]" class="me-2"/>
                                     <t t-if="overview[1] == false">
-                                        <div class="fa fa-picture-o"/>
+                                        <div class="fa fa-picture-o me-2"/>
                                     </t>
                                     <span t-out="overview[2]"/>
                                 </td>

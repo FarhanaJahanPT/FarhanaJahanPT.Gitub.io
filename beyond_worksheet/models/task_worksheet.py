@@ -65,6 +65,9 @@ class WorkSheet(models.Model):
     work_type_ids = fields.Many2many('work.type', string='Work Type', compute='compute_work_type_ids', store=True)
     spv_state = fields.Selection([('valid', 'Valid'),('invalid', 'Invalid'), ('null', ' ')],
                                  string='SPV', compute='compute_spv_state', store=True)
+    document_ids = fields.One2many('documents.document', 'res_id',
+                                   string='Documents', domain=[('res_model', '=', 'task.worksheet')])
+    document_count = fields.Integer(string="Documents Count", compute='_compute_document_count')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -259,6 +262,11 @@ class WorkSheet(models.Model):
         for record in self:
             record.invoice_count = self.env['account.move'].search_count([('invoice_origin', '=', self.name)])
 
+    def _compute_document_count(self):
+        for record in self:
+            record.document_count = self.env['documents.document'].search_count(
+                [('res_model', '=', 'task.worksheet'), ('res_id', '=', record.id)])
+
     def get_sale_order(self):
         self.ensure_one()
         return {
@@ -321,6 +329,17 @@ class WorkSheet(models.Model):
             'target': 'current',
             'domain': [('invoice_origin', '=', self.name)],
             'context': {"create": False},
+        }
+
+    def get_documents(self):
+        self.ensure_one()
+        return {
+            'res_model': 'documents.document',
+            'type': 'ir.actions.act_window',
+            'name': _("%(worksheet_name)s's Documents", worksheet_name=self.name),
+            'domain': [('res_model', '=', 'task.worksheet'), ('res_id', '=', self.id),],
+            'view_mode': 'kanban,tree,form',
+            'context': {'default_res_model': 'task.worksheet', 'default_res_id': self.id,},
         }
 
     @api.model
