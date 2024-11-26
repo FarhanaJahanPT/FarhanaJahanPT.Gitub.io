@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="ChecklistOverviewPopup">
+        <Dialog contentClass="'beyond_checklist_overview'">
+            <t t-set-slot="header">
+                <div class="b-checklist-header d-flex w-100">
+                    <h4>
+                        <div class="beyond_checklist_header">
+                            <i t-att-class="props.class"/>
+                            <span class="b-overview-heading">
+                                <t t-out="props.name"/>
+                            </span>
+                        </div>
+                    </h4>
+                    <button class="b-overview-btn" t-on-click="uploadImg">
+<!--                        <span class="b-overview-btn-icon">📷</span> &lt;!&ndash; Icon &ndash;&gt;-->
+<!--                        <i class="ri-add-line b-overview-btn-icon"></i>-->
+                       <i class="fa fa-plus" aria-hidden="true"></i>
+                        Add Photo
+                    </button>
+                    <div t-on-click="onClose" type="button" class="btn-close" aria-label="Close"/>
+                </div>
+            </t>
+            <div class="overview_body d-grid">
+                <t t-foreach="props.images" t-as="image" t-key="image[2]">
+                    <div class="b-overview-img-container p-4">
+                        <img class="b-overview-img" t-att-src="'data:image/png;base64,'+image[4]"/>
+                    </div>
+                </t>
+            </div>
+
+            <!--            <h1>New chekclist modal</h1>-->
+            <t t-set-slot="footer">
+                <div class="d-none"/>
+            </t>
+        </Dialog>
+    </t>
+</templates>

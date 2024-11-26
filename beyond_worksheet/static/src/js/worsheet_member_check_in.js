@@ -55,7 +55,7 @@ SurveyFormWidget.include({
                             params.longitude = position.coords.longitude
                             this.rpc("/worksheet/values",params
                                 ).then(function(result) {
-                                console.log("rrrr")
+                                console.log("ifff")
                             })
 
                         },
@@ -63,6 +63,12 @@ SurveyFormWidget.include({
                             console.error("Error retrieving location:", error);
                         }
                     );
+                }
+                else{
+                     this.rpc("/worksheet/values",params
+                                ).then(function(result) {
+                                console.log("elseeee")
+                            })
                 }
         }
         const submitPromise = this.rpc(

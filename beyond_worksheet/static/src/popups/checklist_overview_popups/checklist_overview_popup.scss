@@ -1,0 +1,40 @@
+
+span.b-overview-heading {
+    margin-left: 11px !important;
+}
+.b-overview-img {
+    max-width: 250px;
+    max-height: 250px;
+    border-radius:14px;
+}
+.overview_body {
+    grid-template-columns: repeat(3, 1fr); /* 4 columns, each taking equal space */
+}
+.b-checklist-header {
+    position: relative; /* Set relative positioning for the container */
+    align-items: center; /* Center items vertically */
+    justify-content: flex-start; /* Align items to the left */
+}
+ .b-overview-btn {
+    display: inline-flex; /* Align text and icon horizontally */
+    align-items: center; /* Center items vertically */
+    padding: 7px 11px;
+    border: 2px solid #5794dd;
+    background-color: white;
+    color: #5794dd;
+    font-size: 14px;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-left:74%;
+}
+
+// .b-overview-btn:hover {
+//     background-color: #e6f7ff; /* Light blue background on hover */
+//     color: #004085; /* Darker blue text on hover */
+// }
+//
+// .b-overview-btn-icon {
+//     margin-right: 10px; /* Space between icon and text */
+//     font-size: 18px; /* Adjust icon size */
+//     display: flex; /* Ensure proper alignment */
+// }

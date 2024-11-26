@@ -44,9 +44,13 @@
             'beyond_worksheet/static/src/widgets/overview_widget.css',
             'beyond_worksheet/static/src/widgets/checklist_widget.js',
             'beyond_worksheet/static/src/widgets/overview_widget.js',
+            'beyond_worksheet/static/src/popups/checklist_overview_popups/checklist_overview_popup.js',
             'beyond_worksheet/static/src/widgets/checklist_widget.xml',
             'beyond_worksheet/static/src/widgets/overview_widget.xml',
-            'beyond_worksheet/static/src/views/documents_inspector.xml'
+            'beyond_worksheet/static/src/views/documents_inspector.xml',
+            'beyond_worksheet/static/src/popups/checklist_overview_popups/checklist_overview_popup.xml',
+            'beyond_worksheet/static/src/popups/checklist_overview_popups/checklist_overview_popup.scss',
+
         ],
         'web.assets_frontend': [
             'beyond_worksheet/static/src/js/employee_check_in.js',

@@ -62,8 +62,8 @@ class OwnerSignature(http.Controller):
                 'member_id': survey.team_member_id.id,
                 'worksheet_id': survey.worksheet_id.id,
                 'survey_id': survey.id,
-                'in_longitude':post.get('longitude'),
-                'in_latitude':post.get('latitude'),
+                'in_longitude':post.get('longitude') if post.get('longitude') else 0.00 ,
+                'in_latitude':post.get('latitude') if post.get('latitude') else 0.00,
                 'user_input_id': latest_input.id,
             })
         else:
@@ -89,7 +89,7 @@ class OwnerSignature(http.Controller):
         # Create the survey and add questions to question_ids
         elif not survey:
             survey = request.env['survey.survey'].sudo().create({
-                'title': worksheet.name + member.name + str(datetime.today().date()),
+                'title': worksheet.name +'-'+ member.name +'-'+ str(datetime.today().date()),
                 'user_id': request.env.user.id,
                 'access_mode': 'public',
                 'worksheet_id':worksheet_id,
