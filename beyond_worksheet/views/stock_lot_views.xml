@@ -20,10 +20,27 @@
                             <field name="verification_time"/>
                             <field name="state"/>
                             <field name="location"/>
+                            <field name="is_checklist" invisible="1"/>
                         </group>
                     </group>
                 </page>
             </xpath>
+        </field>
+    </record>
+
+    <record id="Worksheet_production_lot_view_tree" model="ir.ui.view">
+        <field name="name">stock.production.lot.view.tree</field>
+        <field name="model">stock.lot</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Lot" create="false">
+                <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="verification_time"/>
+                <field name="state" invisible="type != 'panel'"/>
+                <field name="company_id" column_invisible="1"/>
+                <field name="type" column_invisible="1"/>
+            </tree>
         </field>
     </record>
 </odoo>

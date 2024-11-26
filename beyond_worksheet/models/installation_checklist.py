@@ -5,8 +5,11 @@ from odoo import api, fields, models
 class InstallationChecklist(models.Model):
     _name = 'installation.checklist'
     _description = "Installation Checklist"
+    _order = 'sequence'
 
     name = fields.Char(string='Name', required=True)
+    sequence = fields.Integer(string="Sequence",
+                              help="Determine the display order", index=True)
     type = fields.Selection([('img', 'Image/PDF'), ('text', 'Text')], string='Type', default='img')
     compulsory = fields.Boolean(string='Compulsory', default=False)
     min_qty = fields.Integer(string='Minimum Quantity', default=1)

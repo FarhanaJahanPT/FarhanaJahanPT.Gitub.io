@@ -18,7 +18,7 @@
                                         <t t-if="overview[1] == false">
                                             <div class="fa fa-picture-o me-2"/>
                                         </t>
-                                        <span t-out="overview[2]"/>
+                                        <span t-out="overview[2]" style="cursor: default;"/>
                                     </a>
                                 </td>
                                 <td>
@@ -32,7 +32,7 @@
                                         images remaining
                                     </t>
                                 </td>
-                                <td>a</td>
+<!--                                <td>a</td>-->
                                 <td>
                                     <div class="circular-progress"
                                          t-attf-style="background: conic-gradient(#4caf50 0% {{(overview[5] / overview[4]) * 100}}%, #e0e0e0 0% 100%)">
@@ -46,8 +46,12 @@
                     </t>
                     <tr t-if="serial_count[0][0]">
                         <td>
-                            <div class="fa fa-barcode"/>
-                            Panel serial
+                            <a t-on-click="() => this.SerialNumberView(serial_count[0])">
+                                <div class="fa fa-barcode"/>
+                                <span style="cursor: default;">
+                                    Panel serial
+                                </span>
+                            </a>
                         </td>
                         <td>
                             <t t-if="serial_count[0][1] >= serial_count[0][0]">
@@ -60,7 +64,7 @@
                                 images remaining
                             </t>
                         </td>
-                        <td>bbbbbbbbbbbbbbbbbbbb</td>
+<!--                        <td>bbbbbbbbbbbbbbbbbbbb</td>-->
                         <td>
                             <div class="circular-progress"
                                  t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[0][1] / serial_count[0][0]) * 100}}%, #e0e0e0 0% 100%)">
@@ -73,8 +77,12 @@
                     </tr>
                     <tr t-if="serial_count[1][0]">
                         <td>
-                            <div class="fa fa-barcode"/>
-                            Inverter serial
+                            <a t-on-click="() => this.SerialNumberView(serial_count[1])">
+                                <div class="fa fa-barcode"/>
+                                <span style="cursor: default;">
+                                Inverter serial
+                                </span>
+                            </a>
                         </td>
                         <td>
                             <t t-if="serial_count[1][1] >= serial_count[1][0]">
@@ -87,7 +95,7 @@
                                 images remaining
                             </t>
                         </td>
-                        <td>c</td>
+<!--                        <td>c</td>-->
                         <td>
                             <div class="circular-progress"
                                  t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[1][1] / serial_count[1][0]) * 100}}%, #e0e0e0 0% 100%)">
@@ -108,8 +116,12 @@
                 <table style="width: 100%;border-collapse: separate; border-spacing: 0 25px;">
                     <tr t-if="serial_count[2][0]">
                         <td>
-                            <div class="fa fa-barcode"/>
-                            Battery serial
+                            <a t-on-click="() => this.SerialNumberView(serial_count[2])">
+                                <div class="fa fa-barcode"/>
+                                <span style="cursor: default;">
+                                    Battery serial
+                                </span>
+                            </a>
                         </td>
                         <td>
                             <t t-if="serial_count[2][1] >= serial_count[2][0]">
@@ -122,13 +134,13 @@
                                 images remaining
                             </t>
                         </td>
-                        <td>bbbbbbbbbbbbbbbbbbbb</td>
+<!--                        <td>bbbbbbbbbbbbbbbbbbbb</td>-->
                         <td>
                             <div class="circular-progress"
                                  t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[2][1] / serial_count[2][0]) * 100}}%, #e0e0e0 0% 100%)">
                                 <div class="inner-circle">
                                     <span class="percentage"/>
-                                    <!--                                    <span t-out="(serial_count[2][1] / serial_count[2][0]) * 100"/>%-->
+                                    <!--<span t-out="(serial_count[2][1] / serial_count[2][0]) * 100"/>%-->
                                 </div>
                             </div>
                         </td>
@@ -142,7 +154,7 @@
                                     <t t-if="overview[1] == false">
                                         <div class="fa fa-picture-o me-2"/>
                                     </t>
-                                    <span t-out="overview[2]"/>
+                                    <span t-out="overview[2]" style="cursor: default;"/>
                                 </td>
                                 <td>
                                     <t t-if="overview[5] >= overview[4]">
@@ -155,7 +167,7 @@
                                         images remaining
                                     </t>
                                 </td>
-                                <td>aaaaaaaaaaaaaaaaaaaaaaaa</td>
+<!--                                <td>aaaaaaaaaaaaaaaaaaaaaaaa</td>-->
                                 <td>
                                     <div class="circular-progress"
                                          t-attf-style="background: conic-gradient(#4caf50 0% {{(overview[5] / overview[4]) * 100}}%, #e0e0e0 0% 100%)">

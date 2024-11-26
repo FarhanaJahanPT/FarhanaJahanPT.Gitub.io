@@ -379,9 +379,9 @@ class WorkSheet(models.Model):
         serial_number = []
         serial_count = []
         record = self.browse(vals)
-        serial_count.append([record.panel_count,len(record.panel_lot_ids)])
-        serial_count.append([record.inverter_count,len(record.inverter_lot_ids)])
-        serial_count.append([record.battery_count,len(record.battery_lot_ids)])
+        serial_count.append([record.panel_count,len(record.panel_lot_ids), 'panel'])
+        serial_count.append([record.inverter_count,len(record.inverter_lot_ids), 'inverter'])
+        serial_count.append([record.battery_count,len(record.battery_lot_ids), 'battery'])
         order_line =record.sale_id.order_line.product_id.categ_id.mapped('id')
         if record.x_studio_type_of_service == 'New Installation':
             checklist_ids = self.env['installation.checklist'].search(

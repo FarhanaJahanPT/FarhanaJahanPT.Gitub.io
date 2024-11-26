@@ -11,6 +11,7 @@
         <field name="model">service.checklist</field>
         <field name="arch" type="xml">
             <tree string="Service Checklist" editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="icon"/>
                 <field name="name"/>
                 <field name="type"/>

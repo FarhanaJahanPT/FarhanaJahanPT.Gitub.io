@@ -17,27 +17,22 @@ class Overview extends Component {
         this.action = useService("action");
         this.orm = useService("orm");
         onWillStart(async () => {
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',this)
-            console.log('sssssssssssssssssssssssssssss',this.props)
             var resId = this.props.record.evalContext.id
             const action = await this.orm.call('task.worksheet', 'get_overview_values', [resId]);
-            console.log(action,'aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
             this.state.data.overview = action[0]
             this.state.data.serial_count = action[1]
             this.state.data.images_data = action[2]
         });
     }
     checklist(ev){
-        console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqq',ev)
         const images = this.state.data.images_data.filter((item) => item[0] === ev[0])
-        console.log(images,"==========d")
             const props = {
                 name:ev[2],
                 class:ev[1],
                 images:images
             }
             this.dialogService.add(ChecklistOverviewPopup,props);
-
+            
 //        return this.action.doAction({
 //            name: _t(ev[2]),
 //            res_model: 'installation.checklist.item',
@@ -47,6 +42,41 @@ class Overview extends Component {
 //            views: [[false, 'kanban']],
 //            target: 'new',
 //        });
+    }
+    async SerialNumberView(ev) {
+        try {
+            // Extract record ID
+            var id = this.props.record.evalContext.id;
+            if (typeof id === "object" && id !== null) {
+                id = id.id || id[0]; // Adjust if id is an object or array
+            }
+            console.log("Record ID:", id, ev);
+
+            // Fetch tree view ID
+            const treeViews = await this.orm.call(
+                'ir.ui.view',
+                'search_read',
+                [[['name', '=', 'stock.production.lot.view.tree']], ['id'], 0, 1]
+            );
+            const treeViewId = treeViews.length > 0 ? treeViews[0].id : false;
+
+            if (!treeViewId) {
+                console.error("Tree view not found");
+                return;
+            }
+            console.log("Tree View ID:", treeViewId);
+            return this.action.doAction({
+                name: _t(ev[2] || "Serial Number View"),
+                res_model: 'stock.lot',
+                domain: [["type", "=", ev[2]], ["worksheet_id", "=", id]],
+                type: 'ir.actions.act_window',
+                view_mode: 'tree',
+                views: [[treeViewId, 'tree']],
+                target: 'new',
+            });
+        } catch (error) {
+            console.error("Error in SerialNumberView:", error);
+        }
     }
 }
 export const overview = {
