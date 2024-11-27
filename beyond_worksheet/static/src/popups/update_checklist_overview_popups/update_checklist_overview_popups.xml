@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-name="ChecklistOverviewPopup">
+    <t t-name="UpdateChecklistOverviewPopup">
         <Dialog contentClass="'beyond_checklist_overview'">
             <t t-set-slot="header">
                 <div class="b-checklist-header d-flex w-100">
                     <h4>
                         <div class="beyond_checklist_header">
-                            <i t-att-class="props.class" class="me-2"/>
+                            <i class="fa fa-upload me-2"/>
                             <span class="b-overview-heading">
-                                <t t-out="props.name"/>
+                               Upload <t t-out="props.name"/>
                             </span>
                         </div>
                     </h4>
-                    <button class="b-overview-btn" t-on-click="uploadImg">
-                       <i class="fa fa-plus" aria-hidden="true"></i>
-                        Add Photo
-                    </button>
                     <div t-on-click="onClose" type="button" class="btn-close" aria-label="Close"/>
                 </div>
             </t>
             <div class="overview_body d-grid">
-                <t t-foreach="props.images" t-as="image" t-key="image[2]">
-                    <div class="b-overview-img-container p-4">
-                        <img class="b-overview-img" t-att-src="'data:image/png;base64,'+image[4]"/>
-                    </div>
-                </t>
+                <!-- Preview Uploaded Image -->
+                <div t-if="state.imagePreview" class="b-overview-img-container p-4">
+                    <img t-att-src="state.imagePreview" class="b-overview-img"/>
+                </div>
+                 <!-- File Upload -->
+                <input type="file" class="form-control" t-ref="fileInput" t-on-change="onFileChange" accept="image/*"/>
             </div>
             <t t-set-slot="footer">
-                <div class="d-none"/>
+                <button class="btn btn-primary" t-on-click="onUpload">Save</button>
+                <button class="btn btn-secondary" t-on-click="onClose">Close</button>
             </t>
         </Dialog>
     </t>

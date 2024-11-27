@@ -18,6 +18,8 @@ class StockLot(models.Model):
     location = fields.Text(string='Location')
     categ_id = fields.Many2one('product.category', related='product_id.categ_id')
     is_checklist = fields.Boolean(string='checklist', default=False)
+    latitude = fields.Char(string='Latitude')
+    longitude = fields.Char(string='Longitude')
 
     def write(self, vals):
         res = super(StockLot, self).write(vals)

@@ -16,7 +16,7 @@ class InstallationChecklist(models.Model):
     selfie_type = fields.Selection([('check_in', 'Check In'), ('mid', 'Mid Time'), ('check_out', 'Check Out'), ('null', ' ')],
                                    string='Selfie Type', default='null')
     category_ids = fields.Many2many('product.category', string='Category', required=True)
-    # is_spv_required = fields.Boolean(string='SPV Required', default=False)
+    is_spv_required = fields.Boolean(string='SPV Required', default=False)
     icon = fields.Selection([ ('fa fa-user-circle-o', 'fa fa-user-circle-o'),
                               ('fa fa-barcode', 'fa fa-barcode'),
                               ('fa fa-camera', 'fa fa-camera'),
@@ -27,8 +27,7 @@ class InstallationChecklist(models.Model):
                               ('fa fa-battery-full', 'fa fa-battery-full'),
                               ],string='Icon')
     group = fields.Selection([('on_site', 'Onsite Data'), ('prc', 'PRC Onsite Data')], string='Group', default='on_site', required=True)
-    # compliant = fields.Boolean(string='Compliant')
-    # compliant_note = fields.Text(string='Compliant Note')
+    compliant_note = fields.Text(string='Compliant Note')
 
     def get_checklist_count(self):
         worksheet_ids = self.env['task.worksheet'].search([('x_studio_type_of_service','=', 'New Installation')])

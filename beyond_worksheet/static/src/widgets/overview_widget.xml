@@ -14,11 +14,13 @@
                             <tr>
                                 <td>
                                     <a t-on-click="() => this.checklist(overview)">
-                                        <div t-att-class="overview[1]" class="me-2"/>
+                                        <div t-att-class="overview[1]"
+                                             class="me-2"/>
                                         <t t-if="overview[1] == false">
                                             <div class="fa fa-picture-o me-2"/>
                                         </t>
-                                        <span t-out="overview[2]" style="cursor: default;"/>
+                                        <span t-out="overview[2]"
+                                              style="cursor: default;"/>
                                     </a>
                                 </td>
                                 <td>
@@ -32,7 +34,16 @@
                                         images remaining
                                     </t>
                                 </td>
-<!--                                <td>a</td>-->
+                                <td>
+                                    <input type="checkbox"
+                                           t-on-change="() => this.onChange(overview)"
+                                           t-att-checked="overview[8] ? 'checked' : ''"
+                                           class="form-check-input"/>
+                                </td>
+                                <td>
+                                    <span t-if="overview[7]"
+                                          t-out="overview[7]"/>
+                                </td>
                                 <td>
                                     <div class="circular-progress"
                                          t-attf-style="background: conic-gradient(#4caf50 0% {{(overview[5] / overview[4]) * 100}}%, #e0e0e0 0% 100%)">
@@ -64,7 +75,8 @@
                                 images remaining
                             </t>
                         </td>
-<!--                        <td>bbbbbbbbbbbbbbbbbbbb</td>-->
+                        <td/>
+                        <td/>
                         <td>
                             <div class="circular-progress"
                                  t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[0][1] / serial_count[0][0]) * 100}}%, #e0e0e0 0% 100%)">
@@ -80,7 +92,7 @@
                             <a t-on-click="() => this.SerialNumberView(serial_count[1])">
                                 <div class="fa fa-barcode"/>
                                 <span style="cursor: default;">
-                                Inverter serial
+                                    Inverter serial
                                 </span>
                             </a>
                         </td>
@@ -95,7 +107,8 @@
                                 images remaining
                             </t>
                         </td>
-<!--                        <td>c</td>-->
+                        <td/>
+                        <td/>
                         <td>
                             <div class="circular-progress"
                                  t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[1][1] / serial_count[1][0]) * 100}}%, #e0e0e0 0% 100%)">
@@ -134,7 +147,8 @@
                                 images remaining
                             </t>
                         </td>
-<!--                        <td>bbbbbbbbbbbbbbbbbbbb</td>-->
+                        <td/>
+                        <td/>
                         <td>
                             <div class="circular-progress"
                                  t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[2][1] / serial_count[2][0]) * 100}}%, #e0e0e0 0% 100%)">
@@ -150,11 +164,15 @@
                         <t t-if="overview[3] == 'prc'">
                             <tr>
                                 <td>
-                                    <div t-att-class="overview[1]" class="me-2"/>
-                                    <t t-if="overview[1] == false">
-                                        <div class="fa fa-picture-o me-2"/>
-                                    </t>
-                                    <span t-out="overview[2]" style="cursor: default;"/>
+                                    <a t-on-click="() => this.checklist(overview)">
+                                        <div t-att-class="overview[1]"
+                                             class="me-2"/>
+                                        <t t-if="overview[1] == false">
+                                            <div class="fa fa-picture-o me-2"/>
+                                        </t>
+                                        <span t-out="overview[2]"
+                                              style="cursor: default;"/>
+                                    </a>
                                 </td>
                                 <td>
                                     <t t-if="overview[5] >= overview[4]">
@@ -167,7 +185,16 @@
                                         images remaining
                                     </t>
                                 </td>
-<!--                                <td>aaaaaaaaaaaaaaaaaaaaaaaa</td>-->
+                                <td>
+                                    <input type="checkbox"
+                                           t-on-change="() => this.onChange(overview)"
+                                           t-att-checked="overview[8] ? 'checked' : ''"
+                                           class="form-check-input"/>
+                                </td>
+                                <td>
+                                    <span t-if="overview[7]"
+                                          t-out="overview[7]"/>
+                                </td>
                                 <td>
                                     <div class="circular-progress"
                                          t-attf-style="background: conic-gradient(#4caf50 0% {{(overview[5] / overview[4]) * 100}}%, #e0e0e0 0% 100%)">

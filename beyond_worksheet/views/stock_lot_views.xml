@@ -21,6 +21,8 @@
                             <field name="state"/>
                             <field name="location"/>
                             <field name="is_checklist" invisible="1"/>
+                            <field name="latitude" invisible="1"/>
+                            <field name="longitude" invisible="1"/>
                         </group>
                     </group>
                 </page>
@@ -33,13 +35,16 @@
         <field name="model">stock.lot</field>
         <field name="arch" type="xml">
             <tree string="Stock Lot" create="false">
-                <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>
+                <field name="image" widget="image" options='{"size": [80, 80]}'
+                       class="bg-view"/>
                 <field name="name"/>
                 <field name="product_id"/>
                 <field name="verification_time"/>
                 <field name="state" invisible="type != 'panel'"/>
                 <field name="company_id" column_invisible="1"/>
                 <field name="type" column_invisible="1"/>
+                <field name="latitude" column_invisible="1"/>
+                <field name="longitude" column_invisible="1"/>
             </tree>
         </field>
     </record>

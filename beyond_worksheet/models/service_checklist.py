@@ -31,6 +31,7 @@ class ServiceChecklist(models.Model):
     group = fields.Selection(
         [('on_site', 'Onsite Data'), ('prc', 'PRC Onsite Data')],
         string='Group', default='on_site', required=True)
+    compliant_note = fields.Text(string='Compliant Note')
 
     def get_checklist_count(self):
         worksheet_ids = self.env['task.worksheet'].search([('x_studio_type_of_service', '=', 'Service')])

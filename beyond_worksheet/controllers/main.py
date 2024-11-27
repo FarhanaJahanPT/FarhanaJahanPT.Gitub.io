@@ -129,13 +129,13 @@ class OwnerSignature(http.Controller):
         worksheet = int(kwargs.get('worksheet_id'))
         member = int(kwargs.get('member_id'))
         # Get question and answer from the POST data
-        request.env['worksheet.member.question'].sudo().create({
-            'question_id': int(kwargs.get('question_id')),
-            'answer': kwargs.get('answer'),
-            'worksheet_id': worksheet,
-            'member_id': member,
-            'date': fields.Datetime.today()
-        })
+        # request.env['worksheet.member.question'].sudo().create({
+        #     'question_id': int(kwargs.get('question_id')),
+        #     'answer': kwargs.get('answer'),
+        #     'worksheet_id': worksheet,
+        #     'member_id': member,
+        #     'date': fields.Datetime.today()
+        # })
         # Redirect to the next question or finish if no more questions
         return request.redirect(
             '/my/questions/%s/%s/%s/%s' % (worksheet, member, kwargs.get('latitude'), kwargs.get('longitude')))

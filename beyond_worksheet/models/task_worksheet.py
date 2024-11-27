@@ -33,7 +33,6 @@ class WorkSheet(models.Model):
                                       string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
     team_member_ids = fields.Many2many('team.member', string='Members')
     qr_code = fields.Binary("QR Code", copy=False)
-    member_question_ids = fields.One2many('worksheet.member.question', 'worksheet_id')
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
@@ -392,7 +391,12 @@ class WorkSheet(models.Model):
                 for checklist_item_id in checklist_item_ids:
                     if checklist_item_id.checklist_id.id == checklist_id.id:
                         total += 1
-                data.append([checklist_id.id,checklist_id.icon, checklist_id.name, checklist_id.group, checklist_id.min_qty,total,checklist_id.type,])
+                compliant = checklist_item_ids.filtered(lambda c: c.checklist_id == checklist_id)[:1].compliant
+                data.append(
+                    [checklist_id.id, checklist_id.icon, checklist_id.name,
+                     checklist_id.group, checklist_id.min_qty, total,
+                     checklist_id.type, checklist_id.compliant_note,
+                     compliant])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.checklist_id.id,
                                   checklist_item_id.create_date,
@@ -405,7 +409,16 @@ class WorkSheet(models.Model):
             checklist_item_ids = self.env['service.checklist.item'].search(
                 [('worksheet_id', '=', vals)])
             for checklist_id in checklist_ids:
-                data.append([checklist_id.id,checklist_id.icon, checklist_id.name, checklist_id.group, checklist_id.type])
+                total = 0
+                for checklist_item_id in checklist_item_ids:
+                    if checklist_item_id.service_id.id == checklist_id.id:
+                        total += 1
+                compliant = checklist_item_ids.filtered(lambda c: c.service_id == checklist_id)[:1].compliant
+                data.append(
+                    [checklist_id.id, checklist_id.icon, checklist_id.name,
+                     checklist_id.group, checklist_id.min_qty, total,
+                     checklist_id.type, checklist_id.compliant_note,
+                     compliant])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.service_id.id,
                                   checklist_item_id.create_date,
@@ -413,6 +426,15 @@ class WorkSheet(models.Model):
                                   checklist_item_id.text,
                                   checklist_item_id.image])
         return data, serial_count, checklist
+
+    @api.model
+    def get_checklist_compliant(self,vals,ev):
+        if self.browse(vals).x_studio_type_of_service == 'New Installation':
+            checklist_item_ids = self.env['installation.checklist.item'].search([('worksheet_id', '=', vals),('checklist_id','=',ev[0])])
+        else:
+            checklist_item_ids = self.env['service.checklist.item'].search([('worksheet_id', '=', vals), ('service_id', '=', ev[0])])
+        for checklist_item_id in checklist_item_ids:
+            checklist_item_id.compliant = not checklist_item_id.compliant
 
     @api.constrains('panel_lot_ids', 'inverter_lot_ids', 'battery_lot_ids')
     def get_delivered_items(self):

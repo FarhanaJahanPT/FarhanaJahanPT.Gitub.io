@@ -14,6 +14,9 @@ class InstallationChecklistItem(models.Model):
     worksheet_id = fields.Many2one('task.worksheet', required=True, domain=[('x_studio_type_of_service', '=', 'New Installation')])
     location = fields.Char(string='Location', required=True)
     text = fields.Text(string='Text')
+    compliant = fields.Boolean(string='Compliant')
+    latitude = fields.Char(string='Latitude')
+    longitude = fields.Char(string='Longitude')
 
     @api.constrains('checklist_id')
     def _check_checklist_id_required(self):

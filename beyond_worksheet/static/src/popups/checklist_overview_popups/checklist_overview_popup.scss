@@ -1,6 +1,7 @@
 
 span.b-overview-heading {
-    margin-left: 11px !important;
+    margin-left: 23px !important;
+    position: absolute;
 }
 .b-overview-img {
     max-width: 250px;
@@ -25,7 +26,7 @@ span.b-overview-heading {
     font-size: 14px;
     border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
-    margin-left:74%;
+    margin-left:82%;
 }
 
 // .b-overview-btn:hover {
@@ -38,3 +39,6 @@ span.b-overview-heading {
 //     font-size: 18px; /* Adjust icon size */
 //     display: flex; /* Ensure proper alignment */
 // }
+.beyond_checklist_header {
+    display: flex;
+}

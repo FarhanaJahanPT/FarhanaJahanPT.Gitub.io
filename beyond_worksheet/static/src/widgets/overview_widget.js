@@ -17,8 +17,9 @@ class Overview extends Component {
         this.action = useService("action");
         this.orm = useService("orm");
         onWillStart(async () => {
-            var resId = this.props.record.evalContext.id
-            const action = await this.orm.call('task.worksheet', 'get_overview_values', [resId]);
+            this.state.data.resId = this.props.record.evalContext.id
+            const action = await this.orm.call('task.worksheet', 'get_overview_values', [this.state.data.resId]);
+            console.log('aaaaaaaaaaaaaaaaaaaaaaaa',action)
             this.state.data.overview = action[0]
             this.state.data.serial_count = action[1]
             this.state.data.images_data = action[2]
@@ -27,21 +28,13 @@ class Overview extends Component {
     checklist(ev){
         const images = this.state.data.images_data.filter((item) => item[0] === ev[0])
             const props = {
+                id:ev[0],
                 name:ev[2],
                 class:ev[1],
+                worksheet_id:this.state.data.resId,
                 images:images
             }
             this.dialogService.add(ChecklistOverviewPopup,props);
-            
-//        return this.action.doAction({
-//            name: _t(ev[2]),
-//            res_model: 'installation.checklist.item',
-////            domain: [["checklist_id", "=", ev[0]]],
-//            type: 'ir.actions.act_window',
-//            view_mode: 'kanban',
-//            views: [[false, 'kanban']],
-//            target: 'new',
-//        });
     }
     async SerialNumberView(ev) {
         try {
@@ -66,7 +59,7 @@ class Overview extends Component {
             }
             console.log("Tree View ID:", treeViewId);
             return this.action.doAction({
-                name: _t(ev[2] || "Serial Number View"),
+                name: _t(ev[2] + " Serial Number View"),
                 res_model: 'stock.lot',
                 domain: [["type", "=", ev[2]], ["worksheet_id", "=", id]],
                 type: 'ir.actions.act_window',
@@ -77,6 +70,9 @@ class Overview extends Component {
         } catch (error) {
             console.error("Error in SerialNumberView:", error);
         }
+    }
+    async onChange(ev){
+        const result = await this.orm.call('task.worksheet', 'get_checklist_compliant', [this.state.data.resId, ev]);
     }
 }
 export const overview = {

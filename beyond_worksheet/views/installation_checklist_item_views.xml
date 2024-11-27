@@ -14,12 +14,16 @@
             <tree string="Installation Checklist Item" editable="bottom">
                 <field name="create_date"/>
                 <field name="checklist_id"/>
-                <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
+                <field name="image" widget="image" options='{"size": [80, 80]}'
+                       class="bg-view"/>
                 <field name="text"/>
                 <field name="worksheet_id"/>
-                <field name="user_id"/>
+                <field name="user_id" column_invisible="1"/>
                 <field name="member_id"/>
                 <field name="location"/>
+                <field name="compliant" column_invisible="1"/>
+                <field name="latitude" column_invisible="1"/>
+                <field name="longitude" column_invisible="1"/>
             </tree>
         </field>
     </record>
@@ -41,7 +45,9 @@
                         </group>
                         <group>
                             <field name="text"/>
-                            <field name="image" options="{&quot;size&quot;:[0,270]}" widget="image"/>
+                            <field name="image"
+                                   options="{&quot;size&quot;:[0,270]}"
+                                   widget="image"/>
                         </group>
                     </group>
                 </sheet>
@@ -63,9 +69,11 @@
                     <t t-name="kanban-box">
                         <div class="card oe_kanban_global_click p-0">
                             <div class="o_squared_image">
-                                 <t t-if="record.image">
-                                    <img class="card-img-top" t-att-src="kanban_image('installation.checklist.item', 'image', record.id.raw_value)" t-att-alt="record.checklist_id.value"/>
-                                 </t>
+                                <t t-if="record.image">
+                                    <img class="card-img-top"
+                                         t-att-src="kanban_image('installation.checklist.item', 'image', record.id.raw_value)"
+                                         t-att-alt="record.checklist_id.value"/>
+                                </t>
                                 <br/>
                                 <t t-if="record.text">
                                     <field name="text"/>
@@ -73,7 +81,9 @@
                             </div>
                             <div class="card-body p-0">
                                 <h4 class="card-title p-2 m-0 bg-200">
-                                    <small><field name="create_date"/></small>
+                                    <small>
+                                        <field name="create_date"/>
+                                    </small>
                                 </h4>
                             </div>
                         </div>
@@ -82,7 +92,7 @@
             </kanban>
         </field>
     </record>
-    <menuitem id="installation_checklist_item_menu_action"
-              action="installation_checklist_item_action"
-              parent="task_worksheet_configuration_menu"/>
+    <!--    <menuitem id="installation_checklist_item_menu_action"-->
+    <!--              action="installation_checklist_item_action"-->
+    <!--              parent="task_worksheet_configuration_menu"/>-->
 </odoo>

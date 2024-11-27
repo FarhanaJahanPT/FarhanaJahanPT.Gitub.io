@@ -17,9 +17,12 @@
                 <field name="image" widget="image"  options='{"size": [80, 80]}' class="bg-view"/>
                 <field name="text"/>
                 <field name="worksheet_id"/>
-                <field name="user_id"/>
+                <field name="user_id" column_invisible="1"/>
                 <field name="member_id"/>
                 <field name="location"/>
+                <field name="compliant" column_invisible="1"/>
+                <field name="latitude" column_invisible="1"/>
+                <field name="longitude" column_invisible="1"/>
             </tree>
         </field>
     </record>

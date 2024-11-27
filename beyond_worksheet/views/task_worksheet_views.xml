@@ -87,38 +87,6 @@
                         <page string="Overview" name="overview">
                             <widget name="overview_widget"/>
                         </page>
-<!--                        <page string="Panel Serial Numbers" name="panels" invisible="panel_count == 0">-->
-<!--                            <field name="panel_lot_ids">-->
-<!--                                <tree string="Panel Serial Numbers">-->
-<!--                                    <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>-->
-<!--                                    <field name="name"/>-->
-<!--                                    <field name="product_id"/>-->
-<!--                                    <field name="verification_time"/>-->
-<!--                                    <field name="state"/>-->
-<!--                                    <field name="company_id" column_invisible="1"/>-->
-<!--                                </tree>-->
-<!--                            </field>-->
-<!--                        </page>-->
-<!--                        <page string="Inverter Serial Numbers" invisible="inverter_count == 0">-->
-<!--                            <field name="inverter_lot_ids" invisible="inverter_count == 0">-->
-<!--                                <tree string="Inverter Serial Numbers">-->
-<!--                                    <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>-->
-<!--                                    <field name="name"/>-->
-<!--                                    <field name="product_id"/>-->
-<!--                                    <field name="verification_time"/>-->
-<!--                                </tree>-->
-<!--                            </field>-->
-<!--                        </page>-->
-<!--                        <page string="Battery Serial Numbers" invisible="battery_count == 0">-->
-<!--                            <field name="battery_lot_ids" invisible="battery_count == 0">-->
-<!--                                <tree string="Battery Serial Numbers">-->
-<!--                                    <field name="image" widget="image" options='{"size": [80, 80]}' class="bg-view"/>-->
-<!--                                    <field name="name"/>-->
-<!--                                    <field name="product_id"/>-->
-<!--                                    <field name="verification_time"/>-->
-<!--                                </tree>-->
-<!--                            </field>-->
-<!--                        </page>-->
                         <page string="Attendance Record" invisible="not worksheet_attendance_ids">
                             <field name="worksheet_attendance_ids">
                                 <tree string="Attendance Record">
@@ -142,23 +110,6 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Member Questions" invisible="not member_question_ids">
-                            <field name="member_question_ids">
-                                <tree>
-                                    <field name="question_id"/>
-                                    <field name="answer"/>
-                                    <field name="date"/>
-                                    <field name="member_id"/>
-                                </tree>
-                            </field>
-                        </page>
-<!--                        <page string="Installation Checklist"-->
-<!--                              invisible="x_studio_type_of_service != 'New Installation'">-->
-<!--                            <widget name="checklist_widget"/>-->
-<!--                        </page>-->
-<!--                        <page string="Service Checklist" invisible="x_studio_type_of_service != 'Service'">-->
-<!--                            <widget name="checklist_widget"/>-->
-<!--                        </page>-->
                         <page string="CCEW" name="ccew" invisible="not is_ccew">
                             <group>
                                 <group>

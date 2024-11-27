@@ -17,12 +17,11 @@
                 <field name="type"/>
                 <field name="selfie_type" invisible="type != 'img'"/>
                 <field name="min_qty" readonly="type != 'img'"/>
-<!--                <field name="is_spv_required"/>-->
                 <field name="compulsory"/>
+                <field name="compliant_note"/>
+                <field name="is_spv_required"/>
                 <field name="category_ids" widget="many2many_tags"/>
                 <field name="group"/>
-<!--                <field name="compliant"/>-->
-<!--                <field name="compliant_note"/>-->
             </tree>
         </field>
     </record>
