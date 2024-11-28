@@ -396,7 +396,7 @@ class WorkSheet(models.Model):
                     [checklist_id.id, checklist_id.icon, checklist_id.name,
                      checklist_id.group, checklist_id.min_qty, total,
                      checklist_id.type, checklist_id.compliant_note,
-                     compliant])
+                     compliant, 'installation'])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.checklist_id.id,
                                   checklist_item_id.create_date,
@@ -418,7 +418,7 @@ class WorkSheet(models.Model):
                     [checklist_id.id, checklist_id.icon, checklist_id.name,
                      checklist_id.group, checklist_id.min_qty, total,
                      checklist_id.type, checklist_id.compliant_note,
-                     compliant])
+                     compliant, 'service'])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.service_id.id,
                                   checklist_item_id.create_date,

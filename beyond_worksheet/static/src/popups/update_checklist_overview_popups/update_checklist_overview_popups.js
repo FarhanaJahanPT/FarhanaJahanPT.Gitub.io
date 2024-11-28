@@ -1,21 +1,20 @@
 /** @odoo-module */
 import {Dialog} from "@web/core/dialog/dialog";
-//import {useService} from "@web/core/utils/hooks";
+import {useService} from "@web/core/utils/hooks";
 const {useState, onWillStart, Component, useRef, onMounted, useEffect} = owl;
 import {_t} from "@web/core/l10n/translation";
+import { session } from "@web/session";
 
 export class UpdateChecklistOverviewPopup extends Component{
 
     setup(){
-        console.log('qqqqqqqqqqqqqqqqqqqqqqqqq',this)
+        this.orm = useService("orm");
+        this.notification = useService("notification");
         this.state = useState({
             imagePreview: null, // For previewing the uploaded image
         });
     }
-    uploadImg(){
-        console.log("upload")
-//        this.dialogService.add(ChecklistOverviewPopup,props);
-    }
+
     onFileChange(ev) {
         const file = ev.target.files[0];
         if (file) {
@@ -28,32 +27,51 @@ export class UpdateChecklistOverviewPopup extends Component{
     }
 
     async onUpload() {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            console.log("Latitude:", position.coords.latitude);
-            console.log("Longitude:", position.coords.longitude);
-        },
-        (error) => {
-            console.error("Error getting location:", error.message);
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    this.state.latitude = position.coords.latitude;
+                    this.state.longitude = position.coords.longitude;
+                },
+                (error) => {
+                    console.error("Error getting location:", error.message);
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
         }
-        );
-//        if (this.state.imagePreview) {
-//            await this.orm.call("your.model", "create", {
-//                // Assuming 'id' is passed in props
-//                id: this.props.id,navigator.geolocation
-//                image: this.state.imagePreview.split(",")[1], // Base64-encoded image
-//            });
-//            this.onClose(); // Close dialog after upload
-//        } else {
-//            this.notification.add("Please select an image to upload", {
-//                type: "warning",
-//            });
-//        }
+        if (this.state.imagePreview) {
+            if(this.props.type =='installation'){
+                await this.orm.call("installation.checklist.item", "create",[{
+                    checklist_id: this.props.id,
+                    worksheet_id: this.props.worksheet_id,
+                    user_id: session.uid,
+                    latitude: this.state.latitude,
+                    longitude: this.state.longitude,
+                    location: 'No location Provided',
+                    image: this.state.imagePreview.split(",")[1], // Base64-encoded image
+                }]);
+            }else{
+                await this.orm.call("service.checklist.item", "create",[{
+                    service_id: this.props.id,
+                    worksheet_id: this.props.worksheet_id,
+                    user_id: session.uid,
+                    latitude: this.state.latitude,
+                    longitude: this.state.longitude,
+                    location: 'No location Provided',
+                    image: this.state.imagePreview.split(",")[1], // Base64-encoded image
+                }]);
+            }
+            this.onClose(); // Close dialog after upload
+        } else {
+            this.notification.add("Please select an image to upload", {
+                type: "warning",
+            });
+        }
     }
     onClose(){
         this.props.close();
     }
-
 }
 UpdateChecklistOverviewPopup.template = "UpdateChecklistOverviewPopup";
 UpdateChecklistOverviewPopup.components = {Dialog};

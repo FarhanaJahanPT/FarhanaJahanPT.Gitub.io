@@ -21,7 +21,7 @@
             </t>
             <div class="overview_body d-grid">
                 <t t-foreach="props.images" t-as="image" t-key="image[2]">
-                    <div class="b-overview-img-container p-4">
+                    <div class="b-overview-img-container p-4" t-on-click="onImagePreview">
                         <img class="b-overview-img" t-att-src="'data:image/png;base64,'+image[4]"/>
                     </div>
                 </t>

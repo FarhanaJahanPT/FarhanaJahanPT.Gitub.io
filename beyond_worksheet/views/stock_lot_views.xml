@@ -23,6 +23,7 @@
                             <field name="is_checklist" invisible="1"/>
                             <field name="latitude" invisible="1"/>
                             <field name="longitude" invisible="1"/>
+                            <field name="is_location_validate"/>
                         </group>
                     </group>
                 </page>
@@ -45,6 +46,7 @@
                 <field name="type" column_invisible="1"/>
                 <field name="latitude" column_invisible="1"/>
                 <field name="longitude" column_invisible="1"/>
+                <field name="is_location_validate"/>
             </tree>
         </field>
     </record>

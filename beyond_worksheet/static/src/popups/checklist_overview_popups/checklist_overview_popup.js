@@ -9,15 +9,16 @@ export class ChecklistOverviewPopup extends Component{
 
     setup(){
         this.dialogService = useService("dialog");
-        console.log('qqqqqqqqqqqqqqqqqqqqqqqqq',this)
     }
     uploadImg(){
-        console.log("upload")
         const props = this.props
         this.dialogService.add(UpdateChecklistOverviewPopup,props);
     }
     onClose(){
         this.props.close();
+    }
+    onImagePreview(){
+        console.log("upload.................")
     }
 }
 ChecklistOverviewPopup.template = "ChecklistOverviewPopup";

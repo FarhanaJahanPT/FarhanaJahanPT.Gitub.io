@@ -31,6 +31,7 @@ class Overview extends Component {
                 id:ev[0],
                 name:ev[2],
                 class:ev[1],
+                type:ev[9],
                 worksheet_id:this.state.data.resId,
                 images:images
             }
@@ -43,8 +44,6 @@ class Overview extends Component {
             if (typeof id === "object" && id !== null) {
                 id = id.id || id[0]; // Adjust if id is an object or array
             }
-            console.log("Record ID:", id, ev);
-
             // Fetch tree view ID
             const treeViews = await this.orm.call(
                 'ir.ui.view',
@@ -57,7 +56,6 @@ class Overview extends Component {
                 console.error("Tree view not found");
                 return;
             }
-            console.log("Tree View ID:", treeViewId);
             return this.action.doAction({
                 name: _t(ev[2] + " Serial Number View"),
                 res_model: 'stock.lot',
