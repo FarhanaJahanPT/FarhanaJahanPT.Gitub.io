@@ -13,7 +13,7 @@
                         </div>
                     </h4>
                     <button class="b-overview-btn" t-on-click="uploadImg">
-                       <i class="fa fa-plus" aria-hidden="true"></i>
+                       <i class="fa fa-plus" aria-hidden="true"/>
                         Add Photo
                     </button>
                     <div t-on-click="onClose" type="button" class="btn-close" aria-label="Close"/>
@@ -21,10 +21,17 @@
             </t>
             <div class="overview_body d-grid">
                 <t t-foreach="props.images" t-as="image" t-key="image[2]">
-                    <div class="b-overview-img-container p-4" t-on-click="onImagePreview">
+                    <div class="b-overview-img-container p-4" t-on-click="() => this.onImagePreview(image[4])">
                         <img class="b-overview-img" t-att-src="'data:image/png;base64,'+image[4]"/>
                     </div>
                 </t>
+            </div>
+            <!-- Modal for Image Preview -->
+            <div id="imagePreviewModal" class="image-preview-modal hidden">
+                <div class="modal-content">
+                    <span class="close-btn" t-on-click="onClosePreview">X</span>
+                    <img id="previewedImage" class="preview-image" src="" alt="Image Preview" />
+                </div>
             </div>
             <t t-set-slot="footer">
                 <div class="d-none"/>

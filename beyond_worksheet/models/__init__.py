@@ -18,3 +18,5 @@ from . import electrical_contract_license
 from . import work_type
 from . import license_tags
 from . import documents_document
+from . import swms_risk_register
+from . import swms_risk_work

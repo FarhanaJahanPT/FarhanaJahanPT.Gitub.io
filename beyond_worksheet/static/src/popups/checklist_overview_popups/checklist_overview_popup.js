@@ -17,8 +17,21 @@ export class ChecklistOverviewPopup extends Component{
     onClose(){
         this.props.close();
     }
-    onImagePreview(){
-        console.log("upload.................")
+    onImagePreview(imageData){
+        const modal = document.getElementById("imagePreviewModal");
+        const previewImage = document.getElementById("previewedImage");
+        if (previewImage){
+            previewImage.src = `data:image/png;base64,${imageData}`;
+        }
+        if (modal){
+            modal.classList.add("show");
+        }
+    }
+    onClosePreview() {
+        const modal = document.getElementById("imagePreviewModal");
+        if (modal){
+            modal.classList.remove("show");
+        }
     }
 }
 ChecklistOverviewPopup.template = "ChecklistOverviewPopup";

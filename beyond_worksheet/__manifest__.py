@@ -16,6 +16,7 @@
         'data/work_type_data.xml',
         'data/license_tags_data.xml',
         'data/documents_document_data.xml',
+        'data/swms_risk_work_data.xml',
         'views/project_task_views.xml',
         'views/stock_lot_views.xml',
         'views/task_worksheet_views.xml',
@@ -38,6 +39,8 @@
         'views/work_type_views.xml',
         'views/license_tags_views.xml',
         'views/documents_document_views.xml',
+        'views/swms_risk_register_views.xml',
+        'views/swms_risk_work_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
@@ -52,6 +55,8 @@
             'beyond_worksheet/static/src/popups/update_checklist_overview_popups/update_checklist_overview_popups.xml',
             'beyond_worksheet/static/src/popups/checklist_overview_popups/checklist_overview_popup.xml',
             'beyond_worksheet/static/src/popups/checklist_overview_popups/checklist_overview_popup.scss',
+            'beyond_worksheet/static/src/widgets/risk_color_widget/risk_color_widget.js',
+            'beyond_worksheet/static/src/widgets/risk_color_widget/risk_color_widget.xml',
 
         ],
         'web.assets_frontend': [

@@ -92,7 +92,7 @@
             </kanban>
         </field>
     </record>
-        <menuitem id="installation_checklist_item_menu_action"
-                  action="installation_checklist_item_action"
-                  parent="task_worksheet_configuration_menu"/>
+<!--        <menuitem id="installation_checklist_item_menu_action"-->
+<!--                  action="installation_checklist_item_action"-->
+<!--                  parent="task_worksheet_configuration_menu"/>-->
 </odoo>

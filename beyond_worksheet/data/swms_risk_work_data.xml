@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="risk_work_1" model="swms.risk.work">
+        <field name="name">Tower crane</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_2" model="swms.risk.work">
+        <field name="name">Self-erecting tower crane</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_3" model="swms.risk.work">
+        <field name="name">Derrick crane</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_4" model="swms.risk.work">
+        <field name="name">Portal boom crane</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_5" model="swms.risk.work">
+        <field name="name">Bridge and gantry crane</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_6" model="swms.risk.work">
+        <field name="name">Vehicle loading crane</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_7" model="swms.risk.work">
+        <field name="name">Non-slewing mobile crane</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_8" model="swms.risk.work">
+        <field name="name">Slewing mobile crane – with a capacity up to 20 tonnes</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_9" model="swms.risk.work">
+        <field name="name">Slewing mobile crane – with a capacity of up to 60 tonnes</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_10" model="swms.risk.work">
+        <field name="name">Slewing mobile crane – with a capacity of up to 100 tonnes</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_11" model="swms.risk.work">
+        <field name="name">Slewing mobile crane – with a capacity of over 100 tonnes</field>
+        <field name="type">cranes</field>
+    </record>
+    <record id="risk_work_12" model="swms.risk.work">
+        <field name="name">Materials hoist</field>
+        <field name="type">hoists</field>
+    </record>
+    <record id="risk_work_13" model="swms.risk.work">
+        <field name="name">Personnel and materials hoist</field>
+        <field name="type">hoists</field>
+    </record>
+    <record id="risk_work_14" model="swms.risk.work">
+        <field name="name">Boom-type elevating work platform</field>
+        <field name="type">hoists</field>
+    </record>
+    <record id="risk_work_15" model="swms.risk.work">
+        <field name="name">Concrete placing boom</field>
+        <field name="type">hoists</field>
+    </record>
+    <record id="risk_work_16" model="swms.risk.work">
+        <field name="name">Basic scaffolding</field>
+        <field name="type">scaffolding</field>
+    </record>
+    <record id="risk_work_17" model="swms.risk.work">
+        <field name="name">Intermediate scaffolding</field>
+        <field name="type">scaffolding</field>
+    </record>
+    <record id="risk_work_18" model="swms.risk.work">
+        <field name="name">Advanced scaffolding</field>
+        <field name="type">scaffolding</field>
+    </record>
+    <record id="risk_work_19" model="swms.risk.work">
+        <field name="name">Basic scaffolding</field>
+        <field name="type">dogging_rigging</field>
+    </record>
+    <record id="risk_work_20" model="swms.risk.work">
+        <field name="name">Intermediate scaffolding</field>
+        <field name="type">dogging_rigging</field>
+    </record>
+    <record id="risk_work_21" model="swms.risk.work">
+        <field name="name">Advanced scaffolding</field>
+        <field name="type">dogging_rigging</field>
+    </record>
+    <record id="risk_work_22" model="swms.risk.work">
+        <field name="name">Forklift</field>
+        <field name="type">forklift</field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="swms_risk_work_action" model="ir.actions.act_window">
+        <field name="name">SWMS Risk Work</field>
+        <field name="res_model">swms.risk.work</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="swms_risk_work_view_tree" model="ir.ui.view">
+        <field name="name">swms.risk.work.view.tree</field>
+        <field name="model">swms.risk.work</field>
+        <field name="arch" type="xml">
+            <tree string="SWMS Risk Work" editable="bottom">
+                <field name="name"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="swms_risk_register_action" model="ir.actions.act_window">
+        <field name="name">SWMS Risk Register</field>
+        <field name="res_model">swms.risk.register</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="swms_risk_register_view_tree" model="ir.ui.view">
+        <field name="name">swms.risk.register.view.tree</field>
+        <field name="model">swms.risk.register</field>
+        <field name="arch" type="xml">
+            <tree string="SWMS Risk Register" editable="bottom">
+                <field name="installation_question"/>
+                <field name="job_activity"/>
+                <field name="hazard_associated_risk"/>
+                <field name="risk_level"/>
+                <field name="risk_control"/>
+                <field name="residual_risk_level"/>
+                <field name="risk_group"/>
+                <field name="category_id"/>
+                <field name="installer_input"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="swms_risk_register_menu" action="swms_risk_register_action"
+              parent="task_worksheet_configuration_menu"/>
+</odoo>

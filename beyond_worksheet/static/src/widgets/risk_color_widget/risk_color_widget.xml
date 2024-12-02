@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="beyond_worksheet.RiskColorWidget">
+        <div class="d-inline-flex w-100">
+            <input type="text" t-att-value="props.record.data[props.name]"
+                   t-model="props.record.data[props.name]"
+                   t-on-change="() => this.onChange(props.record.data[props.name])"/>
+        </div>
+    </t>
+</templates>

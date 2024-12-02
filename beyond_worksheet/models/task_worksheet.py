@@ -67,7 +67,21 @@ class WorkSheet(models.Model):
     document_ids = fields.One2many('documents.document', 'res_id',
                                    string='Documents', domain=[('res_model', '=', 'task.worksheet')])
     document_count = fields.Integer(string="Documents Count", compute='_compute_document_count')
-
+    cranes_ids = fields.Many2many('swms.risk.work','task_worksheet_cranes_rel',
+                                  'worksheet_id','work_id',
+                                  string="Cranes",domain=[('type', '=', 'cranes')])
+    hoists_ids = fields.Many2many('swms.risk.work','task_worksheet_hoists_rel',
+                                  'worksheet_id','work_id',
+                                  string="Hoists",domain=[('type', '=', 'hoists')])
+    scaffolding_ids = fields.Many2many('swms.risk.work','task_worksheet_scaffolding_rel',
+                                       'worksheet_id','work_id',
+                                       string="Scaffolding",domain=[('type', '=', 'scaffolding')])
+    dogging_rigging_ids = fields.Many2many('swms.risk.work','task_worksheet_dogging_rigging_rel',
+                                           'worksheet_id','work_id',
+                                           string="Dogging and Rigging",domain=[('type', '=', 'dogging_rigging')])
+    forklift_ids = fields.Many2many('swms.risk.work','task_worksheet_forklift_rel',
+                                    'worksheet_id','work_id',
+                                    string="Forklift",domain=[('type', '=', 'forklift')])
     @api.model_create_multi
     def create(self, vals_list):
         """Function to create sequence"""
