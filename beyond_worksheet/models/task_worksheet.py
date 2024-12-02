@@ -33,6 +33,7 @@ class WorkSheet(models.Model):
                                       string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
     team_member_ids = fields.Many2many('team.member', string='Members')
     qr_code = fields.Binary("QR Code", copy=False)
+    member_question_ids = fields.One2many('worksheet.member.question', 'worksheet_id')
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
     inverter_count = fields.Integer(string='Inverter Count', compute='_compute_order_count', store=True, default=0)
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
@@ -151,7 +152,7 @@ class WorkSheet(models.Model):
                     date_deadline=fields.Datetime.now(),
                     note=_('Need To Generate CES'),
                     user_id=member.id)
-            self.is_ces_activity_created = True if operation_team else False
+            # self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
             license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')

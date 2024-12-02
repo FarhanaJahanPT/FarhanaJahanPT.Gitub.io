@@ -17,6 +17,7 @@
                 <field name="worksheet_id"/>
                 <field name="in_latitude"/>
                 <field name="in_longitude"/>
+                <field name="user_input_id" invisible="1"/>
                 <button name="action_view_maps"
                     type="object"
                     class="btn btn-link ps-0 pt-0 pb-2"
@@ -27,7 +28,9 @@
                     type="object"
                     class="btn btn-primary"
                     string="View Responses"
-                    colspan="2"/>
+                    colspan="2"
+                    invisible="not user_input_id"
+                />
             </tree>
         </field>
     </record>

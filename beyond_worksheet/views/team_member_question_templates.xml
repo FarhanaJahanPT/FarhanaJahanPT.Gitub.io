@@ -32,8 +32,14 @@
     <template id="portal_team_member_questions_done" name="Check-in Completed">
         <t t-call="portal.portal_layout">
             <div class="container">
-                <h2>Check-in Completed</h2>
-                <p>Your check-in has been successfully completed. Thank you!</p>
+                <t t-if="is_same_location">
+                    <h2>Already Check-in with same Location</h2>
+                    <p>Please try again in another location!</p>
+                </t>
+                <t t-else="">
+                    <h2>Check-in Completed</h2>
+                    <p>Your check-in has been successfully completed. Thank you!</p>
+                </t>
             </div>
             <a t-attf-href="/team/member/checkout/{{worksheet}}/{{member}}">Check-out</a>
         </t>

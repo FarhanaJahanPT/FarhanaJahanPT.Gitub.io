@@ -8,6 +8,7 @@ try:
 except ImportError:
     base64 = None
 from odoo import models, fields
+import werkzeug
 
 
 class TeamMemberQuestion(models.Model):
@@ -30,3 +31,10 @@ class SurveySurvey(models.Model):
     team_member_id = fields.Many2one('team.member')
     worksheet_id = fields.Many2one('task.worksheet')
     is_from_worksheet = fields.Boolean(default=False)
+    survey_start_url = fields.Char(compute='_compute_survey_start_url')
+
+    def _compute_survey_start_url(self):
+        for invite in self:
+            print(invite, "in", invite.access_token)
+            invite.survey_start_url = werkzeug.urls.url_join(invite.get_base_url(),
+                                                             invite.get_start_url()) if invite.id else False
