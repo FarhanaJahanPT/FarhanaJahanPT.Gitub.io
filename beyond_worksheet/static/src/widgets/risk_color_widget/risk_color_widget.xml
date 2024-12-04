@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="beyond_worksheet.RiskColorWidget">
-        <div class="d-inline-flex w-100">
-            <input type="text" t-att-value="props.record.data[props.name]"
-                   t-model="props.record.data[props.name]"
-                   t-on-change="() => this.onChange(props.record.data[props.name])"/>
-        </div>
+        <select class="o_input pe-3" t-on-change="onChange"
+                        t-att-style="'background-color: ' + (!props.record.data[props.name] ? 'white' : props.record.data[props.name].endsWith('M') ? '#fbf01f' : props.record.data[props.name].endsWith('H') and !props.record.data[props.name].endsWith('VH') ? '#ffc107' : props.record.data[props.name].endsWith('L') ? '#92d050' : props.record.data[props.name].endsWith('VH') ? '#ea452f' : 'white');">
+            <option t-att-selected="false === value"
+                    t-esc="this.props.placeholder || ''"/>
+            <t t-foreach="props.record.fields[props.name].selection"
+               t-as="option" t-key="option[0]">
+                <option
+                        t-att-value="option[0]"
+                        t-att-selected="option[0] === props.record.data[props.name]"
+                        t-att-style="'background-color: ' + (option[0].endsWith('M') ? '#fbf01f' : option[0].endsWith('H') and !option[0].endsWith('VH') ? '#ffc107' : option[0].endsWith('L') ? '#92d050' : option[0].endsWith('VH') ? '#ea452f' : '');">
+                    <t t-esc="option[1]"/>
+                </option>
+            </t>
+        </select>
     </t>
 </templates>

@@ -83,6 +83,7 @@ class WorkSheet(models.Model):
     forklift_ids = fields.Many2many('swms.risk.work','task_worksheet_forklift_rel',
                                     'worksheet_id','work_id',
                                     string="Forklift",domain=[('type', '=', 'forklift')])
+    swms_file = fields.Binary(string='SWMS')
     @api.model_create_multi
     def create(self, vals_list):
         """Function to create sequence"""
@@ -152,7 +153,7 @@ class WorkSheet(models.Model):
                     date_deadline=fields.Datetime.now(),
                     note=_('Need To Generate CES'),
                     user_id=member.id)
-            # self.is_ces_activity_created = True if operation_team else False
+            self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
             license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
@@ -683,3 +684,16 @@ class WorkSheet(models.Model):
                 })
             self.ccew_file = None
             self.task_id.x_studio_ccew = modified_pdf_content
+
+    def action_create_swms(self):
+        print('sssssssssssssssssssssss',self)
+        pdf_path = get_module_resource('beyond_worksheet',
+                                       'static/src/data/SWMS (2).pdf')
+        doc = fitz.open(pdf_path)
+        page = doc[0]
+
+        pdf_stream = io.BytesIO()
+        doc.save(pdf_stream)
+        doc.close()
+        modified_pdf_content = base64.b64encode(pdf_stream.getvalue())
+        self.swms_file = modified_pdf_content

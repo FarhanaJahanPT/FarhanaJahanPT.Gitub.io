@@ -19,7 +19,6 @@ class Overview extends Component {
         onWillStart(async () => {
             this.state.data.resId = this.props.record.evalContext.id
             const action = await this.orm.call('task.worksheet', 'get_overview_values', [this.state.data.resId]);
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaa',action)
             this.state.data.overview = action[0]
             this.state.data.serial_count = action[1]
             this.state.data.images_data = action[2]
@@ -51,7 +50,6 @@ class Overview extends Component {
                 [[['name', '=', 'stock.production.lot.view.tree']], ['id'], 0, 1]
             );
             const treeViewId = treeViews.length > 0 ? treeViews[0].id : false;
-
             if (!treeViewId) {
                 console.error("Tree view not found");
                 return;
