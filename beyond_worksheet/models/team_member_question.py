@@ -32,6 +32,9 @@ class SurveySurvey(models.Model):
     worksheet_id = fields.Many2one('task.worksheet')
     is_from_worksheet = fields.Boolean(default=False)
     survey_start_url = fields.Char(compute='_compute_survey_start_url')
+    signature = fields.Image(
+        string="Signature",
+        copy=False, attachment=True, max_width=1024, max_height=1024)
 
     def _compute_survey_start_url(self):
         for invite in self:

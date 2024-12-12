@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
+from datetime import datetime
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -12,7 +13,7 @@ class WorksheetAttendance(models.Model):
     type = fields.Selection([('check_in', 'Check In'),
                              ('check_out', 'Check Out')], string='Type',
                             required=True)
-    date = fields.Datetime(string='Date', default=lambda self: fields.Datetime.now(), required=True)
+    date = fields.Datetime(string='Date')
     location = fields.Char(string='Location')
     member_id = fields.Many2one('team.member', string='User', required=True)
     task_id = fields.Many2one('project.task', related="worksheet_id.task_id")
@@ -22,6 +23,9 @@ class WorksheetAttendance(models.Model):
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True)
     survey_id = fields.Many2one('survey.survey')
     user_input_id = fields.Many2one('survey.user_input')
+    signature = fields.Image(
+        string="Signature",
+        copy=False, attachment=True, max_width=1024, max_height=1024)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -42,8 +46,9 @@ class WorksheetAttendance(models.Model):
             'url': get_google_maps_url(self.in_latitude, self.in_longitude),
             'target': 'new'
         }
+
     def action_view_answers(self):
-        print("action view answerws",self.read())
+        print("action view answerws", self.read())
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -53,6 +58,56 @@ class WorksheetAttendance(models.Model):
             'res_id': self.user_input_id.id,
             'target': 'new',
         }
+
+    @api.model
+    def auto_create_check_out(self):
+        # Get today's date
+        today = fields.Date.today()
+        print(today,"today")
+        today1 = datetime.today().date()
+        print(today1,"today1")
+
+        # Find members who have checked in but not checked out
+        check_ins = self.env['worksheet.attendance'].sudo().search([
+            ('type', '=', 'check_in'),
+            ('date', '<=', today),  # Check-ins from previous days
+        ])
+        print("checkn in ",check_ins)
+        for check_in in check_ins:
+            check_out_exists = self.env['worksheet.attendance'].sudo().search([
+                ('type', '=', 'check_out'),
+                ('member_id', '=', check_in.member_id.id),
+                ('worksheet_id', '=', check_in.worksheet_id.id),
+                ('date', '=', check_in.date),
+            ])
+            print(check_in.date)
+            print(check_in,check_in.worksheet_id,check_in.member_id.name,"ggggggg",check_out_exists,check_out_exists.worksheet_id)
+
+            # print(check_out_exists.read(),"check_out_exists",check_in.read())
+            if not check_out_exists:
+                check_out_date = datetime.combine(check_in.date.date(), datetime.min.time()).replace(hour=11, minute=59)
+                # Create the check-out record
+                print("chckout 1111")
+                self.env['worksheet.attendance'].sudo().create({
+                    'type': 'check_out',
+                    'member_id': check_in.member_id.id,
+                    'worksheet_id': check_in.worksheet_id.id,
+                    'date': check_out_date,
+                })
+                # ll
+
+    # def action_view_answers(self):
+    #     print("action view answerws",self.read())
+    #     self.ensure_one()
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Responses',
+    #         'view_mode': 'tree',
+    #         'res_model': 'swms.team.member.input',
+    #         'domain': [('member_id', '=', self.member_id.id),('worksheet_id', '=', self.worksheet_id.id),('date', '=', self.date)],
+    #         'context': {'create': False},
+    #         'target': 'new',
+    #     }
 
     @api.model
     def create(self, vals):

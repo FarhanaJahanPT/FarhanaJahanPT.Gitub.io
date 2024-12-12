@@ -1,0 +1,1426 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_swms_worksheet">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <style>
+                            table{
+                                border-collapse: collapse;
+                                width: 100%;
+                                text-align: left;
+                                line-height: 1.8;
+                                margin-bottom: 10px;
+                                table-layout: fixed;
+                            }
+                            .table_background{
+                                background: #a6a6a6;
+                            }
+                            .td_width{
+                                width:25%;
+                            }
+                            th,td{
+                                vertical-align: top;
+                                padding: 5px;
+                            }
+                            img{
+                                width: fit-content;
+                            }
+                            p{
+                                line-height: 1.5;
+                            }
+                            ul {
+                                padding-left: 20px;
+                                font-size: 12pt;
+                            }
+                            li {
+                                margin-bottom: 5px;
+                            }
+                            a {
+                                color: #0000FF;
+                                text-decoration: underline;
+                            }
+                        </style>
+                        <table border="1">
+                            <tr>
+                                <th colspan="2" class="table_background">
+                                    SWMS Title
+                                </th>
+                            </tr>
+                            <tr>
+                                <th colspan="2">
+                                    Grid Connected PV and Battery Storage
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Version 6</th>
+                                <th>Date Issued: <span t-esc="data['date']"/></th>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
+                        <table border="1">
+                            <tr>
+                                <th class="table_background">
+                                    Safe Work Method Statement
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    This SWMS has been developed according to the
+                                    Beyond Solar IMS Manual and on the current
+                                    version of the SWMS Form (version control
+                                    is found in the footer).
+                                    <br/>
+                                    <br/>
+                                    The up-to-date SWMS for this job is the version
+                                    which is printed and taken to site. The Install/
+                                    Site Supervisor is required to carry out a
+                                    hazard
+                                    identification process when they arrive on site,
+                                    see table below. Any medium or high risks should
+                                    be flagged with the Project Manager before
+                                    proceeding.
+                                    <br/>
+                                    <br/>
+                                    The Install/ Site Supervisor must ensure that
+                                    all workers attending the site inspection are
+                                    inducted and sign onto this SWMS. If plant, such
+                                    as
+                                    ladders or EWPs are used to access the roof, a
+                                    pre-start check must be carried out prior to
+                                    use.
+                                    Report any hazards or incidents to the Project
+                                    Manager immediately.
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
+                        <table border="1">
+                            <tr>
+                                <th class="table_background">
+                                    Scope of Work covered by this SMWSs
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    This SWMS was developed specifically for the
+                                    Installation of roof-mounted solar energy system
+                                    and/or energy storage system at the site listed
+                                    below.
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
+                        <table border="1">
+                            <tr class="table_background">
+                                <th>
+                                    Principal Contractor
+                                </th>
+                                <th>
+                                    Sub-Contractor Details
+                                </th>
+                                <th>
+                                    Installation site/Client Details
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Beyond Solar
+                                    <br/>
+                                    2/79 Williamson Rd Ingleburn, 2565 NSW
+                                    <br/>
+                                    ABN: 67 604 966 403
+                                    <br/>
+                                    Email: info@beyondsolar.com.au
+                                    <br/>
+                                    M: 0449544914
+                                </td>
+                                <td/>
+                                <td>
+                                    <span t-field="o.partner_id.name"/><br/>
+                                    <span t-field="o.site_address"/><br/>
+                                    Email: <span t-field="o.partner_id.email"/><br/>
+                                    M: <span t-field="o.partner_id.phone"/><br/>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        <table border="1">
+                            <tr class="table_background">
+                                <th colspan="4">
+                                    Development of SWMS
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    SWMS approved by
+                                    <br/>
+                                    <br/>
+                                </td>
+                                <td/>
+                                <td>Signature:</td>
+                                <td>Date:</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Responsible Person (RP*)</b> for
+                                    implementing, monitoring and ensuring compliance
+                                    with SWMS.
+                                    <br/>
+                                </td>
+                                <td><span t-field="o.team_lead_id.name"/></td>
+                                <td>
+                                    Signature:
+                                    <t t-if="o.task_id.install_signature">
+                                        <img t-att-src="image_data_uri(o.task_id.install_signature)" style="max-height:45pt;max-width:90%"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    Date:
+                                    <span t-if="o.task_id.date_worksheet_install" t-esc="o.task_id.date_worksheet_install.strftime('%d-%m-%Y')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Beyond Solar Project Manager (PM)
+                                </td>
+                                <td colspan="3"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    SWMS have been developed in consultation
+                                    with
+                                </td>
+                                <td colspan="3">
+                                    <input type="checkbox" disabled="true"/>
+                                    Client/ Site
+                                    <input type="checkbox" disabled="true"/>
+                                    (Principal) Contractor
+                                    <input type="checkbox" disabled="true"/>
+                                    Workers
+                                    All workers involved in the task must have this
+                                    SMWS communicated to them before work
+                                    commences. Sign on page below.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="color: #565353;">
+                                    <b>Other Install Key Roles</b>
+                                </td>
+                                <td colspan="2" style="color: #565353;">
+                                    <b>Other Install Site Key Contacts</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Construction Engineers
+                                </td>
+                                <td/>
+                                <td/>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Head Installer
+                                </td>
+                                <td/>
+                                <td/>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>
+                                    HSEQ
+                                </td>
+                                <td/>
+                                <td/>
+                                <td/>
+                            </tr>
+                        </table>
+                        <br/>
+                        <h3>Worker Sign-On Sheet</h3>
+                        <table border="1">
+                            <tr class="table_background">
+                                <td colspan="4">
+                                    Worker Declaration- by signing below the worker agrees to the following for
+                                    <span t-field="o.partner_id.street"/> <span t-field="o.partner_id.street2"/> <span t-field="o.partner_id.city"/>
+                                     <span t-field="o.partner_id.state_id.code"/> <span t-field="o.partner_id.zip"/>
+                                    <ul>
+                                        <li>I have been consulted and have assisted in the development of this SWMS.</li>
+                                        <li>I have been given the opportunity to comment on the content of this SWMS.</li>
+                                        <li>I have read and understand how I am to carry out the activities listed in this SWMS.</li>
+                                        <li>
+                                            I have been supplied with the Personal Protective Equipment identified on this SWMS, and I have been given
+                                            training in the safe use of this equipment.
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="table_background">
+                                <td>
+                                   Workers Names
+                                </td>
+                                <td>
+                                    Role &amp; qualifications used on this site (e.g., Electrician, Installer etc)
+                                </td>
+                                <td>
+                                    Signature
+                                </td>
+                                <td>
+                                    Date of Sign onto Construction Safety Plan
+                                </td>
+                            </tr>
+                            <t t-foreach="o.team_member_ids" t-as="team_member_id" t-key="team_member_id_index">
+                                <tr>
+                                    <td>
+                                        <span t-esc="team_member_id_index + 1"/>.
+                                        <span t-field="team_member_id.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="team_member_id.contract_license_ids" t-as="l">
+                                        <span t-field="l.type"/>,
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="data['attendance_ids']" t-as="a">
+                                            <t t-if="a.member_id.name == team_member_id.name and a.type == 'check_in' and a.signature">
+                                                <img t-att-src="image_data_uri(a.signature)" style="max-height:45pt;max-width:90%"/>
+                                            </t>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="data['attendance_ids']" t-as="a">
+                                            <t t-if="a.member_id.name == team_member_id.name and a.type == 'check_in' and a.signature">
+                                                <span t-field="a.date"/>
+                                            </t>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                        <br/>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        <h3>Competencies and Training</h3>
+                        <table border="1">
+                            <tr class="table_background">
+                                <td>
+                                    Topic
+                                </td>
+                                <td>
+                                    High Risk Work Licence or competency required?
+                                </td>
+                                <td>
+                                    Person with Competency
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    General Construction Induction
+                                </td>
+                                <td>
+                                    <input type="checkbox" checked="checked"/>
+                                    White Card
+                                </td>
+                                <td>
+                                    All workers should have a white card to enter the
+                                    site and perform inspections. See below*
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   First Aid
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Provide First Aid Cert.
+                                </td>
+                                <td>
+                                    At least one person on site
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   Electrical work
+                                </td>
+                                <td>
+                                    <input type="checkbox" checked="checked"/>
+                                    Electrician Licence
+                                </td>
+                                <td>
+                                    At least one person on site
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Wearing harness (Fall restraint or Fall arrest as last option)
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Work Safely at Heights competency
+                                </td>
+                                <td>
+                                    Required if worker is using a harness
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    EWP
+                                    (&lt;11m, scissor-lift, boom-lift)
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    EWP competency OR Yellow Card
+                                </td>
+                                <td>
+                                    Required to operate scissor lift/ EWP &lt;11m
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Telehandler with forklift attachment
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Telehandler Gold Card OR RIIHAN309D -
+                                    Conduct telescopic materials handler operations
+                                </td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>Cranes</td>
+                                <td>
+                                    <t t-foreach="data['risk']" t-as="risk">
+                                        <t t-if="risk['type'] == 'cranes'">
+                                            <t t-set="is_checked" t-value="False"/>
+                                            <t t-foreach="o.cranes_ids" t-as="l">
+                                                <t t-if="l.name == risk['name']">
+                                                    <t t-set="is_checked" t-value="True"/>
+                                                </t>
+                                            </t>
+                                            <input type="checkbox" t-att-checked="is_checked and 'true'"/>
+                                            <t t-esc="risk['name']"/><br/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Hoists
+                                </td>
+                                <td>
+                                    <t t-foreach="data['risk']" t-as="risk">
+                                        <t t-if="risk['type'] == 'hoists'">
+                                            <t t-set="is_checked" t-value="False"/>
+                                            <t t-foreach="o.hoists_ids" t-as="l">
+                                                <t t-if="l.name == risk['name']">
+                                                    <t t-set="is_checked" t-value="True"/>
+                                                </t>
+                                            </t>
+                                            <input type="checkbox" t-att-checked="is_checked and 'true'"/>
+                                            <t t-esc="risk['name']"/><br/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Scaffolding</td>
+                                <td>
+                                    <t t-foreach="data['risk']" t-as="risk">
+                                        <t t-if="risk['type'] == 'scaffolding'">
+                                            <t t-set="is_checked" t-value="False"/>
+                                            <t t-foreach="o.scaffolding_ids" t-as="l">
+                                                <t t-if="l.name == risk['name']">
+                                                    <t t-set="is_checked" t-value="True"/>
+                                                </t>
+                                            </t>
+                                            <input type="checkbox" t-att-checked="is_checked and 'true'"/>
+                                            <t t-esc="risk['name']"/><br/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Dogging &amp; Rigging</td>
+                                <td>
+                                    <t t-foreach="data['risk']" t-as="risk">
+                                        <t t-if="risk['type'] == 'dogging_rigging'">
+                                            <t t-set="is_checked" t-value="False"/>
+                                            <t t-foreach="o.dogging_rigging_ids" t-as="l">
+                                                <t t-if="l.name == risk['name']">
+                                                    <t t-set="is_checked" t-value="True"/>
+                                                </t>
+                                            </t>
+                                            <input type="checkbox" t-att-checked="is_checked and 'true'"/>
+                                            <t t-esc="risk['name']"/><br/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Forklifts</td>
+                                <td>
+                                    <t t-foreach="data['risk']" t-as="risk">
+                                        <t t-if="risk['type'] == 'forklift'">
+                                            <t t-set="is_checked" t-value="False"/>
+                                            <t t-foreach="o.forklift_ids" t-as="l">
+                                                <t t-if="l.name == risk['name']">
+                                                    <t t-set="is_checked" t-value="True"/>
+                                                </t>
+                                            </t>
+                                            <input type="checkbox" t-att-checked="is_checked and 'true'"/>
+                                            <t t-esc="risk['name']"/><br/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table border="1">
+                            <tr>
+                                <th class="table_background">
+                                    White Cards*
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Staff performing inspections or walk through, including sales and engineering staff <u>must have a white card unless they are supervised by a
+                                    inducted person at ALL TIMES.</u> That is, someone who is competent to work at a construction site and knows their way around the site.
+                                    <br/>
+                                    <u>Scenario 1: Inspection at construction site</u>
+                                    <br/>
+                                    An engineer may attend a construction site <u>without a white card</u> if they will be supervised at all times by a contractor with a white card operating
+                                    under a SWMS, and the contractor must also sign the engineer onto their SWMS and perform an induction that is relevant for the engineer, this
+                                    may including emphasizing pathways and skylights on the roof. The engineer must be able to inspect the site without wearing a harness, accessing
+                                    a roof area by fixed ladder, scissor lift (with ramp) is safe under direct supervision (see work safely at heights).
+                                    <br/>
+                                    <u>Scenario 2: Inspecting site (work has not started)</u>
+                                    A sales representative or engineer may inspect a site of a potential or future project <u>without a white card</u> if they are supervised by a person with
+                                    knowledge of the site, such a building manager, security attendant, operations manager etc. No work has commenced. And the staff member can
+                                    perform an inspection without wearing a harness; accessing a roof area by fixed ladder, scissor lift (with ramp) is safe under direct supervision (see
+                                    work safely at heights).
+                                    <br/>
+                                    If there is no one at a site to supervise the inspection, the staff member must have their own white card.
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        <h3>Personal Protective Equipment</h3>List of PPE required for project.
+                        <table border="1">
+                            <tr style="background: #41b1f1;">
+                                <td>Hi-Vis</td>
+                                <td>Steel cap boots</td>
+                                <td>Gloves</td>
+                                <td>Eye protection</td>
+                                <td>Hearing protection</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" checked="checked"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Specific Task
+                                    <br/>
+                                    _____________
+                                </td>
+                                <td>
+                                    <input type="checkbox" checked="checked"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Specific Task
+                                    <br/>
+                                    _____________
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" checked="checked"/>
+                                    Required for Specific Task
+                                    <p style="color:#949494;">
+                                        Running cable, handling
+                                        material with sharp edge;
+                                        using epoxy resin.
+                                    </p>
+                                    <input type="checkbox" disabled="true"/>
+                                    Not required
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" checked="checked"/>
+                                    Required for Specific Task
+                                    <p style="color:#949494;">
+                                        Cutting rail/ Hot work; drilling
+                                    </p>
+                                    <input type="checkbox" disabled="true"/>
+                                    Not required
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" checked="checked"/>
+                                    Required for Specific Task
+                                    <p style="color:#949494;">
+                                        Cutting rail/ Hot work; drilling; site noise
+                                    </p>
+                                    <input type="checkbox" disabled="true"/>
+                                    Not required
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/1.png' % request.httprequest.host_url"/>
+                                </td>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/2.png' % request.httprequest.host_url"/>
+                                </td>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/3.png' % request.httprequest.host_url"/>
+                                </td>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/4.png' % request.httprequest.host_url"/>
+                                </td>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/5.png' % request.httprequest.host_url"/>
+                                </td>
+                            </tr>
+                            <tr style="background: #41b1f1;">
+                                <td>Hard Hat</td>
+                                <td>Respirator</td>
+                                <td>Long Sleeve &amp; Trousers</td>
+                                <td/>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Specific Task
+                                    <br/>
+                                    <input type="checkbox" checked="checked"/>
+                                    Not required
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" checked="checked"/>
+                                    Required for Specific Task
+                                    <p style="color:#949494;">
+                                        Installing chem set - drilling; use of epoxy resin
+                                    </p>
+                                    <input type="checkbox" disabled="true"/>
+                                    Not required
+                                </td>
+                                <td>
+                                    <input type="checkbox" checked="checked"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" disabled="true"/>
+                                    Required for Specific Task
+                                    <br/>
+                                    <input type="checkbox" disabled="true"/>
+                                    Not required
+                                </td>
+                                <td/>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/6.png' % request.httprequest.host_url"/>
+                                </td>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/7.png' % request.httprequest.host_url"/>
+                                </td>
+                                <td>
+                                    <img t-att-src="'%s/beyond_worksheet/static/src/img/8.png' % request.httprequest.host_url"/>
+                                </td>
+                                <td/>
+                                <td/>
+                            </tr>
+                        </table>
+                        <br/>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        <p>
+                            Are there any additional hazards or addition tasks identified now at this stage
+                            (i.e., before work starts) that are NOT inc. in the SWMS below?
+                            Use the follow table as an identification tool. If there are additional hazards,
+                            please mark in far right column below and provide details on the next page.
+                        </p>
+                        <table border="1">
+                            <tr class="table_background">
+                                <th style="width:5%;">Haz<br/>#</th>
+                                <th>What could hurt me? (Hazard)</th>
+                                <th>How could it hurt me? (Consequence)</th>
+                                <th>Potential Controls</th>
+                                <th style="color:ea452f;width:11%;">Additional Hazard (Y)</th>
+                            </tr>
+                            <tr>
+                                <td>1.</td>
+                                <td>Other work activities in area</td>
+                                <td>Collisions, ergonomics, incompatible activities.</td>
+                                <td>Communication, barriers, awareness</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td>Tools and Equipment</td>
+                                <td>Impact, entanglement, friction / abrasion, cutting, vibration, Cuts and Lacerations</td>
+                                <td>Check tools before starting work.</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>3.</td>
+                                <td>Manual handling</td>
+                                <td>Back injury, strain and sprain. Injury from pushing, pulling, lifting</td>
+                                <td>Team lift, use mechanical aid, crane, forklift, hoist</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>4.</td>
+                                <td>Surfaces - Uneven, slippery</td>
+                                <td>Slip, Trip, Fall</td>
+                                <td>Awareness , barricades, signage</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>5.</td>
+                                <td>Vehicles, PIVS in vicinity</td>
+                                <td>Hit, property damage, crushing , tipping over</td>
+                                <td>Training, Qualification, Exclusion zones</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>6.</td>
+                                <td>Driving hazards</td>
+                                <td>Road condition, other vehicles, uneven terrain, vehicle condition</td>
+                                <td>Barricades, training, Qualifications, walkways</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>7.</td>
+                                <td>Noise</td>
+                                <td>Hearing damage,</td>
+                                <td>Ear protection, separate noisy tasks</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>8.</td>
+                                <td> Visibility / Lighting</td>
+                                <td>Hit / collision / eye strain</td>
+                                <td>Additional lighting</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>9.</td>
+                                <td>Foreign Body in eye</td>
+                                <td>Eye damage , puncture wound</td>
+                                <td>Safety Glasses, Face Shield,</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>10.</td>
+                                <td>Heights</td>
+                                <td>Impact injury, unguarded openings, damaged rungs. Lack of barricading.</td>
+                                <td><b>Working at Height Permit</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>11.</td>
+                                <td>Falling objects</td>
+                                <td>Hit, crushing, Musculoskeletal damage</td>
+                                <td>Barricading / Drop Zone,</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>12.</td>
+                                <td>Ladder Use</td>
+                                <td>Falling from Height, Falling objects,</td>
+                                <td>Appropriate ladder selection, Potential Permit</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>13.</td>
+                                <td>Roof work</td>
+                                <td>Falling from Height, incl. fall through, Falling objects,</td>
+                                <td><b>Working at Heights Permit</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>14.</td>
+                                <td>Confined spaces</td>
+                                <td>Engulfment, suffocation, entrapment</td>
+                                <td><b>Confined Space Permit</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>15.</td>
+                                <td>Oxygen Deficiency</td>
+                                <td>Suffocation, fainting</td>
+                                <td><b>Confined Space Permit</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>16.</td>
+                                <td>Dust / Fibres</td>
+                                <td>Respiratory effects, silicosis,</td>
+                                <td>Respiratory protection (PPE)</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>17.</td>
+                                <td>Weather</td>
+                                <td>Rain, Wind, Lightning, Melanoma from UV radiation from Sun</td>
+                                <td>Monitor weather condition, work schedule, PPE,</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>18.</td>
+                                <td>Temperature / Hot or Cold</td>
+                                <td>Burns, Heat and cold, Heat stress, muscle &amp; ligament damage in cold</td>
+                                <td>Work schedule, short duration only, PPE</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>19.</td>
+                                <td>Electricity</td>
+                                <td>Arc Flash, Electrocution, machinery damage</td>
+                                <td>Qualified electrician, <b>LOTO Permit</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>20.</td>
+                                <td>Moving machinery</td>
+                                <td>Nips, crushing, amputation, laceration, Hit.</td>
+                                <td>Separation of mobile plant &amp; pedestrian workers</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>21.</td>
+                                <td>Rotating equipment / Moving objects</td>
+                                <td>Laceration, burns, Nips, Crushing, amputation</td>
+                                <td>Guarding, service equipment, pre-start checks</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>22.</td>
+                                <td>Steam</td>
+                                <td>Scolds, burns,</td>
+                                <td>Safe system of work, guarding</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>23.</td>
+                                <td>Water</td>
+                                <td>Engulfment, drowning</td>
+                                <td>Barricades,</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>24.</td>
+                                <td>Gas / fumes / dusts</td>
+                                <td>Explosive atmospheres, Explosion, Fire, incl..Liquid, Gas, Vapour, Solid, Dust, Metal</td>
+                                <td><b>Hot Work Permit, consult with key contact</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>25.</td>
+                                <td>Chemicals</td>
+                                <td>Toxic poisoning through absorption/inhalation. Burn.</td>
+                                <td>PPE, SDS, <b>consult with key contact</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>26.</td>
+                                <td>Newness to site</td>
+                                <td>lack of training, lack of familiarisation with risks</td>
+                                <td>Supervision, Toolbox, SMWS</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>27.</td>
+                                <td>Fire</td>
+                                <td>Burns, property damage</td>
+                                <td><b>Hot Work Permit</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>28.</td>
+                                <td>Sprinkler deactivation</td>
+                                <td>Uncontrolled fire , flood , water damage</td>
+                                <td><b>Hot Work Permit</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>29.</td>
+                                <td>Flammables</td>
+                                <td>Increased risk of explosion &amp; fire</td>
+                                <td>SDS, firefighting emergency procedures</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>30.</td>
+                                <td>Radiation, Electromagnetic Radiation</td>
+                                <td>Burns, poisoning</td>
+                                <td>PPE, Isolate, barricade off area.</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>31.</td>
+                                <td>Viral, Bacterial, Parasitic, Fungal</td>
+                                <td>Skin infections</td>
+                                <td>PPE</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>32.</td>
+                                <td>Hazardous substances</td>
+                                <td>Eco toxic , Corrosive, Sensitizer, Reactive, Irritant</td>
+                                <td>PPE, SDS sheet, <b>consult with key contact</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>33.</td>
+                                <td>Fatigue</td>
+                                <td>Low concentration, microscopes</td>
+                                <td>Appropriate rest periods, work schedule</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>34.</td>
+                                <td>Ergonomics/OOS</td>
+                                <td>Product damage Poor work design, layout, repetition, and tendon and muscle</td>
+                                <td>Posture, correct tools, regular breaks</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>35.</td>
+                                <td>Lone worker</td>
+                                <td>Contact risks, emergency response communication</td>
+                                <td>Communication plan, 2-way radios, phone</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>36.</td>
+                                <td>Repetitive / mundane task</td>
+                                <td>OOS / Repetitive strain, boredom</td>
+                                <td>Work Breaks, stretching, correct tool use</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>37.</td>
+                                <td>Spills and Leaks</td>
+                                <td>Contamination of ground / waterways, risk of poisoning or fire</td>
+                                <td>Bunding, Spill Kits, Clean-up</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>38.</td>
+                                <td>Wastewater</td>
+                                <td>Pollution of natural waterways or groundwater</td>
+                                <td>Bunding, Cover storm-water drains,</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>39.</td>
+                                <td>Land</td>
+                                <td>Contamination of soil</td>
+                                <td>Bunding, Spill Kits, Clean-up, contact EPA</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>40.</td>
+                                <td>Air</td>
+                                <td>Odour, Visible emissions, particles (PM10), Sulphur Dioxide, Metal fume</td>
+                                <td>PPE</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>41.</td>
+                                <td>Waste</td>
+                                <td>Contamination, Spillage, Solid waste, Liquid Waste</td>
+                                <td>Spill Kit, Bunding, WSU’s</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>42.</td>
+                                <td>Excavations / Earthworks</td>
+                                <td>Engulfment, suffocation, entrapment, underground services,</td>
+                                <td>Shoring, barricade,</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>43.</td>
+                                <td>Crane Use</td>
+                                <td>Slew radius(hit), falling objects, unstable ground, weather, load factors</td>
+                                <td><b>HRW Licence, exclusion zones, structural cert.</b></td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>44.</td>
+                                <td>Perceived pressure / haste</td>
+                                <td>Stress, Fatigue</td>
+                                <td>Supervision, planned break schedule</td>
+                                <td/>
+                            </tr>
+                        </table>
+                        <br/>
+                        <h3>Hazards and tasks, additional to SWMS</h3>
+                        <table border="1">
+                            <tr style="background: #dbe4f0;">
+                                <th>Job activity</th>
+                                <th>Hazards and associated risks</th>
+                                <th style="width:6%;">Risk Level</th>
+                                <th>How will the hazards and the risks be
+                                    controlled?</th>
+                                <th style="width:10%;">Residual Risk Level</th>
+                            </tr>
+                            <tr style="height: 100px;">
+                                <td/><td/><td/><td/><td/>
+                            </tr>
+                            <tr style="height: 100px;">
+                                <td/><td/><td/><td/><td/>
+                            </tr>
+                            <tr style="height: 100px;">
+                                <td/><td/><td/><td/><td/>
+                            </tr>
+                            <tr style="height: 100px;">
+                                <td/><td/><td/><td/><td/>
+                            </tr>
+                        </table>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        <p class="table_background" style="font-size: large;border: black;border-style: solid;border-width: thin;">
+                            Evaluate Risk and Determine Significance
+                        </p>
+                        The level of risk will increase as the likelihood of harm and its severity increases.
+                        <br/><br/>
+                        Determine the associated risk level based on the following Risk Matrix. Controls should be selected with consideration of the Hierarchy of Controls.
+                        <br/>
+                        <p style="color: #f19749">Risk Matrix</p>
+                        <img t-att-src="'%s/beyond_worksheet/static/src/img/9.png' % request.httprequest.host_url"/>
+                        <br/><br/>
+                        The residual risk level, identified in the SWMS, indicates the Action Required as per the table below.
+                        <p style="color: #f19749">Risk Rating</p>
+                        <table border="1" width="50%">
+                            <tr>
+                                <th>Risk Rating</th>
+                                <th>Description</th>
+                                <th>Action Required</th>
+                            </tr>
+                            <tr>
+                                <td>Very High</td>
+                                <td>Control immediately</td>
+                                <td>Stop work until risk is reduced</td>
+                            </tr>
+                            <tr>
+                                <td>High</td>
+                                <td>Control today</td>
+                                <td>More specific control measures must be
+                                    applied and brief workers daily.</td>
+                            </tr>
+                            <tr>
+                                <td>Moderate</td>
+                                <td>Act this week</td>
+                                <td>Control measures can be applied in a general
+                                    way and monitored weekly</td>
+                            </tr>
+                            <tr>
+                                <td>Low</td>
+                                <td>Act this month/ quarter</td>
+                                <td>Monitor monthly or quarterly</td>
+                            </tr>
+                        </table>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        <table border="1">
+                            <tr style="background: #dbe4f0;">
+                                <th>
+                                    Job activity
+                                    <br/>
+                                    <p style="color:#ea452f;">
+                                        <img t-att-src="'%s/beyond_worksheet/static/src/img/10.png' % request.httprequest.host_url"/> or NA
+                                    </p>
+                                </th>
+                                <th>Hazards and associated risks</th>
+                                <th style="width:6%;">Risk Level</th>
+                                <th>
+                                    How will the hazards and the risks be
+                                    controlled?
+                                    <p style="color:#ea452f;">
+                                        <img t-att-src="'%s/beyond_worksheet/static/src/img/10.png' % request.httprequest.host_url"/> or NA
+                                    </p>
+                                </th>
+                                <th style="width:10%;">Residual Risk Level</th>
+                                <th style="width:15%;">RP* (Install Supervisor if not otherwise specified)</th>
+                            </tr>
+                            <t t-foreach="data['risk_ids']" t-as="risk_id">
+                                <tr>
+                                    <td><span t-field="risk_id.job_activity"/></td>
+                                    <td><span t-field="risk_id.hazard_associated_risk"/></td>
+                                    <td t-att-style="'background-color: ' + (not risk_id.risk_level
+                                                                                  and 'white'
+                                                                                  or risk_id.risk_level.endswith('M')
+                                                                                  and '#fbf01f'
+                                                                                  or risk_id.risk_level.endswith('H')
+                                                                                  and not risk_id.risk_level.endswith('VH')
+                                                                                  and '#ffc107'
+                                                                                  or risk_id.risk_level.endswith('L')
+                                                                                  and '#92d050'
+                                                                                  or risk_id.risk_level.endswith('VH')
+                                                                                  and '#ea452f'
+                                                                                  or 'white')">
+                                        <span t-field="risk_id.risk_level"/>
+                                    </td>
+                                    <td><span t-field="risk_id.risk_control"/></td>
+                                    <td t-att-style="'background-color: ' + (not risk_id.residual_risk_level
+                                                                                  and 'white'
+                                                                                  or risk_id.residual_risk_level.endswith('M')
+                                                                                  and '#fbf01f'
+                                                                                  or risk_id.residual_risk_level.endswith('H')
+                                                                                  and not risk_id.residual_risk_level.endswith('VH')
+                                                                                  and '#ffc107'
+                                                                                  or risk_id.residual_risk_level.endswith('L')
+                                                                                  and '#92d050'
+                                                                                  or risk_id.residual_risk_level.endswith('VH')
+                                                                                  and '#ea452f'
+                                                                                  or 'white')">
+                                        <span t-field="risk_id.residual_risk_level"/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        <p style="color: #f19749">Appendix- Levels of severity</p>
+                        <table border="1">
+                            <tr>
+                                <th style="width:25%;">Severity</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>Negligible</td>
+                                <td>No injury</td>
+                            </tr>
+                            <tr>
+                                <td>Minor</td>
+                                <td>Injury or ill-health requiring first aid treatment only
+                                    (includes minor cuts and bruises, irritation, ill-health with temporary discomfort)</td>
+                            </tr>
+                            <tr>
+                                <td>Moderate</td>
+                                <td>Minor injury or illness. Injury requiring medical treatment with short term lost time
+                                    (e.g., lacerations, burns sprains, minor fractures, dermatitis, repetitive strain and
+                                    overuse)</td>
+                            </tr>
+                            <tr>
+                                <td>Significant</td>
+                                <td>Major injury or illness. A serious illness or injury that requires a long term treatment
+                                    or surgery. (e.g.; major fractures)</td>
+                            </tr>
+                            <tr>
+                                <td>Severe</td>
+                                <td>May cause death or permanently disabling injury
+                                    (includes amputations, occupational cancer, acute poisoning and fatal diseases)</td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <p style="color: #294363">
+                            What is the likelihood of harm occurring?
+                        </p>
+                        <p>
+                            The likelihood that someone will be harmed can be estimated by considering the following:
+                            <br/>
+                            * How often is the task done? Does this make the harm more or less likely?
+                            <br/>
+                            * How often are people near the hazard? How close do people get to it?
+                            <br/>
+                            * Has it ever happened before, either in your workplace or somewhere else? How often?
+                        </p>
+                        <p style="color: #f19749">Levels of likelihood</p>
+                        <table border="1">
+                            <tr>
+                                <th style="width:25%;">Likelihood</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>Rare</td>
+                                <td>Very unlikely to occur</td>
+                            </tr>
+                            <tr>
+                                <td>Unlikely</td>
+                                <td>So unlikely, that an occurrence is not expected</td>
+                            </tr>
+                            <tr>
+                                <td>Possible</td>
+                                <td>Possible or limited previous occurrence</td>
+                            </tr>
+                            <tr>
+                                <td>Probable</td>
+                                <td>Predicted to occur several times and it has happened many times
+                                    previously</td>
+                            </tr>
+                            <tr>
+                                <td>Frequent</td>
+                                <td>Common or repeating occurrence</td>
+                            </tr>
+                        </table>
+                        <footer class="footer">
+                            <p>SWMS Roof Mount Construction Work</p>
+                            <p style="margin-top: -40px;" align="center">Date:  <span t-esc="data['date']"/></p>
+                            <p style="margin-top: -40px;" align="right">Uncontrolled when Printed</p>
+                            <p align="center">Version 6</p>
+                        </footer>
+                        <div style=" page-break-before: always;"/>
+                        Applicable legislation, Code of Practice, Australian Standards, Guidance Notes
+                        <br/>
+                        <h3>Legal Requirement</h3>
+                        <table border="1">
+                            <tr>
+                                <th>Topic</th>
+                                <th>Act</th>
+                                <th>Regulations</th>
+                            </tr>
+                            <tr>
+                                <td>General Work Health a Safety</td>
+                                <td>
+                                    Work Health and Safety Act 2011
+                                    (Harmonised States - NSW, QLD, ACT, TAS, NT, SA)
+                                    <br/><br/>
+                                    Occupational Health and
+                                    Safety Act 2004 (VIC)
+                                    <br/><br/>
+                                    Work Health and Safety
+                                    Act 2020 (WA)
+                                </td>
+                                <td>
+                                    Work Health and Safety
+                                    Regulations 2017
+                                    (Harmonised States -
+                                    NSW, QLD, ACT, TAS, NT,
+                                    SA)<br/><br/>
+                                    Occupational Health and
+                                    Safety Regulations 2017
+                                    (VIC)<br/><br/>
+                                    Work Health and Safety Act
+                                    2020 (WA)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Plant and Equipment</td>
+                                <td>
+                                    Refer to Corporate Legal Register
+                                </td>
+                                <td>Refer to Corporate Legal Register</td>
+                            </tr>
+                            <tr>
+                                <td>Electrical Safety</td>
+                                <td>
+                                    Electrical Safety Act 2002
+                                    (QLD)<br/><br/>
+                                    Electricity (Consumer
+                                    Safety) Act 2004 (NSW)<br/><br/>
+                                    Electricity Safety Act 1971
+                                    (ACT)<br/><br/>
+                                    Electricity Safety Act 1998
+                                    (VIC)<br/><br/><br/><br/><br/>
+                                    Electrical Workers and
+                                    Contractors Act 2016 (NT)<br/><br/>
+                                    Electricity Act 1996 (SA)<br/><br/><br/>
+                                    Electricity Act 1945 (WA)
+                                </td>
+                                <td>
+                                    Electrical Safety Regulation
+                                    2013 (QLD)<br/><br/>
+                                    Electricity (Consumer
+                                    Safety) Regulation 2015
+                                    (NSW)<br/><br/>
+                                    Electricity Safety
+                                    Regulation 2004 (ACT)<br/><br/>
+                                    Electricity Safety
+                                    (Installations) Regulations
+                                    2009 (VIC)<br/>
+                                    Electricity Safety
+                                    (Registration and
+                                    Licensing) Regulations
+                                    2010 (VIC)<br/><br/>
+                                    Electrical Workers and
+                                    Contractors Regulations
+                                    2016 (NT)<br/><br/>
+                                    Electricity (General)
+                                    Regulations 2012 (SA)<br/><br/>
+                                    Electricity Regulations 1947
+                                    Electricity (Licensing)
+                                    Regulations 1991 (WA)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Injury and compensatio</td>
+                                <td>Refer to Corporate Legal Register</td>
+                                <td>Refer to Corporate Legal Register</td>
+                            </tr>
+                            <tr>
+                                <td>Fire safety</td>
+                                <td>Refer to Corporate Legal Register</td>
+                                <td>Refer to Corporate Legal Register</td>
+                            </tr>
+                            <tr>
+                                <td>Environmental Planning Assessment Regulation</td>
+                                <td>Refer to Corporate Legal Register</td>
+                                <td>Refer to Corporate Legal Register</td>
+                            </tr>
+                        </table>
+                        <div style=" page-break-before: always;"/>
+                        <p style="color: #294363">Codes of Practice</p>
+                        <ul>
+                            <li>
+                                <a>
+                                    Excavation Work
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    Safe Design of Structures
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    Managing the Risk of Falls at Workplaces
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    Managing Electrical Risks at the Workplace
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    Managing Noise and Preventing Hearing Loss at Work
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    Confined Spaces
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    Hazardous Manual Tasks
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    How to Manage and Control Asbestos in the Workplace
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    Guide to safe solar panel installation NSW
+                                </a>
+                            </li>
+                        </ul>
+                        <br/><br/><br/>
+                        <a href="https://www.safeworkaustralia.gov.au/resources_publications/model-codes-of-practice" target="_blank">
+                            https://www.safeworkaustralia.gov.au/resources_publications/model-codes-of-practice
+                        </a><br/>
+                        <p style="color: #294363">Australian Standards</p>
+                        Australian Standards are available online through SAI Global Infostore
+                        <br/>
+                        <a href="https://infostore.saiglobal.com/store/" target="_blank">
+                            https://infostore.saiglobal.com/store/
+                        </a><br/><br/>
+                        <p style="color: #294363">Industry relevant standards</p>
+                        <ul>
+                            <li>AS/NZS 5033 Installation of Photovoltaic (PV) Arrays</li>
+                            <li>AS/NZS 3000 Electrical Wiring Rules</li>
+                            <li>AS/NZS 3012:2010 Electrical Installations-Construction and Demolition Sites</li>
+                            <li>AS 3439 Low-Voltage Switchgear and Control Gear Assemblies</li>
+                            <li>AS 2053 Conduits and Fittings for Electrical Installations</li>
+                            <li>AS 4509 Stand-Alone Power Systems</li>
+                            <li>AS 1664 Aluminium Structures</li>
+                            <li>AS/NZS 1170.2:2011 Structural Design Action - Wind Actions</li>
+                            <li>AS/NZS 1768:2007 Lightning Protection</li>
+                            <li>AS/NZS 3008.1.1:2009 Electrical Installations – Selection of Cables</li>
+                            <li>AS/NZS 4777.2:2015 Grid Connection of Energy Systems via Inverters – Inverter Requirements</li>
+                        </ul>
+                        <p style="color: #294363">Safety standards</p>
+                        <ul>
+                            <li>AS 2550.7-1996: Cranes, hoists and winches - safe use-Builders' hoists and associated equipment.</li>
+                        </ul>
+                        <p style="color: #294363">Industry Standards and Guidance</p>
+                        <ul>
+                            <li>CEC Solar Installation Guidelines;</li>
+                            <li>Grid Connect Solar PV Systems: Install and Supervise Guidelines for Accredited Installers.</li>
+                            <li>Grid Connect Solar PV Systems: No Battery Storage, Design Guidelines for Accredited Installers.</li>
+                        </ul>
+                        <p style="color: #294363">Management System Standards</p>
+                        <ul>
+                            <li>AS/NZS ISO 45001 Occupational Health and Safety Management Systems –</li>
+                            <li>AS/NZS ISO 9001 Quality Management Systems</li>
+                            <li>AS/NZS ISO 14001 Environmental Management Systems</li>
+                            <li>AS/NZS 31000 Risk Management</li>
+                        </ul>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

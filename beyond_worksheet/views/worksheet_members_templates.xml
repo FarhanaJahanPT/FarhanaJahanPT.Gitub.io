@@ -5,7 +5,7 @@
             <t t-set="breadcrumbs_searchbar" t-value="False"/>
             <div style="height: 80vh;display: flex;flex-direction: column;align-items: center;justify-content: center;"
                  class="member_portal">
-                <form t-attf-action="" id="checkin_form">
+                <form t-attf-action="" id="start_form">
                     <input type="hidden" name="worksheet_id" t-att-value="worksheet" id="worksheet_id"/>
                     <input type="hidden" name="member_id" id="member"/>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -24,33 +24,33 @@
 
     <template id="survey_fill_form_done" inherit_id="survey.survey_fill_form_done">
         <xpath expr="//div[hasclass('wrap')]" position="replace">
-            <div class="wrap">
-                <div class="o_survey_finished mt32 mb32">
-                    <h1 class="fs-2">Thank you!</h1>
-                    <div t-field="survey.description_done" class="oe_no_empty"/>
-                    <div class="row">
-                        <div class="col">
-                            <t t-if="survey.scoring_type != 'no_scoring' and survey.scoring_success_min">
-                                <div>You scored<t t-esc="answer.scoring_percentage"/>%
-                                </div>
-                                <t t-if="answer.scoring_success">
-                                    <div>Congratulations, you have passed the test!</div>
-
-                                    <div t-if="survey.certification" class="mt16 mb16">
-                                        <a role="button"
-                                           class="btn btn-primary btn-lg"
-                                           t-att-href="'/survey/%s/get_certification' % survey.id">
-                                            <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification"
-                                               title="Download certification"/>
-                                            Download certification
-                                        </a>
+            <t t-if="not survey.is_from_worksheet">
+                <div class="wrap">
+                    <div class="o_survey_finished mt32 mb32">
+                        <h1 class="fs-2">Thank you!</h1>
+                        <div t-field="survey.description_done" class="oe_no_empty"/>
+                        <div class="row">
+                            <div class="col">
+                                <t t-if="survey.scoring_type != 'no_scoring' and survey.scoring_success_min">
+                                    <div>You scored<t t-esc="answer.scoring_percentage"/>%
                                     </div>
+                                    <t t-if="answer.scoring_success">
+                                        <div>Congratulations, you have passed the test!</div>
+                                        <div t-if="survey.certification" class="mt16 mb16">
+                                            <a role="button"
+                                               class="btn btn-primary btn-lg"
+                                               t-att-href="'/survey/%s/get_certification' % survey.id">
+                                                <i class="fa fa-fw fa-trophy" role="img"
+                                                   aria-label="Download certification"
+                                                   title="Download certification"/>
+                                                Download certification
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div>Unfortunately, you have failed the test.</div>
+                                    </t>
                                 </t>
-                                <t t-else="">
-                                    <div>Unfortunately, you have failed the test.</div>
-                                </t>
-                            </t>
-                            <t t-if="not survey.is_from_worksheet">
                                 <t t-call="survey.survey_button_retake"/>
                                 <div t-if="survey.scoring_type != 'scoring_without_answers'" class="o_survey_review">
                                     If you wish, you can
@@ -58,18 +58,25 @@
                                         review your answers
                                     </a>
                                 </div>
-                            </t>
-                        </div>
-                        <div class="col-6 text-center"
-                             t-if="survey.certification_give_badge and answer.scoring_success">
-                            <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
-                            <div>You received the badge<span class="fw-bold"
-                                                             t-esc="survey.certification_badge_id.name"/>!
+                            </div>
+                            <div class="col-6 text-center"
+                                 t-if="survey.certification_give_badge and answer.scoring_success">
+                                <img t-att-src="'/web/image/gamification.badge/%s/image_128' % survey.certification_badge_id.id"/>
+                                <div>You received the badge<span class="fw-bold"
+                                                                 t-esc="survey.certification_badge_id.name"/>!
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </t>
+            <t t-else="">
+                <t t-call="beyond_worksheet.portal_team_member_signature">
+                    <t t-set="member_id" t-value="survey.team_member_id"/>
+                    <t t-set="worksheet_id" t-value="survey.worksheet_id"/>
+                    <t t-set="survey_id" t-value="survey"/>
+                </t>
+            </t>
         </xpath>
     </template>
 </odoo>

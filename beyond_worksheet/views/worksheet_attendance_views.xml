@@ -9,7 +9,7 @@
         <field name="name">worksheet.attendance.view.tree</field>
         <field name="model">worksheet.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Worksheet Attendance"  editable="bottom">
+            <tree string="Worksheet Attendance" editable="bottom">
                 <field name="date"/>
                 <field name="member_id"/>
                 <field name="type"/>
@@ -17,20 +17,16 @@
                 <field name="worksheet_id"/>
                 <field name="in_latitude"/>
                 <field name="in_longitude"/>
-                <field name="user_input_id" invisible="1"/>
+                <field name="user_input_id" column_invisible="True"/>
                 <button name="action_view_maps"
-                    type="object"
-                    class="btn btn-link ps-0 pt-0 pb-2"
-                    icon="oi-arrow-right"
-                    string="View on Maps"
-                    colspan="2"/>
-                <button name="action_view_answers"
-                    type="object"
-                    class="btn btn-primary"
-                    string="View Responses"
-                    colspan="2"
-                    invisible="not user_input_id"
-                />
+                        type="object"
+                        class="btn btn-link ps-0 pt-0 pb-2"
+                        icon="oi-arrow-right"
+                        string="View on Maps"
+                        colspan="2"/>
+                <button name="action_view_answers" type="object" class="btn btn-primary" string="View Responses"
+                        colspan="2" invisible="not user_input_id"/>
+
             </tree>
         </field>
     </record>
@@ -48,6 +44,9 @@
                             <field name="worksheet_id"/>
                             <field name="task_id" invisible="1"/>
                             <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="signature" options="{'style-inline': true, 'codeview': true}"/>
                         </group>
                     </group>
                 </sheet>

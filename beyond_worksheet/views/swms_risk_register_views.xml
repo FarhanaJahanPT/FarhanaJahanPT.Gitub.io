@@ -16,8 +16,8 @@
                 <field name="hazard_associated_risk"/>
                 <field name="risk_level" widget="risk_color"/>
                 <field name="risk_control"/>
-                <field name="residual_risk_level"/>
-                <field name="risk_group" widget="risk_color"/>
+                <field name="residual_risk_level" widget="risk_color"/>
+                <field name="risk_group"/>
                 <field name="category_id"/>
                 <field name="installer_input"/>
             </tree>

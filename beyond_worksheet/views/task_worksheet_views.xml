@@ -15,6 +15,7 @@
                     <button name="action_create_ccew" class="btn-primary" type="object" string="Create CCEW"
                             invisible="not is_ccew"/>
                     <button name="action_create_swms" class="btn-primary" type="object" string="Create SWMS"/>
+                    <button name="action_test_swms" class="btn-primary" type="object" string="Create SWMS Test"/>
                     <button name="action_generate_qr_code" class="btn-secondary" type="object" string="Generate QR"
                             invisible="qr_code"/>
                 </header>
@@ -77,11 +78,11 @@
                             <field name="panel_lot_ids" invisible="1"/>
                             <field name="inverter_lot_ids" invisible="1"/>
                             <field name="battery_lot_ids" invisible="1"/>
-                            <field name="cranes_ids"  widget="many2many_tags" invisible="1"/>
-                            <field name="hoists_ids"  widget="many2many_tags" invisible="1"/>
-                            <field name="scaffolding_ids"  widget="many2many_tags" invisible="1"/>
-                            <field name="dogging_rigging_ids"  widget="many2many_tags" invisible="1"/>
-                            <field name="forklift_ids"  widget="many2many_tags" invisible="1"/>
+                            <field name="cranes_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="hoists_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="scaffolding_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="dogging_rigging_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="forklift_ids" widget="many2many_tags" invisible="1"/>
                         </group>
                         <group>
                             <field name="solar_panel_layout" widget="image"
@@ -102,19 +103,17 @@
                                     <field name="additional_service"/>
                                     <field name="in_latitude"/>
                                     <field name="in_longitude"/>
-                                    <field name="user_input_id" invisible="1"/>
+<!--                                    <field name="signature" widget="image"/>-->
+                                    <field name="user_input_id" column_invisible="True"/>
                                     <button name="action_view_maps"
                                             type="object"
                                             class="btn btn-link ps-0 pt-0 pb-2"
                                             icon="oi-arrow-right"
                                             string="View on Maps"
                                             colspan="2"/>
-                                    <button name="action_view_answers"
-                                            type="object"
-                                            class="btn btn-primary"
+                                    <button name="action_view_answers" type="object" class="btn btn-primary"
                                             string="View Responses"
-                                            colspan="2"
-                                            invisible="not user_input_id"/>
+                                            colspan="2" invisible="not user_input_id"/>
                                 </tree>
                             </field>
                         </page>

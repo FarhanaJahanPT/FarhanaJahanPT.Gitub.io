@@ -12,8 +12,11 @@ publicWidget.registry.MemberPortal = publicWidget.Widget.extend({
             'keyup #unique_member_id': '_onChangeMember',
         },
         async _onChangeMember(ev) {
+            var worksheet_id = $('#worksheet_id')[0].value
+            console.log( $('#worksheet_id')," $('#worksheet_id')", $('#worksheet_id')[0].value)
             var result = await jsonrpc('/check/member',  {
-                        'member_id' :ev.target.value
+                        'member_id' :ev.target.value,
+                        'worksheet_id':worksheet_id
                         })
             if(result.exists == false){
                 $('#validation_message').text('Invalid Employee ID.');
@@ -21,19 +24,7 @@ publicWidget.registry.MemberPortal = publicWidget.Widget.extend({
                 $('#submit_button').prop('disabled', true);
             }
             else{
-                if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            $('#checkin_form').attr('action', '/my/questions/' + $('#worksheet_id')[0].value+'/'+ result.member_id + '/' + position.coords.latitude + '/'+ position.coords.longitude);
-                        },
-                        (error) => {
-                            console.error("Error retrieving location:", error);
-                        }
-                    );
-                }
-                else{
-                    $('#checkin_form').attr('action', '/my/questions/' + $('#worksheet_id')[0].value+'/'+ result.member_id + '/' + 0 + '/'+ 0);
-                }
+                $('#start_form').attr('action', '/my/swms/report/' + worksheet_id +'/'+ result.member_id );
                 $('#validation_message').text('');
                 $('#submit_button').prop('disabled', false);
                 $('#member').val(result.member_id);

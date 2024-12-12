@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_swms_report" model="ir.actions.report">
+        <field name="name">SWMS Worksheet Report</field>
+        <field name="model">task.worksheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beyond_worksheet.report_swms_worksheet</field>
+        <field name="report_file">beyond_worksheet.report_swms_worksheet</field>
+    </record>
+</odoo>

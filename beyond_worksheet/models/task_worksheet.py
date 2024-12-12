@@ -68,6 +68,7 @@ class WorkSheet(models.Model):
     document_ids = fields.One2many('documents.document', 'res_id',
                                    string='Documents', domain=[('res_model', '=', 'task.worksheet')])
     document_count = fields.Integer(string="Documents Count", compute='_compute_document_count')
+    team_member_input_ids = fields.One2many('swms.team.member.input','worksheet_id')
     cranes_ids = fields.Many2many('swms.risk.work','task_worksheet_cranes_rel',
                                   'worksheet_id','work_id',
                                   string="Cranes",domain=[('type', '=', 'cranes')])
@@ -84,6 +85,7 @@ class WorkSheet(models.Model):
                                     'worksheet_id','work_id',
                                     string="Forklift",domain=[('type', '=', 'forklift')])
     swms_file = fields.Binary(string='SWMS')
+
     @api.model_create_multi
     def create(self, vals_list):
         """Function to create sequence"""
@@ -686,14 +688,20 @@ class WorkSheet(models.Model):
             self.task_id.x_studio_ccew = modified_pdf_content
 
     def action_create_swms(self):
-        print('sssssssssssssssssssssss',self)
-        pdf_path = get_module_resource('beyond_worksheet',
-                                       'static/src/data/SWMS (2).pdf')
-        doc = fitz.open(pdf_path)
-        page = doc[0]
+        pdf_file_name = (self.name + '-' + 'SWMS_document').replace('.', '').replace('/','_') + '.pdf'
+        pdf_content = self.env['ir.actions.report']._render_qweb_pdf("beyond_worksheet.action_report_swms_report", self.id)[0]  # Get PDF content
+        report_vals = {
+            'name': pdf_file_name,
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'res_model': 'task.worksheet',
+            'res_id': self.id,
+            'mimetype': 'application/pdf',
+        }
+        res = self.env['ir.attachment'].sudo().create(report_vals)
+        self.write({'swms_file': res.datas})
 
-        pdf_stream = io.BytesIO()
-        doc.save(pdf_stream)
-        doc.close()
-        modified_pdf_content = base64.b64encode(pdf_stream.getvalue())
-        self.swms_file = modified_pdf_content
+    def action_test_swms(self):
+        return self.env.ref(
+            'beyond_worksheet.action_report_swms_report').report_action(self)
+

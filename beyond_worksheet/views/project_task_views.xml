@@ -21,4 +21,16 @@
             </xpath>
         </field>
     </record>
+
+    <record id="project_task_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.task.view.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_beyond_solar.project_task_form_view"/>
+        <field name="arch" type="xml">
+            <field name="install_notes" position="after">
+                <field name="install_signature" widget="image" readonly="1" colspan="2"/>
+                <field name="date_worksheet_install" readonly="1"/>
+            </field>
+        </field>
+    </record>
 </odoo>
