@@ -78,15 +78,16 @@
         <t t-call="portal.portal_layout">
             <div class="container">
                 <t t-if="is_same_location">
-                    <h2>Already Check-in with same Location</h2>
-                    <p>Please try again in another location!</p>
+                    <h2>Check-In Already Recorded at This Location</h2>
+                    <p>Please proceed to a different location to check in again.</p>
                 </t>
                 <t t-else="">
                     <h2>Check-in Completed</h2>
                     <p>Your check-in has been successfully completed.</p>
+                    <a t-attf-href="/team/member/checkout/{{worksheet}}/{{member}}">Check-out</a>
+
                 </t>
             </div>
-            <a t-attf-href="/team/member/checkout/{{worksheet}}/{{member}}">Check-out</a>
         </t>
     </template>
     <template id="portal_team_member_checkout" name="Check-out Completed">

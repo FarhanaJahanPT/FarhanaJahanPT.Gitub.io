@@ -57,7 +57,7 @@ class OwnerSignature(http.Controller):
             'member_id':survey.team_member_id.id,
             'survey_id':survey.id
         }
-    # Team member workhseet start
+    # Team member worksheet start
     @http.route('/my/worksheet/<int:worksheet_id>', type="http", auth="public", website=True,
                 sitemap=False)
     def worksheet_members_portal(self, worksheet_id, **kw):
@@ -68,156 +68,202 @@ class OwnerSignature(http.Controller):
     @http.route('/check/member', type='json', auth='public', methods=['POST'])
     def check_member(self, member_id, worksheet_id):
         worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
-        member = worksheet.team_member_ids.filtered(lambda l: l.member_id == member_id)
-        print(member, "dddddddddd")
-        return {'exists': bool(member), 'member_id': member.id if member else None}
+        # Check if the member is a team member or the team lead
+        is_team_member = worksheet.team_member_ids.filtered(lambda l: l.member_id == member_id)
+        is_team_lead = worksheet.team_lead_id and worksheet.team_lead_id.member_id == member_id
+        # Prepare the response
+        if is_team_member:
+            return {'exists': True, 'member_id': is_team_member.id}
+        elif is_team_lead:
+            return {'exists': True, 'member_id': worksheet.team_lead_id.id}
+        return {'exists': False, 'member_id': None}
 
-    # Display swms summary
-    @http.route(['/my/swms/report/<int:worksheet>/<int:member>'], type='http', auth="public",
-                website=True)
+    @http.route(['/my/swms/report/<int:worksheet>/<int:member>'], type='http', auth="public", website=True)
     def show_swms_report(self, worksheet, member, **kwargs):
-        worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet))
-        check_in = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(
-                member) and a.type == 'check_in')
-        check_out = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(
-                member) and a.type == 'check_out')
+        """Displays the SWMS report for a member and worksheet."""
+        worksheet = request.env['task.worksheet'].sudo().browse(worksheet)
+        today = fields.Date.today()
+
+        # Filter today's check-in and check-out records
+        attendance_today = worksheet.worksheet_attendance_ids.filtered(
+            lambda a: a.date.date() == today and a.member_id.id == member
+        )
+        check_in = attendance_today.filtered(lambda a: a.type == 'check_in')
+        check_out = attendance_today.filtered(lambda a: a.type == 'check_out')
+
+        # Handle scenarios for check-in and check-out
         if check_in and not check_out:
-            return request.render('beyond_worksheet.portal_team_member_checkin_completed',
-                                  {'worksheet': int(worksheet), 'member': int(member),
-                                   'is_same_location': False})
+            return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
+                'worksheet': worksheet.id,
+                'member': member,
+                'is_same_location': False
+            })
+
         if check_in and check_out:
             return request.render("beyond_worksheet.portal_team_member_checkout")
-        order_line_categ_ids = worksheet.sale_id.order_line.product_id.categ_id.mapped('id')
-        print(order_line_categ_ids, "order_line_categ_ids")
-        swms_data = request.env['swms.risk.register'].sudo().search([('category_id', 'in', order_line_categ_ids)])
-        print(swms_data, "swms_report")
-        return request.render("beyond_worksheet.swms_repoart",
-                              {'worksheet': worksheet, 'member': member, 'swms_data': swms_data})
 
-    # show installation question from the survey
-    @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http',
-                auth="public", website=True)
+        # Retrieve SWMS data based on product categories in the sale order
+        product_categories = worksheet.sale_id.order_line.product_id.categ_id
+        swms_data = request.env['swms.risk.register'].sudo().search([
+            ('category_id', 'in', product_categories.ids)
+        ])
+
+        # Render the SWMS report
+        return request.render("beyond_worksheet.swms_repoart", {
+            'worksheet': worksheet,
+            'member': member,
+            'swms_data': swms_data
+        })
+
+    @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http', auth="public", website=True)
     def show_question(self, worksheet, member, **kwargs):
-        print("show question")
-        # Fetch unanswered questions first
-        member_id = kwargs.get('member_id') if kwargs.get('member_id') else member
-        worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
-        worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
-        member = request.env['team.member'].sudo().browse(int(member_id))
-        today = datetime.today().date()
-        questions = request.env['survey.question'].sudo().search([('is_from_worksheet_questions', '=', True)])
-        print(questions, "qqqqqqqq")
-        survey = request.env['survey.survey'].sudo().search([('team_member_id', '=', int(member_id)),
-                                                             ('worksheet_id', '=', int(worksheet_id)),
-                                                             ('create_date', '>=', str(today) + ' 00:00:00'),
-                                                             ('create_date', '<=', str(today) + ' 23:59:59')])
+        """Displays or creates a survey with installation questions for the specified worksheet and team member."""
+        today = fields.Date.today()
+
+        # Ensure worksheet_id and member_id are integers
+        worksheet_id = int(kwargs.get('worksheet_id', worksheet))
+        member_id = int(kwargs.get('member_id', member))
+
+        worksheet = request.env['task.worksheet'].sudo().browse(worksheet_id)
+        member = request.env['team.member'].sudo().browse(member_id)
+        survey_model = request.env['survey.survey'].sudo()
+        attendance_model = request.env['worksheet.attendance'].sudo()
+        question_model = request.env['survey.question'].sudo()
+
+        # Check for an existing survey for the member and worksheet on the same day
+        survey = survey_model.search([
+            ('team_member_id', '=', member_id),
+            ('worksheet_id', '=', worksheet_id),
+            ('create_date', '>=', f"{today} 00:00:00"),
+            ('create_date', '<=', f"{today} 23:59:59")
+        ], limit=1)
+
         if survey:
-            existing_record = request.env['worksheet.attendance'].sudo().search([
-                ('member_id', '=', int(member_id)),
+            # Check if the member has already checked in and answered questions
+            existing_attendance = attendance_model.search([
+                ('member_id', '=', member_id),
                 ('type', '=', 'check_in'),
-                ('worksheet_id', '=', int(worksheet_id)),
-                ('create_date', '>=', str(today) + ' 00:00:00'),
-                ('create_date', '<=', str(today) + ' 23:59:59')
-            ])
-            if survey.answer_done_count >= 1 and existing_record:
-                return request.render('beyond_worksheet.portal_team_member_checkin_completed',
-                                      {'worksheet': worksheet_id, 'member': member_id})
-        # Create the survey and add questions to question_ids
+                ('worksheet_id', '=', worksheet_id),
+                ('create_date', '>=', f"{today} 00:00:00"),
+                ('create_date', '<=', f"{today} 23:59:59")
+            ], limit=1)
+
+            if survey.answer_done_count >= 1 and existing_attendance:
+                return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
+                    'worksheet': worksheet_id,
+                    'member': member_id
+                })
+
         else:
+            # Create a new survey and add questions
+            questions = question_model.search([('is_from_worksheet_questions', '=', True)])
             survey = request.env['survey.survey'].with_user(SUPERUSER_ID).create({
-                'title': worksheet.name + '-' + member.name + '-' + str(datetime.today().date()),
+                'title': f"{worksheet.name}-{member.name}-{today}",
                 'user_id': request.env.user.id,
                 'access_mode': 'public',
                 'worksheet_id': worksheet_id,
                 'team_member_id': member_id,
                 'is_from_worksheet': True,
-                'question_and_page_ids': [fields.Command.create({
-                    'title': question.title,
-                    'question_type': question.question_type,
-                    'id': question.id,
-                    'suggested_answer_ids': [fields.Command.create({
-                        'value': answer.value if answer.value else False,
-                        'value_image': answer.value_image if answer.value_image else False,
-
-                    }) for answer in question.suggested_answer_ids],
-                    'answer_numerical_box': question.answer_numerical_box if question.answer_numerical_box else False,
-                    'answer_date': question.answer_date if question.answer_date else False,
-                    'answer_datetime': question.answer_datetime if question.answer_datetime else False,
-                    'is_scored_question': question.is_scored_question if question.is_scored_question else False,
-                    'description': question.description if question.description else False,
-                    'matrix_row_ids': [fields.Command.create({
-                        'value': answer.value if answer.value else False,
-                    }) for answer in question.matrix_row_ids],
-                    'constr_mandatory': question.constr_mandatory if question.constr_mandatory else False,
-                    'constr_error_msg': question.constr_error_msg if question.constr_error_msg else False
-                }) for question in questions]  # Add questions here
+                'question_and_page_ids': [
+                    fields.Command.create({
+                        'title': question.title,
+                        'question_type': question.question_type,
+                        'suggested_answer_ids': [
+                            fields.Command.create({
+                                'value': answer.value,
+                                'value_image': answer.value_image,
+                            }) for answer in question.suggested_answer_ids
+                        ],
+                        'answer_numerical_box': question.answer_numerical_box,
+                        'answer_date': question.answer_date,
+                        'answer_datetime': question.answer_datetime,
+                        'is_scored_question': question.is_scored_question,
+                        'description': question.description,
+                        'matrix_row_ids': [
+                            fields.Command.create({'value': row.value}) for row in question.matrix_row_ids
+                        ],
+                        'constr_mandatory': question.constr_mandatory,
+                        'constr_error_msg': question.constr_error_msg
+                    }) for question in questions
+                ]
             })
 
-        print(survey, "========survey")
-        print(survey.survey_start_url, "urlllllll")
+        # Redirect to the survey start URL
         return request.redirect(survey.survey_start_url)
 
     # Checkin record creation
     @http.route(
         '/team/member/checkin/<int:survey_id>/<int:worksheet_id>/<int:member_id>/<float:latitude>/<float:longitude>',
-        type="http", auth="public",
-        website=True,
-        sitemap=False)
+        type="http", auth="public", website=True, sitemap=False)
     def worksheet_members_check_in(self, survey_id, worksheet_id, member_id, latitude, longitude, **kw):
-        survey = request.env['survey.survey'].sudo().browse(int(survey_id))
-        latest_input = survey.user_input_ids.sudo().sorted(key=lambda r: r.create_date, reverse=True)[:1]
+        Survey = request.env['survey.survey'].sudo()
+        Attendance = request.env['worksheet.attendance'].sudo()
         today = datetime.today().date()
-        existing_attendance = request.env['worksheet.attendance'].sudo().search([
-            ('member_id', '=', int(member_id)),
+
+        # Fetch survey and the latest input
+        survey = Survey.browse(survey_id)
+        latest_input = survey.user_input_ids.sorted(key=lambda r: r.create_date, reverse=True)[:1]
+
+        # Check for existing check-ins today
+        existing_attendance = Attendance.search([
+            ('member_id', '=', member_id),
             ('type', '=', 'check_in'),
-            ('create_date', '>=', str(today) + ' 00:00:00'),
-            ('create_date', '<=', str(today) + ' 23:59:59')
+            ('create_date', '>=', f"{today} 00:00:00"),
+            ('create_date', '<=', f"{today} 23:59:59")
         ])
+
         if existing_attendance:
-            if any(record.member_id.id == member_id for record in existing_attendance):
-                print(existing_attendance, "if checkin existing record")
-                return request.render('beyond_worksheet.portal_team_member_checkin_completed',
-                                      {'worksheet': worksheet_id, 'member': member_id, 'is_same_location': False})
-            else:
-                for record in existing_attendance:
-                    distance = self.haversine(latitude, longitude, record.in_latitude, record.in_longitude)
-                    if distance <= 200:  # Threshold in meters
-                        print("Check-in at the same location already exists")
-                        return request.render('beyond_worksheet.portal_team_member_checkin_completed',
-                                              {'worksheet': worksheet_id, 'member': member_id,
-                                               'is_same_location': True})
-        else:
-            check_in = request.env['worksheet.attendance'].sudo().create({
-                'type': 'check_in',
-                'member_id': member_id,
-                'worksheet_id': worksheet_id,
-                'in_latitude': latitude,
-                'in_longitude': longitude,
-                'survey_id': survey_id,
-                'signature': survey.signature,
-                'user_input_id': latest_input.id,
-                'date': today
+            for record in existing_attendance:
+                distance = self.haversine(latitude, longitude, record.in_latitude, record.in_longitude)
+                if distance <= 200:  # Threshold in meters
+                    print("Check-in at the same location already exists")
+                    return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
+                        'worksheet': worksheet_id,
+                        'member': member_id,
+                        'is_same_location': True
+                    })
+
+            # Check-in exists but not at the same location
+            print(existing_attendance, "Existing check-in found for the member")
+            return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
+                'worksheet': worksheet_id,
+                'member': member_id,
+                'is_same_location': False
             })
-            print("check_in", check_in, worksheet_id, member_id)
-            return request.render('beyond_worksheet.portal_team_member_checkin_completed',
-                                  {'worksheet': int(worksheet_id), 'member': int(member_id),
-                                   'is_same_location': False})
-    # checkout record creation
+
+        # Create a new check-in record
+        check_in = Attendance.create({
+            'type': 'check_in',
+            'member_id': member_id,
+            'worksheet_id': worksheet_id,
+            'in_latitude': latitude,
+            'in_longitude': longitude,
+            'survey_id': survey_id,
+            'signature': survey.signature,
+            'user_input_id': latest_input.id if latest_input else None,
+            'date': today
+        })
+        print("New check-in created:", check_in)
+        return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
+            'worksheet': worksheet_id,
+            'member': member_id,
+            'is_same_location': False
+        })
+
     @http.route('/team/member/checkout/<int:worksheet_id>/<int:member_id>', type='http', auth="public", website=True)
     def member_checkout(self, worksheet_id, member_id, **kwargs):
-        # Implement any checkout logic here (e.g., marking the member as checked out).
-        # Optionally, you can retrieve and update data for the specific member.
-        print('++++', kwargs)
+        """Handles the member checkout process."""
         today = fields.Date.today()
-        worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
-        check_in = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(
-                member_id) and a.type == 'check_in')
-        check_out = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == fields.datetime.today().date() and a.member_id.id == int(
-                member_id) and a.type == 'check_out')
+        worksheet = request.env['task.worksheet'].sudo().browse(worksheet_id)
+
+        # Filter attendance records for today's check-in and check-out
+        attendance_today = worksheet.worksheet_attendance_ids.filtered(
+            lambda a: a.date.date() == today and a.member_id.id == member_id
+        )
+        check_in = attendance_today.filtered(lambda a: a.type == 'check_in')
+        check_out = attendance_today.filtered(lambda a: a.type == 'check_out')
+
+        # Create check-out record if a check-in exists without a corresponding check-out
         if check_in and not check_out:
             request.env['worksheet.attendance'].sudo().create({
                 'type': 'check_out',
@@ -225,16 +271,71 @@ class OwnerSignature(http.Controller):
                 'worksheet_id': worksheet_id,
                 'date': today
             })
-        # Render the checkout template
-        return request.render("beyond_worksheet.portal_team_member_checkout",)
 
-    # @http.route('/my/worksheet/<int:worksheet_id>/<int:survey_id>/signature/status', type='json', auth='user')
-    # def check_signature_status(self, worksheet_id, survey_id):
-    #     attendance = request.env['survey.survey'].sudo().search([
-    #         ('worksheet_id', '=', worksheet_id),
-    #         ('id', '=', survey_id),
-    #         ('is_from_worksheet', '=', True),
-    #         ('signature', '!=', False),
-    #     ], limit=1)
-    #     print(attendance, "a attendance aaaaaaa")
-    #     return {'signature_completed': bool(attendance)}
+        # Render the checkout template
+        return request.render("beyond_worksheet.portal_team_member_checkout")
+
+
+ # 1111111111
+    # show installation question from the survey
+    # @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http',
+    #             auth="public", website=True)
+    # def show_question(self, worksheet, member, **kwargs):
+    #     print("show question")
+    #     # Fetch unanswered questions first
+    #     member_id = kwargs.get('member_id') if kwargs.get('member_id') else member
+    #     worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
+    #     worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
+    #     member = request.env['team.member'].sudo().browse(int(member_id))
+    #     today = datetime.today().date()
+    #     questions = request.env['survey.question'].sudo().search([('is_from_worksheet_questions', '=', True)])
+    #     print(questions, "qqqqqqqq")
+    #     survey = request.env['survey.survey'].sudo().search([('team_member_id', '=', int(member_id)),
+    #                                                          ('worksheet_id', '=', int(worksheet_id)),
+    #                                                          ('create_date', '>=', str(today) + ' 00:00:00'),
+    #                                                          ('create_date', '<=', str(today) + ' 23:59:59')])
+    #     if survey:
+    #         existing_record = request.env['worksheet.attendance'].sudo().search([
+    #             ('member_id', '=', int(member_id)),
+    #             ('type', '=', 'check_in'),
+    #             ('worksheet_id', '=', int(worksheet_id)),
+    #             ('create_date', '>=', str(today) + ' 00:00:00'),
+    #             ('create_date', '<=', str(today) + ' 23:59:59')
+    #         ])
+    #         if survey.answer_done_count >= 1 and existing_record:
+    #             return request.render('beyond_worksheet.portal_team_member_checkin_completed',
+    #                                   {'worksheet': worksheet_id, 'member': member_id})
+    #     # Create the survey and add questions to question_ids
+    #     else:
+    #         survey = request.env['survey.survey'].with_user(SUPERUSER_ID).create({
+    #             'title': worksheet.name + '-' + member.name + '-' + str(datetime.today().date()),
+    #             'user_id': request.env.user.id,
+    #             'access_mode': 'public',
+    #             'worksheet_id': worksheet_id,
+    #             'team_member_id': member_id,
+    #             'is_from_worksheet': True,
+    #             'question_and_page_ids': [fields.Command.create({
+    #                 'title': question.title,
+    #                 'question_type': question.question_type,
+    #                 'id': question.id,
+    #                 'suggested_answer_ids': [fields.Command.create({
+    #                     'value': answer.value if answer.value else False,
+    #                     'value_image': answer.value_image if answer.value_image else False,
+    #
+    #                 }) for answer in question.suggested_answer_ids],
+    #                 'answer_numerical_box': question.answer_numerical_box if question.answer_numerical_box else False,
+    #                 'answer_date': question.answer_date if question.answer_date else False,
+    #                 'answer_datetime': question.answer_datetime if question.answer_datetime else False,
+    #                 'is_scored_question': question.is_scored_question if question.is_scored_question else False,
+    #                 'description': question.description if question.description else False,
+    #                 'matrix_row_ids': [fields.Command.create({
+    #                     'value': answer.value if answer.value else False,
+    #                 }) for answer in question.matrix_row_ids],
+    #                 'constr_mandatory': question.constr_mandatory if question.constr_mandatory else False,
+    #                 'constr_error_msg': question.constr_error_msg if question.constr_error_msg else False
+    #             }) for question in questions]  # Add questions here
+    #         })
+    #
+    #     print(survey, "========survey")
+    #     print(survey.survey_start_url, "urlllllll")
+    #     return request.redirect(survey.survey_start_url)
