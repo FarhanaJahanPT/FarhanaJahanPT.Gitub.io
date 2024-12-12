@@ -3,7 +3,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { jsonrpc } from "@web/core/network/rpc_service";
 
 publicWidget.registry.MemberPortal = publicWidget.Widget.extend({
-    selector: '.member_portal',  // Replace with the class/id of the template element
+    selector: '.member_portal',
         start: function () {
             this._super.apply(this, arguments);
             $('#submit_button').prop('disabled', true);

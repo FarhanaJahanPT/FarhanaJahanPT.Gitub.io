@@ -7,31 +7,9 @@ publicWidget.registry.MemberPortalSignature = publicWidget.Widget.extend({
     selector: '.member_signature',  // Replace with the class/id of the template element
         events: {
             'click #member_check_in': '_CheckIn',
-            'click .upload_member_btn_signature': '_CheckSignature',
         },
-//         start: function () {
-//        this._super.apply(this, arguments);
-////        this._setupSignatureWatcher();
-//    },
 
-    _CheckSignature: function () {
-        const self = this;
-        const worksheetId = $('#worksheet_id').val();
-        const surveyId = $('#survey_worksheet').val();
-        console.log("inside signatureeeeeeeeeeee")
-        // Check signature completion status
-        jsonrpc('/my/worksheet/' + worksheetId + '/' + surveyId + '/signature/status', {})
-            .then(function (result) {
-                if (result.signature_completed) {
-                    $('.member_btn_check_in').removeClass('d-none'); // Show success message
-                    $('.success_msg_text').removeClass('d-none'); // Enable Check-In button
-                    $('.upload_member_btn_signature').addClass('d-none'); // Enable Check-In button
-                }
-            })
-            .catch(function (error) {
-                console.error('Error checking signature status:', error);
-            });
-    },
+
     async _CheckIn(ev) {
         const worksheetId = $('#worksheet_id').val();
         const surveyId = $('#survey_worksheet').val();
