@@ -170,7 +170,6 @@ SurveyFormWidget.include({
             this._scrollToError($errorTarget);
         }
         if (options.isFinish){
-            console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
             window.location.reload()
         }
     },

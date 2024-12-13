@@ -60,12 +60,12 @@
             'beyond_worksheet/static/src/popups/checklist_overview_popups/checklist_overview_popup.scss',
             'beyond_worksheet/static/src/widgets/risk_color_widget/risk_color_widget.js',
             'beyond_worksheet/static/src/widgets/risk_color_widget/risk_color_widget.xml',
-            # 'beyond_worksheet/static/src/core/beyond_portal_signature.js',
 
         ],
         'web.assets_frontend': [
             'beyond_worksheet/static/src/js/employee_check_in.js',
-            'beyond_worksheet/static/src/js/workheet_member_check_in.js',
+            'beyond_worksheet/static/src/js/additonal_risk.js',
+            # 'beyond_worksheet/static/src/js/workheet_member_check_in.js',
             'beyond_worksheet/static/src/core/beyond_portal_signature.xml',
             'beyond_worksheet/static/src/core/signature_forum.js'
 
@@ -73,11 +73,6 @@
         'survey.survey_assets': [
             'beyond_worksheet/static/src/js/worsheet_member_check_out.js',
         ],
-        #     'web._assets_core': [
-        #         'beyond_worksheet/static/src/core/beyond_portal_signature.js',
-        #         'beyond_worksheet/static/src/core/beyond_portal_signature.xml'
-        #
-        #     ]
     },
     'installable': True,
     'application': False,

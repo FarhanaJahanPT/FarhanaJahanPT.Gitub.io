@@ -267,6 +267,14 @@ class OwnerSignature(http.Controller):
         # Render the checkout template
         return request.render("beyond_worksheet.portal_team_member_checkout")
 
+    @http.route('/worksheet/additional/risk',  type='json', auth='public')
+    def additional_risk(self,worksheet_id,risk):
+        print("addional risk")
+        request.env['additional.risk'].sudo().create({
+            'name': risk,
+            'worksheet_id': worksheet_id,
+        })
+
 
  # 1111111111
     # show installation question from the survey

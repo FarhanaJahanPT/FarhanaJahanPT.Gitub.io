@@ -86,6 +86,7 @@ class WorkSheet(models.Model):
                                     string="Forklift",domain=[('type', '=', 'forklift')])
     swms_file = fields.Binary(string='SWMS')
     swms_attachment_id = fields.Many2one(comodel_name='ir.attachment')
+    additional_risk_ids = fields.Many2many('additional.risk','worksheet_id')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -156,7 +157,7 @@ class WorkSheet(models.Model):
                     date_deadline=fields.Datetime.now(),
                     note=_('Need To Generate CES'),
                     user_id=member.id)
-            self.is_ces_activity_created = True if operation_team else False
+            # self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
             license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')

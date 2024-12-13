@@ -16,3 +16,4 @@ access_work_type,access.work.type,model_work_type,base.group_user,1,1,1,1
 access_swms_risk_register,access.swms.risk.register,model_swms_risk_register,base.group_user,1,1,1,1
 access_swms_risk_work,access.swms.risk.work,model_swms_risk_work,base.group_user,1,1,1,1
 access_swms_team_member_input,access.swms.team.member.input,model_swms_team_member_input,base.group_user,1,1,1,1
+access_additional_risk,access.additional.risk,model_additional_risk,base.group_user,1,1,1,1

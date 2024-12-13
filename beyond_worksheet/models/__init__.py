@@ -22,3 +22,4 @@ from . import documents_document
 from . import swms_risk_register
 from . import swms_risk_work
 from . import swms_team_member_input
+from . import additional_risk
