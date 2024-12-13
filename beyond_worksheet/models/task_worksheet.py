@@ -86,6 +86,23 @@ class WorkSheet(models.Model):
                                     string="Forklift",domain=[('type', '=', 'forklift')])
     swms_file = fields.Binary(string='SWMS')
     swms_attachment_id = fields.Many2one(comodel_name='ir.attachment')
+    hi_vis = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')], string='Hi-Vis')
+    steel_cap_boots = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')],string='Steel cap boots')
+    gloves = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')],string='Gloves')
+    eye_protection = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')],string='Eye protection')
+    hearing_protection = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')],string='Hearing protection')
+    hard_hat = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')],string='Hard Hat')
+    respirator = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')],string='Respirator')
+    long_sleeve_trousers = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')],string='Long Sleeve & Trousers')
+    hi_vis_text = fields.Char()
+    steel_cap_boots_text = fields.Char()
+    gloves_text = fields.Char()
+    eye_protection_text = fields.Char()
+    hearing_protection_text = fields.Char()
+    hard_hat_text = fields.Char()
+    respirator_text = fields.Char()
+    long_sleeve_trousers_text = fields.Char()
+    long_sleeve_trousers_text = fields.Char()
 
     @api.model_create_multi
     def create(self, vals_list):
