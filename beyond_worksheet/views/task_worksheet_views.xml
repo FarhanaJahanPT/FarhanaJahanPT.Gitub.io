@@ -134,6 +134,7 @@
                                     <field name="ccew_file" widget="pdf_viewer" readonly="1"/>
                                 </group>
                                 <group string="SWMS">
+                                    <field name="swms_attachment_id" invisible="1"/>
                                     <field name="swms_file"  widget="pdf_viewer"/>
                                 </group>
                             </group>

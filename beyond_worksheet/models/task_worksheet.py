@@ -85,6 +85,7 @@ class WorkSheet(models.Model):
                                     'worksheet_id','work_id',
                                     string="Forklift",domain=[('type', '=', 'forklift')])
     swms_file = fields.Binary(string='SWMS')
+    swms_attachment_id = fields.Many2one(comodel_name='ir.attachment')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -155,7 +156,7 @@ class WorkSheet(models.Model):
                     date_deadline=fields.Datetime.now(),
                     note=_('Need To Generate CES'),
                     user_id=member.id)
-            # self.is_ces_activity_created = True if operation_team else False
+            self.is_ces_activity_created = True if operation_team else False
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
             license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
@@ -688,6 +689,8 @@ class WorkSheet(models.Model):
             self.task_id.x_studio_ccew = modified_pdf_content
 
     def action_create_swms(self):
+        if self.swms_attachment_id:
+            self.swms_attachment_id.unlink()
         pdf_file_name = (self.name + '-' + 'SWMS_document').replace('.', '').replace('/','_') + '.pdf'
         pdf_content = self.env['ir.actions.report']._render_qweb_pdf("beyond_worksheet.action_report_swms_report", self.id)[0]  # Get PDF content
         report_vals = {
@@ -699,7 +702,8 @@ class WorkSheet(models.Model):
             'mimetype': 'application/pdf',
         }
         res = self.env['ir.attachment'].sudo().create(report_vals)
-        self.write({'swms_file': res.datas})
+        self.write({'swms_attachment_id': res,
+                    'swms_file': res.datas})
 
     def action_test_swms(self):
         return self.env.ref(

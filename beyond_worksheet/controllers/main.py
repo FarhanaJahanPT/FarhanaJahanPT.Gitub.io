@@ -90,7 +90,6 @@ class OwnerSignature(http.Controller):
         )
         check_in = attendance_today.filtered(lambda a: a.type == 'check_in')
         check_out = attendance_today.filtered(lambda a: a.type == 'check_out')
-
         # Handle scenarios for check-in and check-out
         if check_in and not check_out:
             return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
@@ -98,21 +97,14 @@ class OwnerSignature(http.Controller):
                 'member': member,
                 'is_same_location': False
             })
-
         if check_in and check_out:
             return request.render("beyond_worksheet.portal_team_member_checkout")
-
         # Retrieve SWMS data based on product categories in the sale order
-        product_categories = worksheet.sale_id.order_line.product_id.categ_id
-        swms_data = request.env['swms.risk.register'].sudo().search([
-            ('category_id', 'in', product_categories.ids)
-        ])
-
+        worksheet.action_create_swms()
         # Render the SWMS report
         return request.render("beyond_worksheet.swms_repoart", {
             'worksheet': worksheet,
             'member': member,
-            'swms_data': swms_data
         })
 
     @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http', auth="public", website=True)

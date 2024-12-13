@@ -302,7 +302,7 @@
                                     <td>
                                         <t t-foreach="data['attendance_ids']" t-as="a">
                                             <t t-if="a.member_id.name == team_member_id.name and a.type == 'check_in' and a.signature">
-                                                <span t-field="a.date"/>
+                                                <span t-esc="a.date.strftime('%d-%m-%Y')"/>
                                             </t>
                                         </t>
                                     </td>
