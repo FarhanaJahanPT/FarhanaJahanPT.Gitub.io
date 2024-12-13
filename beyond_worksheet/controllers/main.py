@@ -19,7 +19,6 @@ class OwnerSignature(http.Controller):
         delta_lambda = radians(lon2 - lon1)
         a = sin(delta_phi / 2) ** 2 + cos(phi1) * cos(phi2) * sin(delta_lambda / 2) ** 2
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        print(R * c, "r c haversine")
         return R * c
 
     @http.route('/my/task/<int:task_id>/signature', type="http", auth="public", website=True,
@@ -208,7 +207,6 @@ class OwnerSignature(http.Controller):
             for record in existing_attendance:
                 distance = self.haversine(latitude, longitude, record.in_latitude, record.in_longitude)
                 if distance <= 200:  # Threshold in meters
-                    print("Check-in at the same location already exists")
                     return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
                         'worksheet': worksheet_id,
                         'member': member_id,
@@ -216,7 +214,6 @@ class OwnerSignature(http.Controller):
                     })
 
             # Check-in exists but not at the same location
-            print(existing_attendance, "Existing check-in found for the member")
             return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
                 'worksheet': worksheet_id,
                 'member': member_id,
@@ -235,7 +232,6 @@ class OwnerSignature(http.Controller):
             'user_input_id': latest_input.id if latest_input else None,
             'date': today
         })
-        print("New check-in created:", check_in)
         return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
             'worksheet': worksheet_id,
             'member': member_id,
@@ -269,73 +265,7 @@ class OwnerSignature(http.Controller):
 
     @http.route('/worksheet/additional/risk',  type='json', auth='public')
     def additional_risk(self,worksheet_id,risk):
-        print("addional risk")
         request.env['additional.risk'].sudo().create({
             'name': risk,
             'worksheet_id': worksheet_id,
         })
-
-
- # 1111111111
-    # show installation question from the survey
-    # @http.route(['/my/questions/<int:worksheet>/<int:member>'], type='http',
-    #             auth="public", website=True)
-    # def show_question(self, worksheet, member, **kwargs):
-    #     print("show question")
-    #     # Fetch unanswered questions first
-    #     member_id = kwargs.get('member_id') if kwargs.get('member_id') else member
-    #     worksheet_id = kwargs.get('worksheet_id') if kwargs.get('worksheet_id') else worksheet
-    #     worksheet = request.env['task.worksheet'].sudo().browse(int(worksheet_id))
-    #     member = request.env['team.member'].sudo().browse(int(member_id))
-    #     today = datetime.today().date()
-    #     questions = request.env['survey.question'].sudo().search([('is_from_worksheet_questions', '=', True)])
-    #     print(questions, "qqqqqqqq")
-    #     survey = request.env['survey.survey'].sudo().search([('team_member_id', '=', int(member_id)),
-    #                                                          ('worksheet_id', '=', int(worksheet_id)),
-    #                                                          ('create_date', '>=', str(today) + ' 00:00:00'),
-    #                                                          ('create_date', '<=', str(today) + ' 23:59:59')])
-    #     if survey:
-    #         existing_record = request.env['worksheet.attendance'].sudo().search([
-    #             ('member_id', '=', int(member_id)),
-    #             ('type', '=', 'check_in'),
-    #             ('worksheet_id', '=', int(worksheet_id)),
-    #             ('create_date', '>=', str(today) + ' 00:00:00'),
-    #             ('create_date', '<=', str(today) + ' 23:59:59')
-    #         ])
-    #         if survey.answer_done_count >= 1 and existing_record:
-    #             return request.render('beyond_worksheet.portal_team_member_checkin_completed',
-    #                                   {'worksheet': worksheet_id, 'member': member_id})
-    #     # Create the survey and add questions to question_ids
-    #     else:
-    #         survey = request.env['survey.survey'].with_user(SUPERUSER_ID).create({
-    #             'title': worksheet.name + '-' + member.name + '-' + str(datetime.today().date()),
-    #             'user_id': request.env.user.id,
-    #             'access_mode': 'public',
-    #             'worksheet_id': worksheet_id,
-    #             'team_member_id': member_id,
-    #             'is_from_worksheet': True,
-    #             'question_and_page_ids': [fields.Command.create({
-    #                 'title': question.title,
-    #                 'question_type': question.question_type,
-    #                 'id': question.id,
-    #                 'suggested_answer_ids': [fields.Command.create({
-    #                     'value': answer.value if answer.value else False,
-    #                     'value_image': answer.value_image if answer.value_image else False,
-    #
-    #                 }) for answer in question.suggested_answer_ids],
-    #                 'answer_numerical_box': question.answer_numerical_box if question.answer_numerical_box else False,
-    #                 'answer_date': question.answer_date if question.answer_date else False,
-    #                 'answer_datetime': question.answer_datetime if question.answer_datetime else False,
-    #                 'is_scored_question': question.is_scored_question if question.is_scored_question else False,
-    #                 'description': question.description if question.description else False,
-    #                 'matrix_row_ids': [fields.Command.create({
-    #                     'value': answer.value if answer.value else False,
-    #                 }) for answer in question.matrix_row_ids],
-    #                 'constr_mandatory': question.constr_mandatory if question.constr_mandatory else False,
-    #                 'constr_error_msg': question.constr_error_msg if question.constr_error_msg else False
-    #             }) for question in questions]  # Add questions here
-    #         })
-    #
-    #     print(survey, "========survey")
-    #     print(survey.survey_start_url, "urlllllll")
-    #     return request.redirect(survey.survey_start_url)

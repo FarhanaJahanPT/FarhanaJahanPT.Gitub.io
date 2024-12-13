@@ -11,20 +11,19 @@ publicWidget.registry.AdditionalRisk = publicWidget.Widget.extend({
     init() {
        this.rpc = this.bindService("rpc");
     },
-
     async _addRiskBtn(ev) {
         const worksheetId = $('#worksheet_id').val();
         const risk = $('#additionalRiskValue').val();
-        console.log(worksheetId,risk)
         if (risk){
             await jsonrpc('/worksheet/additional/risk/',  {
                         'risk' :risk,
-                        'worksheet_id':worksheet_id
+                        'worksheet_id':worksheetId
                         })
-            window.location.reload()
+            $('#riskModalClose').click()
+            $('#additionalRiskValue').val('');
         }
         else{
-                        $('#validation_message_risk').text('Please Enter the risk.');
+            $('#validation_message_risk').text('Please Enter the risk.');
         }
     }
 });

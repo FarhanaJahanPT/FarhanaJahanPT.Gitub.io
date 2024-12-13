@@ -78,11 +78,6 @@
                             <field name="panel_lot_ids" invisible="1"/>
                             <field name="inverter_lot_ids" invisible="1"/>
                             <field name="battery_lot_ids" invisible="1"/>
-                            <field name="cranes_ids" widget="many2many_tags" invisible="1"/>
-                            <field name="hoists_ids" widget="many2many_tags" invisible="1"/>
-                            <field name="scaffolding_ids" widget="many2many_tags" invisible="1"/>
-                            <field name="dogging_rigging_ids" widget="many2many_tags" invisible="1"/>
-                            <field name="forklift_ids" widget="many2many_tags" invisible="1"/>
                         </group>
                         <group>
                             <field name="solar_panel_layout" widget="image"
@@ -136,6 +131,41 @@
                                 <group string="SWMS">
                                     <field name="swms_attachment_id" invisible="1"/>
                                     <field name="swms_file"  widget="pdf_viewer"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="SWMS" name="swms_report_fields"  invisible="1">
+                            <group>
+                                <group string="Competencies and Training">
+                                    <field name="cranes_ids" widget="many2many_tags"/>
+                                    <field name="hoists_ids" widget="many2many_tags"/>
+                                    <field name="scaffolding_ids" widget="many2many_tags"/>
+                                    <field name="dogging_rigging_ids" widget="many2many_tags"/>
+                                    <field name="forklift_ids" widget="many2many_tags"/>
+                                    <field name="additional_risk_ids">
+                                        <tree string="Additional Risk">
+                                            <field name="name"/>
+                                            <field name="worksheet_id"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Personal Protective Equipment">
+                                    <field name="hi_vis"/>
+                                    <field name="hi_vis_text" required="hi_vis == 'specific_task'"/>
+                                    <field name="steel_cap_boots"/>
+                                    <field name="steel_cap_boots_text" required="steel_cap_boots == 'specific_task'"/>
+                                    <field name="gloves"/>
+                                    <field name="gloves_text" required="gloves == 'specific_task'"/>
+                                    <field name="eye_protection"/>
+                                    <field name="eye_protection_text" required="eye_protection == 'specific_task'"/>
+                                    <field name="hearing_protection"/>
+                                    <field name="hearing_protection_text" required="hearing_protection == 'specific_task'"/>
+                                    <field name="hard_hat"/>
+                                    <field name="hard_hat_text" required="hard_hat == 'specific_task'"/>
+                                    <field name="respirator"/>
+                                    <field name="respirator_text" required="respirator == 'specific_task'"/>
+                                    <field name="long_sleeve_trousers"/>
+                                    <field name="long_sleeve_trousers_text" required="long_sleeve_trousers == 'specific_task'"/>
                                 </group>
                             </group>
                         </page>

@@ -544,59 +544,83 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="checkbox" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.hi_vis == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.hi_vis == 'specific_task'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if="o.hi_vis == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.hi_vis == 'site_entry'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
-                                    _____________
-                                </td>
-                                <td>
-                                    <input type="checkbox" checked="checked"/>
-                                    Required for Site Entry
-                                    <br/>
-                                    <input type="checkbox" disabled="true"/>
-                                    Required for Specific Task
-                                    <br/>
-                                    _____________
-                                </td>
-                                <td>
-                                    <input type="checkbox" disabled="true"/>
-                                    Required for Site Entry
-                                    <br/>
-                                    <input type="checkbox" checked="checked"/>
-                                    Required for Specific Task
                                     <p style="color:#949494;">
-                                        Running cable, handling
-                                        material with sharp edge;
-                                        using epoxy resin.
+                                        <span t-field="o.hi_vis_text"/>
                                     </p>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if="o.hi_vis" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.hi_vis" checked="checked"/>
                                     Not required
                                 </td>
                                 <td>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.steel_cap_boots == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.steel_cap_boots == 'specific_task'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
-                                    <input type="checkbox" checked="checked"/>
+                                    <input type="checkbox" t-if="o.steel_cap_boots == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.steel_cap_boots == 'site_entry'" disabled="true"/>
                                     Required for Specific Task
+                                    <br/>
                                     <p style="color:#949494;">
-                                        Cutting rail/ Hot work; drilling
+                                        <span t-field="o.steel_cap_boots_text"/>
                                     </p>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if="o.steel_cap_boots" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.steel_cap_boots" checked="checked"/>
                                     Not required
                                 </td>
                                 <td>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.gloves == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.gloves == 'specific_task'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
-                                    <input type="checkbox" checked="checked"/>
+                                    <input type="checkbox" t-if="o.gloves == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.gloves == 'site_entry'" disabled="true"/>
                                     Required for Specific Task
+                                    <br/>
                                     <p style="color:#949494;">
-                                        Cutting rail/ Hot work; drilling; site noise
+                                        <span t-field="o.gloves_text"/>
                                     </p>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if="o.gloves" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.gloves" checked="checked"/>
+                                    Not required
+                                </td>
+                                <td>
+                                    <input type="checkbox" t-if=" o.eye_protection == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.eye_protection == 'specific_task'" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" t-if="o.eye_protection == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.eye_protection == 'site_entry'" disabled="true"/>
+                                    Required for Specific Task
+                                    <br/>
+                                    <p style="color:#949494;">
+                                        <span t-field="o.eye_protection_text"/>
+                                    </p>
+                                    <input type="checkbox" t-if="o.eye_protection" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.eye_protection" checked="checked"/>
+                                    Not required
+                                </td>
+                                <td>
+                                    <input type="checkbox" t-if=" o.hearing_protection == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.hearing_protection == 'specific_task'" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" t-if="o.hearing_protection == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.hearing_protection == 'site_entry'" disabled="true"/>
+                                    Required for Specific Task
+                                    <br/>
+                                    <p style="color:#949494;">
+                                        <span t-field="o.hearing_protection_text"/>
+                                    </p>
+                                    <input type="checkbox" t-if="o.hearing_protection" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.hearing_protection" checked="checked"/>
                                     Not required
                                 </td>
                             </tr>
@@ -626,35 +650,51 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.hard_hat == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.hard_hat == 'specific_task'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if="o.hard_hat == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.hard_hat == 'site_entry'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
-                                    <input type="checkbox" checked="checked"/>
-                                    Not required
-                                </td>
-                                <td>
-                                    <input type="checkbox" disabled="true"/>
-                                    Required for Site Entry
-                                    <br/>
-                                    <input type="checkbox" checked="checked"/>
-                                    Required for Specific Task
                                     <p style="color:#949494;">
-                                        Installing chem set - drilling; use of epoxy resin
+                                        <span t-field="o.hard_hat_text"/>
                                     </p>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if="o.hard_hat" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.hard_hat" checked="checked"/>
                                     Not required
                                 </td>
                                 <td>
-                                    <input type="checkbox" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.respirator == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.respirator == 'specific_task'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
-                                    <input type="checkbox" disabled="true"/>
+                                    <input type="checkbox" t-if="o.respirator == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.respirator == 'site_entry'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
-                                    <input type="checkbox" disabled="true"/>
+                                    <p style="color:#949494;">
+                                        <span t-field="o.respirator_text"/>
+                                    </p>
+                                    <input type="checkbox" t-if="o.respirator" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.respirator" checked="checked"/>
+                                    Not required
+                                </td>
+                                <td>
+                                    <input type="checkbox" t-if=" o.long_sleeve_trousers == 'site_entry'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.long_sleeve_trousers == 'specific_task'" disabled="true"/>
+                                    Required for Site Entry
+                                    <br/>
+                                    <input type="checkbox" t-if="o.long_sleeve_trousers == 'specific_task'" checked="checked"/>
+                                    <input type="checkbox" t-if=" o.long_sleeve_trousers == 'site_entry'" disabled="true"/>
+                                    Required for Specific Task
+                                    <br/>
+                                    <p style="color:#949494;">
+                                        <span t-field="o.long_sleeve_trousers_text"/>
+                                    </p>
+                                    <input type="checkbox" t-if="o.long_sleeve_trousers" disabled="true"/>
+                                    <input type="checkbox" t-if="not o.long_sleeve_trousers" checked="checked"/>
                                     Not required
                                 </td>
                                 <td/>
@@ -1016,18 +1056,33 @@
                                     controlled?</th>
                                 <th style="width:10%;">Residual Risk Level</th>
                             </tr>
-                            <tr style="height: 100px;">
-                                <td/><td/><td/><td/><td/>
-                            </tr>
-                            <tr style="height: 100px;">
-                                <td/><td/><td/><td/><td/>
-                            </tr>
-                            <tr style="height: 100px;">
-                                <td/><td/><td/><td/><td/>
-                            </tr>
-                            <tr style="height: 100px;">
-                                <td/><td/><td/><td/><td/>
-                            </tr>
+                            <t t-if="o.additional_risk_ids">
+                                <t t-foreach="o.additional_risk_ids" t-as="additional_risk_id">
+                                    <tr style="height: 100px;">
+                                        <td/>
+                                        <td>
+                                            <span t-field="additional_risk_id.name"/>
+                                        </td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <tr style="height: 100px;">
+                                    <td/><td/><td/><td/><td/>
+                                </tr>
+                                <tr style="height: 100px;">
+                                    <td/><td/><td/><td/><td/>
+                                </tr>
+                                <tr style="height: 100px;">
+                                    <td/><td/><td/><td/><td/>
+                                </tr>
+                                <tr style="height: 100px;">
+                                    <td/><td/><td/><td/><td/>
+                                </tr>
+                            </t>
                         </table>
                         <footer class="footer">
                             <p>SWMS Roof Mount Construction Work</p>
