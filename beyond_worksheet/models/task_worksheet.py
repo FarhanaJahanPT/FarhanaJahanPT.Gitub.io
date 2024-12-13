@@ -722,8 +722,3 @@ class WorkSheet(models.Model):
         res = self.env['ir.attachment'].sudo().create(report_vals)
         self.write({'swms_attachment_id': res,
                     'swms_file': res.datas})
-
-    def action_test_swms(self):
-        return self.env.ref(
-            'beyond_worksheet.action_report_swms_report').report_action(self)
-
