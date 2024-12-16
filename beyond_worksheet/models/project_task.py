@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ProjectTask(models.Model):
@@ -34,7 +34,6 @@ class ProjectTask(models.Model):
             model_id = self.env['ir.model'].search([('model', '=', 'task.worksheet')], limit=1).id
             self.env['worksheet.notification'].sudo().create([{
                 'author_id': self.env.user.id,
-                # 'user_id': self.x_studio_proposed_team.id,
                 'team_id': self.team_lead_id.id,
                 'model_id': model_id,
                 'res_id': self.worksheet_id.id,

@@ -545,11 +545,11 @@
                             <tr>
                                 <td>
                                     <input type="checkbox" t-if=" o.hi_vis == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.hi_vis == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.hi_vis != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.hi_vis == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.hi_vis == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.hi_vis != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">
@@ -561,11 +561,11 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" t-if=" o.steel_cap_boots == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.steel_cap_boots == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.steel_cap_boots != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.steel_cap_boots == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.steel_cap_boots == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.steel_cap_boots != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">
@@ -577,11 +577,11 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" t-if=" o.gloves == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.gloves == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.gloves != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.gloves == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.gloves == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.gloves != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">
@@ -593,11 +593,11 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" t-if=" o.eye_protection == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.eye_protection == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.eye_protection != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.eye_protection == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.eye_protection == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.eye_protection != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">
@@ -609,11 +609,11 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" t-if=" o.hearing_protection == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.hearing_protection == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.hearing_protection != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.hearing_protection == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.hearing_protection == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.hearing_protection != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">
@@ -651,11 +651,11 @@
                             <tr>
                                 <td>
                                     <input type="checkbox" t-if=" o.hard_hat == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.hard_hat == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.hard_hat != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.hard_hat == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.hard_hat == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.hard_hat != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">
@@ -667,11 +667,11 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" t-if=" o.respirator == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.respirator == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.respirator != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.respirator == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.respirator == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.respirator != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">
@@ -683,11 +683,11 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" t-if=" o.long_sleeve_trousers == 'site_entry'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.long_sleeve_trousers == 'specific_task'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.long_sleeve_trousers != 'site_entry'" disabled="true"/>
                                     Required for Site Entry
                                     <br/>
                                     <input type="checkbox" t-if="o.long_sleeve_trousers == 'specific_task'" checked="checked"/>
-                                    <input type="checkbox" t-if=" o.long_sleeve_trousers == 'site_entry'" disabled="true"/>
+                                    <input type="checkbox" t-if=" o.long_sleeve_trousers != 'specific_task'" disabled="true"/>
                                     Required for Specific Task
                                     <br/>
                                     <p style="color:#949494;">

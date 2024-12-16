@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from dateutil.utils import today
-
 from odoo import http
 from odoo.http import request
-from datetime import datetime, timedelta
+from datetime import datetime
 from odoo import fields, SUPERUSER_ID
 from math import radians, sin, cos, sqrt, atan2
 
@@ -56,6 +54,7 @@ class OwnerSignature(http.Controller):
             'member_id':survey.team_member_id.id,
             'survey_id':survey.id
         }
+
     # Team member worksheet start
     @http.route('/my/worksheet/<int:worksheet_id>', type="http", auth="public", website=True,
                 sitemap=False)
@@ -82,11 +81,9 @@ class OwnerSignature(http.Controller):
         """Displays the SWMS report for a member and worksheet."""
         worksheet = request.env['task.worksheet'].sudo().browse(worksheet)
         today = fields.Date.today()
-
         # Filter today's check-in and check-out records
         attendance_today = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == today and a.member_id.id == member
-        )
+            lambda a: a.date.date() == today and a.member_id.id == member)
         check_in = attendance_today.filtered(lambda a: a.type == 'check_in')
         check_out = attendance_today.filtered(lambda a: a.type == 'check_out')
         # Handle scenarios for check-in and check-out
@@ -110,17 +107,14 @@ class OwnerSignature(http.Controller):
     def show_question(self, worksheet, member, **kwargs):
         """Displays or creates a survey with installation questions for the specified worksheet and team member."""
         today = fields.Date.today()
-
         # Ensure worksheet_id and member_id are integers
         worksheet_id = int(kwargs.get('worksheet_id', worksheet))
         member_id = int(kwargs.get('member_id', member))
-
         worksheet = request.env['task.worksheet'].sudo().browse(worksheet_id)
         member = request.env['team.member'].sudo().browse(member_id)
         survey_model = request.env['survey.survey'].sudo()
         attendance_model = request.env['worksheet.attendance'].sudo()
         question_model = request.env['survey.question'].sudo()
-
         # Check for an existing survey for the member and worksheet on the same day
         survey = survey_model.search([
             ('team_member_id', '=', member_id),
@@ -128,7 +122,6 @@ class OwnerSignature(http.Controller):
             ('create_date', '>=', f"{today} 00:00:00"),
             ('create_date', '<=', f"{today} 23:59:59")
         ], limit=1)
-
         if survey:
             # Check if the member has already checked in and answered questions
             existing_attendance = attendance_model.search([
@@ -138,13 +131,11 @@ class OwnerSignature(http.Controller):
                 ('create_date', '>=', f"{today} 00:00:00"),
                 ('create_date', '<=', f"{today} 23:59:59")
             ], limit=1)
-
             if survey.answer_done_count >= 1 and existing_attendance:
                 return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
                     'worksheet': worksheet_id,
                     'member': member_id
                 })
-
         else:
             # Create a new survey and add questions
             questions = question_model.search([('is_from_worksheet_questions', '=', True)])
@@ -178,7 +169,6 @@ class OwnerSignature(http.Controller):
                     }) for question in questions
                 ]
             })
-
         # Redirect to the survey start URL
         return request.redirect(survey.survey_start_url)
 
@@ -190,11 +180,9 @@ class OwnerSignature(http.Controller):
         Survey = request.env['survey.survey'].sudo()
         Attendance = request.env['worksheet.attendance'].sudo()
         today = datetime.today().date()
-
         # Fetch survey and the latest input
         survey = Survey.browse(survey_id)
         latest_input = survey.user_input_ids.sorted(key=lambda r: r.create_date, reverse=True)[:1]
-
         # Check for existing check-ins today
         existing_attendance = Attendance.search([
             ('member_id', '=', member_id),
@@ -202,7 +190,6 @@ class OwnerSignature(http.Controller):
             ('create_date', '>=', f"{today} 00:00:00"),
             ('create_date', '<=', f"{today} 23:59:59")
         ])
-
         if existing_attendance:
             for record in existing_attendance:
                 distance = self.haversine(latitude, longitude, record.in_latitude, record.in_longitude)
@@ -212,14 +199,12 @@ class OwnerSignature(http.Controller):
                         'member': member_id,
                         'is_same_location': True
                     })
-
             # Check-in exists but not at the same location
             return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
                 'worksheet': worksheet_id,
                 'member': member_id,
                 'is_same_location': False
             })
-
         # Create a new check-in record
         check_in = Attendance.create({
             'type': 'check_in',
@@ -243,14 +228,11 @@ class OwnerSignature(http.Controller):
         """Handles the member checkout process."""
         today = fields.Date.today()
         worksheet = request.env['task.worksheet'].sudo().browse(worksheet_id)
-
         # Filter attendance records for today's check-in and check-out
         attendance_today = worksheet.worksheet_attendance_ids.filtered(
-            lambda a: a.date.date() == today and a.member_id.id == member_id
-        )
+            lambda a: a.date.date() == today and a.member_id.id == member_id)
         check_in = attendance_today.filtered(lambda a: a.type == 'check_in')
         check_out = attendance_today.filtered(lambda a: a.type == 'check_out')
-
         # Create check-out record if a check-in exists without a corresponding check-out
         if check_in and not check_out:
             request.env['worksheet.attendance'].sudo().create({
@@ -259,7 +241,6 @@ class OwnerSignature(http.Controller):
                 'worksheet_id': worksheet_id,
                 'date': today
             })
-
         # Render the checkout template
         return request.render("beyond_worksheet.portal_team_member_checkout",{'worksheet':worksheet})
 

@@ -13,7 +13,6 @@ publicWidget.registry.MemberPortal = publicWidget.Widget.extend({
         },
         async _onChangeMember(ev) {
             var worksheet_id = $('#worksheet_id')[0].value
-            console.log( $('#worksheet_id')," $('#worksheet_id')", $('#worksheet_id')[0].value)
             var result = await jsonrpc('/check/member',  {
                         'member_id' :ev.target.value,
                         'worksheet_id':worksheet_id

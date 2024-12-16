@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
-from datetime import datetime
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -48,7 +47,6 @@ class WorksheetAttendance(models.Model):
         }
 
     def action_view_answers(self):
-        print("action view answerws", self.read())
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -75,7 +73,6 @@ class WorksheetAttendance(models.Model):
                 ('worksheet_id', '=', check_in.worksheet_id.id),
                 ('date', '=', check_in.date),
             ])
-            # print(check_out_exists.read(),"check_out_exists",check_in.read())
             if not check_out_exists:
                 self.env['worksheet.attendance'].sudo().create({
                     'type': 'check_out',

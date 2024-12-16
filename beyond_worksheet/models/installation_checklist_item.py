@@ -43,7 +43,6 @@ class InstallationChecklistItem(models.Model):
                 'datas': res.image,
                 'name': res.checklist_id.name,
                 'location': res.location,
-                # 'file_extension': 'png',
                 'folder_id': self.env.ref('beyond_worksheet.documents_project_folder_Worksheet').id,
                 'res_model': 'task.worksheet',
                 'res_id': res.worksheet_id.id,

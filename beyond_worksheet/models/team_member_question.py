@@ -22,7 +22,6 @@ class TeamMemberQuestion(models.Model):
 class SurveyQuestion(models.Model):
     _inherit = 'survey.question'
 
-    # is_from_worksheet = fields.Boolean(related='survey_id.is_from_worksheet', store=True)
     is_from_worksheet_questions = fields.Boolean(default=False)
 
 class SurveySurvey(models.Model):
@@ -38,6 +37,5 @@ class SurveySurvey(models.Model):
 
     def _compute_survey_start_url(self):
         for invite in self:
-            print(invite, "in", invite.access_token)
             invite.survey_start_url = werkzeug.urls.url_join(invite.get_base_url(),
                                                              invite.get_start_url()) if invite.id else False

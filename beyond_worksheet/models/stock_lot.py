@@ -77,7 +77,6 @@ class StockLot(models.Model):
         # Get the location
         location = geolocator.geocode(address)
         if location:
-            print(f"Latitude: {location.latitude}, Longitude: {location.longitude}")
             return location
         else:
             print("Address not found. Please check the address format.")

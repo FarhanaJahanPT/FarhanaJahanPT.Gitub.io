@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import SurveyFormWidget from '@survey/js/survey_form';
-console.log(SurveyFormWidget,"SurveyFormWidget")
 SurveyFormWidget.include({
     _submitForm: async function (options) {
         var params = {};
@@ -21,9 +20,7 @@ SurveyFormWidget.include({
             }
         } else {
             var $form = this.$('form');
-            console.log($form,"$form")
             var formData = new FormData($form[0]);
-            console.log(formData,"formData")
             if (!options.skipValidation) {
                 // Validation pre submit
                 if (!this._validateForm($form, formData)) {
@@ -45,36 +42,8 @@ SurveyFormWidget.include({
         }
         if (options.isFinish){
                 params.survey_id = $form[0].name
-                console.log($form[0].name,"idddddddddddd")
                   this.rpc("/worksheet/values",params
-                                ).then(function(result) {
-                                console.log("elseeee")
-                            })
-//                var self = this
-//                if ("geolocation" in navigator) {
-//                    console.log('geooooo09999999999')
-//                    navigator.geolocation.getCurrentPosition(
-//                        (position) => {
-//                            console.log('geooooo',position)
-//                            params.latitude = position.coords.latitude
-//                            params.longitude = position.coords.longitude
-//                            this.rpc("/worksheet/values",params
-//                                ).then(function(result) {
-//                                console.log("ifff")
-//                            })
-//                        },
-//                        (error) => {
-//                            console.error("Error retrieving location:", error);
-//                        }
-//                    );
-//                }
-//                else{
-//                    console.log("else workhseet")
-//                     this.rpc("/worksheet/values",params
-//                                ).then(function(result) {
-//                                console.log("elseeee")
-//                            })
-//                }
+                                ).then(function(result) {})
         }
         const submitPromise = this.rpc(
             `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
