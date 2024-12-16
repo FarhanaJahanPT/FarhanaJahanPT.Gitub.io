@@ -89,7 +89,16 @@
     <template id="portal_team_member_checkout" name="Check-out Completed">
         <t t-call="portal.portal_layout">
             <div class="container">
-                <h2>Check-Out Completed</h2>
+                        <div>
+                        <t t-if="worksheet.swms_attachment_id">
+                            <iframe t-att-src="'/web/content/' + str(worksheet.swms_attachment_id.id) + '?download=false'"
+                                    style="width:100%; height:800px; border: none;" frameborder="0">
+                                Your browser does not support PDF viewing.
+                                <a t-att-href="'/web/content/' + str(worksheet.swms_attachment_id.id)">Download PDF</a>
+                            </iframe>
+0                        </t>
+                    </div>
+
                 <p>Thank you!</p>
             </div>
         </t>

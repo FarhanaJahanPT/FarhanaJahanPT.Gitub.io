@@ -97,7 +97,7 @@ class OwnerSignature(http.Controller):
                 'is_same_location': False
             })
         if check_in and check_out:
-            return request.render("beyond_worksheet.portal_team_member_checkout")
+            return request.render("beyond_worksheet.portal_team_member_checkout",{'worksheet':worksheet})
         # Retrieve SWMS data based on product categories in the sale order
         worksheet.action_create_swms()
         # Render the SWMS report
@@ -261,7 +261,7 @@ class OwnerSignature(http.Controller):
             })
 
         # Render the checkout template
-        return request.render("beyond_worksheet.portal_team_member_checkout")
+        return request.render("beyond_worksheet.portal_team_member_checkout",{'worksheet':worksheet})
 
     @http.route('/worksheet/additional/risk',  type='json', auth='public')
     def additional_risk(self,worksheet_id,risk):

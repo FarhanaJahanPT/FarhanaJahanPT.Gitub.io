@@ -63,16 +63,11 @@ class WorksheetAttendance(models.Model):
     def auto_create_check_out(self):
         # Get today's date
         today = fields.Date.today()
-        print(today,"today")
-        today1 = datetime.today().date()
-        print(today1,"today1")
-
         # Find members who have checked in but not checked out
         check_ins = self.env['worksheet.attendance'].sudo().search([
             ('type', '=', 'check_in'),
             ('date', '<=', today),  # Check-ins from previous days
         ])
-        print("checkn in ",check_ins)
         for check_in in check_ins:
             check_out_exists = self.env['worksheet.attendance'].sudo().search([
                 ('type', '=', 'check_out'),
@@ -80,34 +75,14 @@ class WorksheetAttendance(models.Model):
                 ('worksheet_id', '=', check_in.worksheet_id.id),
                 ('date', '=', check_in.date),
             ])
-            print(check_in.date)
-            print(check_in,check_in.worksheet_id,check_in.member_id.name,"ggggggg",check_out_exists,check_out_exists.worksheet_id)
-
             # print(check_out_exists.read(),"check_out_exists",check_in.read())
             if not check_out_exists:
-                check_out_date = datetime.combine(check_in.date.date(), datetime.min.time()).replace(hour=11, minute=59)
-                # Create the check-out record
-                print("chckout 1111")
                 self.env['worksheet.attendance'].sudo().create({
                     'type': 'check_out',
                     'member_id': check_in.member_id.id,
                     'worksheet_id': check_in.worksheet_id.id,
-                    'date': check_out_date,
+                    'date': check_in.date,
                 })
-                # ll
-
-    # def action_view_answers(self):
-    #     print("action view answerws",self.read())
-    #     self.ensure_one()
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Responses',
-    #         'view_mode': 'tree',
-    #         'res_model': 'swms.team.member.input',
-    #         'domain': [('member_id', '=', self.member_id.id),('worksheet_id', '=', self.worksheet_id.id),('date', '=', self.date)],
-    #         'context': {'create': False},
-    #         'target': 'new',
-    #     }
 
     @api.model
     def create(self, vals):

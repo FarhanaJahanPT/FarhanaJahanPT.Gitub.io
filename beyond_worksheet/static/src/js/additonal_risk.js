@@ -8,9 +8,7 @@ publicWidget.registry.AdditionalRisk = publicWidget.Widget.extend({
         events: {
             'click #addRiskBtn': '_addRiskBtn',
         },
-    init() {
-       this.rpc = this.bindService("rpc");
-    },
+
     async _addRiskBtn(ev) {
         const worksheetId = $('#worksheet_id').val();
         const risk = $('#additionalRiskValue').val();
