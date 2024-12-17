@@ -6,7 +6,7 @@
             <option t-att-selected="false === value"
                     t-esc="this.props.placeholder || ''"/>
             <t t-foreach="props.record.fields[props.name].selection"
-               t-as="option" t-key="option[0]">
+               t-as="option" t-key="option_index">
                 <option
                         t-att-value="option[0]"
                         t-att-selected="option[0] === props.record.data[props.name]"

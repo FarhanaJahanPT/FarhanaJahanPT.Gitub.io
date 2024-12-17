@@ -10,6 +10,7 @@ export class UpdateChecklistOverviewPopup extends Component{
     setup(){
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.action = useService("action");
         this.state = useState({
             imagePreview: null, // For previewing the uploaded image
         });
@@ -62,7 +63,7 @@ export class UpdateChecklistOverviewPopup extends Component{
                     image: this.state.imagePreview.split(",")[1], // Base64-encoded image
                 }]);
             }
-            this.onClose(); // Close dialog after upload
+            this.action.doAction("soft_reload");
         } else {
             this.notification.add("Please select an image to upload", {
                 type: "warning",

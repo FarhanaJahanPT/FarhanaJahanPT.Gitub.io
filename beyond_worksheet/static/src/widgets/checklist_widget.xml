@@ -3,7 +3,7 @@
     <t t-name="beyond_worksheet.Checklist" owl="1">
         <div>
             <t t-foreach="this.state.data.checklist" t-as="checklist_item_id"
-               t-key="checklist_item_id[0]">
+               t-key="checklist_item_id_index">
                 <div class="g-col-sm-2">
                     <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
                         <span t-out="checklist_item_id[1]"/>
@@ -12,7 +12,7 @@
                 <div t-if="checklist_item_id[2] == 'img'">
                     <div>
                         <t t-foreach="this.state.data.checklist_item"
-                           t-as="checklist_item" t-key="checklist_item[1]">
+                           t-as="checklist_item" t-key="checklist_item_index">
                             <div t-if="checklist_item_id[0] == checklist_item[0]"
                                  class="card-title p-2 bg-200"
                                  style="display: flex;">
@@ -31,7 +31,7 @@
                 </div>
                 <div t-if="checklist_item_id[2] == 'text'">
                     <t t-foreach="this.state.data.checklist_item"
-                       t-as="checklist_item" t-key="checklist_item[1]">
+                       t-as="checklist_item" t-key="checklist_item_index">
                         <div t-if="checklist_item_id[0] == checklist_item[0]"
                              class="card-title p-2 bg-200"
                              style="display: flex;">

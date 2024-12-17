@@ -9,7 +9,7 @@
                 </div>
                 <table style="width: 100%;border-collapse: separate; border-spacing: 0 25px;">
                     <t t-foreach="this.state.data.overview" t-as="overview"
-                       t-key="overview[0]">
+                       t-key="overview_index">
                         <t t-if="overview[3] == 'on_site'">
                             <tr>
                                 <td>
@@ -160,7 +160,7 @@
                         </td>
                     </tr>
                     <t t-foreach="this.state.data.overview" t-as="overview"
-                       t-key="overview[0]">
+                       t-key="overview_index">
                         <t t-if="overview[3] == 'prc'">
                             <tr>
                                 <td>
