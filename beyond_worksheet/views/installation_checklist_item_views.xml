@@ -12,7 +12,7 @@
         <field name="model">installation.checklist.item</field>
         <field name="arch" type="xml">
             <tree string="Installation Checklist Item" editable="bottom">
-                <field name="create_date"/>
+                <field name="date"/>
                 <field name="checklist_id"/>
                 <field name="image" widget="image" options='{"size": [80, 80]}'
                        class="bg-view"/>
@@ -36,7 +36,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="create_date"/>
+                            <field name="date"/>
                             <field name="checklist_id"/>
                             <field name="worksheet_id"/>
                             <field name="user_id"/>
@@ -63,7 +63,7 @@
                 <field name="checklist_id"/>
                 <field name="text"/>
                 <field name="image"/>
-                <field name="create_date"/>
+                <field name="date"/>
                 <field name="location"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -82,7 +82,7 @@
                             <div class="card-body p-0">
                                 <h4 class="card-title p-2 m-0 bg-200">
                                     <small>
-                                        <field name="create_date"/>
+                                        <field name="date"/>
                                     </small>
                                 </h4>
                             </div>

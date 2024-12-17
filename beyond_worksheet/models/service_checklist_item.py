@@ -17,6 +17,7 @@ class ServiceChecklistItem(models.Model):
     compliant = fields.Boolean(string='Compliant')
     latitude = fields.Char(string='Latitude')
     longitude = fields.Char(string='Longitude')
+    date = fields.Datetime(string='Date', default=fields.Datetime.now)
 
     @api.constrains('service_id')
     def _check_service_id_required(self):
@@ -43,7 +44,6 @@ class ServiceChecklistItem(models.Model):
                 'datas': res.image,
                 'name': res.service_id.name,
                 'location': res.location,
-                # 'file_extension': 'png',
                 'folder_id': self.env.ref('beyond_worksheet.documents_project_folder_Worksheet').id,
                 'res_model': 'task.worksheet',
                 'res_id': res.worksheet_id.id,

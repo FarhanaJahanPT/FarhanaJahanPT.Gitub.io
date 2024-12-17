@@ -17,6 +17,7 @@ class InstallationChecklistItem(models.Model):
     compliant = fields.Boolean(string='Compliant')
     latitude = fields.Char(string='Latitude')
     longitude = fields.Char(string='Longitude')
+    date = fields.Datetime(string='Date', default=fields.Datetime.now)
 
     @api.constrains('checklist_id')
     def _check_checklist_id_required(self):

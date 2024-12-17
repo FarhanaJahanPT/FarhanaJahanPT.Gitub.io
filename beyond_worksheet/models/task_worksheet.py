@@ -390,7 +390,7 @@ class WorkSheet(models.Model):
                 data.append([checklist_id.id, checklist_id.name, checklist_id.type])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.checklist_id.id,
-                                  checklist_item_id.create_date,
+                                  checklist_item_id.date,
                                   checklist_item_id.location,
                                   checklist_item_id.text,
                                   checklist_item_id.image])
@@ -402,7 +402,7 @@ class WorkSheet(models.Model):
                     [checklist_id.id, checklist_id.name, checklist_id.type])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.service_id.id,
-                                  checklist_item_id.create_date,
+                                  checklist_item_id.date,
                                   checklist_item_id.location,
                                   checklist_item_id.text,
                                   checklist_item_id.image])
@@ -436,7 +436,7 @@ class WorkSheet(models.Model):
                      compliant, 'installation'])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.checklist_id.id,
-                                  checklist_item_id.create_date,
+                                  checklist_item_id.date,
                                   checklist_item_id.location,
                                   checklist_item_id.text,
                                   checklist_item_id.image])
@@ -458,7 +458,7 @@ class WorkSheet(models.Model):
                      compliant, 'service'])
             for checklist_item_id in checklist_item_ids:
                 checklist.append([checklist_item_id.service_id.id,
-                                  checklist_item_id.create_date,
+                                  checklist_item_id.date,
                                   checklist_item_id.location,
                                   checklist_item_id.text,
                                   checklist_item_id.image])
