@@ -242,6 +242,7 @@ class OwnerSignature(http.Controller):
                 'date': today
             })
         # Render the checkout template
+        worksheet.action_create_swms()
         return request.render("beyond_worksheet.portal_team_member_checkout",{'worksheet':worksheet})
 
     @http.route('/worksheet/additional/risk',  type='json', auth='public')

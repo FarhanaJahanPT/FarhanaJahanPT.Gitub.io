@@ -114,7 +114,6 @@
                                  t-attf-style="background: conic-gradient(#4caf50 0% {{(serial_count[1][1] / serial_count[1][0]) * 100}}%, #e0e0e0 0% 100%)">
                                 <div class="inner-circle">
                                     <span class="percentage"/>
-                                    <!--  <span t-out="(serial_count[1][1] / serial_count[1][0]) * 100"/>%-->
                                 </div>
                             </div>
 

@@ -17,6 +17,7 @@
         'data/license_tags_data.xml',
         'data/documents_document_data.xml',
         'data/swms_risk_work_data.xml',
+        'data/team_member_question_data.xml',
         'views/project_task_views.xml',
         'views/stock_lot_views.xml',
         'views/task_worksheet_views.xml',
