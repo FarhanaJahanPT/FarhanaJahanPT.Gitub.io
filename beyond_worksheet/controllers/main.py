@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo.exceptions import UserError
 from odoo.http import request
 from datetime import datetime
 from odoo import fields, SUPERUSER_ID
 from math import radians, sin, cos, sqrt, atan2
+
+from odoo.tools import replace_exceptions, str2bool
 
 
 class OwnerSignature(http.Controller):
@@ -251,3 +254,27 @@ class OwnerSignature(http.Controller):
             'name': risk,
             'worksheet_id': worksheet_id,
         })
+
+    @http.route(['/web/content',
+                 '/web/content/<string:xmlid>',
+                 '/web/content/<string:xmlid>/<string:filename>',
+                 '/web/content/<int:id>',
+                 '/web/content/<int:id>/<string:filename>',
+                 '/web/content/<string:model>/<int:id>/<string:field>',
+                 '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'],
+                type='http', auth="public")
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
+                       filename=None, filename_field='name', mimetype=None, unique=False,
+                       download=False, access_token=None, nocache=False):
+        with replace_exceptions(UserError, by=request.not_found()):
+            record = request.env['ir.binary'].sudo()._find_record(xmlid, model,id and int(id),access_token)
+            stream = request.env['ir.binary'].sudo()._get_stream_from(record,field,filename,filename_field,mimetype)
+            if request.httprequest.args.get('access_token'):
+                stream.public = True
+        send_file_kwargs = {'as_attachment': str2bool(download)}
+        if unique:
+            send_file_kwargs['immutable'] = True
+            send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
+        if nocache:
+            send_file_kwargs['max_age'] = None
+        return stream.get_response(**send_file_kwargs)

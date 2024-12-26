@@ -16,5 +16,4 @@
         <field name="is_from_worksheet_questions">True</field>
         <field name="suggested_answer_ids" eval="[Command.set([ref('tm_answer_2')])]"/>
     </record>
-
 </odoo>
