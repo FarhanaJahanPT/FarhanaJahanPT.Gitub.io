@@ -49,11 +49,9 @@
     'assets': {
         'web.assets_backend': [
             'beyond_worksheet/static/src/widgets/overview_widget.css',
-            'beyond_worksheet/static/src/widgets/checklist_widget.js',
             'beyond_worksheet/static/src/widgets/overview_widget.js',
             'beyond_worksheet/static/src/popups/update_checklist_overview_popups/update_checklist_overview_popups.js',
             'beyond_worksheet/static/src/popups/checklist_overview_popups/checklist_overview_popup.js',
-            'beyond_worksheet/static/src/widgets/checklist_widget.xml',
             'beyond_worksheet/static/src/widgets/overview_widget.xml',
             'beyond_worksheet/static/src/views/documents_inspector.xml',
             'beyond_worksheet/static/src/popups/update_checklist_overview_popups/update_checklist_overview_popups.xml',
@@ -70,9 +68,9 @@
             'beyond_worksheet/static/src/core/beyond_portal_signature.xml',
             'beyond_worksheet/static/src/core/signature_forum.js'
         ],
-        'survey.survey_assets': [
-            'beyond_worksheet/static/src/js/worsheet_member_check_out.js',
-        ],
+        # 'survey.survey_assets': [
+        #     'beyond_worksheet/static/src/js/worsheet_member_check_out.js',
+        # ],
     },
     'installable': True,
     'application': False,

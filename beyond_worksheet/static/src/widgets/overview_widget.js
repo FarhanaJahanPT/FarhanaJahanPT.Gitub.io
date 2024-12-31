@@ -38,12 +38,10 @@ class Overview extends Component {
     }
     async SerialNumberView(ev) {
         try {
-            // Extract record ID
             var id = this.props.record.evalContext.id;
             if (typeof id === "object" && id !== null) {
-                id = id.id || id[0]; // Adjust if id is an object or array
+                id = id.id || id[0];
             }
-            // Fetch tree view ID
             const treeViews = await this.orm.call(
                 'ir.ui.view',
                 'search_read',

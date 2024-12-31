@@ -2,7 +2,7 @@
 import re
 import fitz
 import io
-from datetime import datetime, timedelta
+from datetime import datetime
 try:
     import qrcode
 except ImportError:
@@ -102,7 +102,6 @@ class WorkSheet(models.Model):
     hearing_protection_text = fields.Char()
     hard_hat_text = fields.Char()
     respirator_text = fields.Char()
-    long_sleeve_trousers_text = fields.Char()
     long_sleeve_trousers_text = fields.Char()
 
     @api.model_create_multi
@@ -245,8 +244,7 @@ class WorkSheet(models.Model):
         for rec in self:
             order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Inverters' or sol.product_id.categ_id.parent_id.name == 'Inverters')[:1]
             rec.inverter_count = sum(order_line.mapped('product_uom_qty'))
-            order_line = rec.sale_id.order_line.filtered(
-                lambda sol: sol.product_id.categ_id.name == 'Solar Panels')[:1]
+            order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Solar Panels')[:1]
             rec.panel_count = sum(order_line.mapped('product_uom_qty'))
             order_line = rec.sale_id.order_line.filtered(lambda sol: sol.product_id.categ_id.name == 'Storage')[:1]
             rec.battery_count = sum(order_line.mapped('product_uom_qty'))
@@ -325,35 +323,6 @@ class WorkSheet(models.Model):
             'context': "{'create': False}"
         }
 
-    def _generate_attendance_invoice_cron(self):
-        today = datetime.today()
-        monday = today - timedelta(days=today.weekday())
-        friday = monday + timedelta(days=4)
-        attendance_ids = self.env['worksheet.attendance'].search([('datetime', '>=', monday.date()),('datetime', '<=', friday.date())])
-        for worksheet_id in attendance_ids.worksheet_id:
-            if worksheet_id:
-                for user_id in worksheet_id.worksheet_attendance_ids.user_id:
-                    service = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.type == 'check_in' and w.user_id == user_id)
-                    additional = worksheet_id.worksheet_attendance_ids.filtered(lambda w: w.additional_service == True and w.user_id == user_id)
-                    vals = []
-                    if service:
-                        vals.append((0, 0,{'name': "Services at {}".format(worksheet_id.name),
-                                         'quantity': 1,
-                                         'price_unit': service[:1].user_id.invoice_amount}))
-                    if additional:
-                        vals.append((0, 0,{'name': "Additional service item at {}".format(worksheet_id.name),
-                                         'quantity': 1,
-                                         'price_unit': additional[:1].user_id.invoice_amount}))
-                    invoice = self.env['account.move'].sudo().create([{
-                        'name': self.env['ir.sequence'].next_by_code('rcti.invoice'),
-                        'move_type': 'in_invoice',
-                        'partner_id': user_id.partner_id.id,
-                        'invoice_origin': worksheet_id.name,
-                        'date': worksheet_id.task_id.planned_date_begin,
-                        'invoice_date_due': today.date() + timedelta(days=5),
-                        'invoice_line_ids': vals
-                    }])
-
     def get_invoice(self):
         """Smart button to view the Corresponding Invoices for the Worksheet"""
         self.ensure_one()
@@ -379,40 +348,9 @@ class WorkSheet(models.Model):
         }
 
     @api.model
-    def get_checklist_values(self, vals):
-        data = []
-        checklist = []
-        order_line = self.browse(vals).sale_id.order_line.product_id.categ_id.mapped('id')
-        if self.browse(vals).x_studio_type_of_service == 'New Installation':
-            checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)])
-            checklist_item_ids = self.env['installation.checklist.item'].search([('worksheet_id', '=', vals)])
-            for checklist_id in checklist_ids:
-                data.append([checklist_id.id, checklist_id.name, checklist_id.type])
-            for checklist_item_id in checklist_item_ids:
-                checklist.append([checklist_item_id.checklist_id.id,
-                                  checklist_item_id.date,
-                                  checklist_item_id.location,
-                                  checklist_item_id.text,
-                                  checklist_item_id.image])
-        elif self.browse(vals).x_studio_type_of_service == 'Service':
-            checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)])
-            checklist_item_ids = self.env['service.checklist.item'].search([('worksheet_id', '=', vals)])
-            for checklist_id in checklist_ids:
-                data.append(
-                    [checklist_id.id, checklist_id.name, checklist_id.type])
-            for checklist_item_id in checklist_item_ids:
-                checklist.append([checklist_item_id.service_id.id,
-                                  checklist_item_id.date,
-                                  checklist_item_id.location,
-                                  checklist_item_id.text,
-                                  checklist_item_id.image])
-        return data, checklist
-
-    @api.model
     def get_overview_values(self,vals):
         data = []
         checklist = []
-        serial_number = []
         serial_count = []
         record = self.browse(vals)
         serial_count.append([record.panel_count,len(record.panel_lot_ids), 'panel'])
@@ -420,8 +358,7 @@ class WorkSheet(models.Model):
         serial_count.append([record.battery_count,len(record.battery_lot_ids), 'battery'])
         order_line =record.sale_id.order_line.product_id.categ_id.mapped('id')
         if record.x_studio_type_of_service == 'New Installation':
-            checklist_ids = self.env['installation.checklist'].search(
-                [('category_ids', 'in', order_line)])
+            checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)])
             checklist_item_ids = self.env['installation.checklist.item'].search([('worksheet_id', '=', vals)])
             for checklist_id in checklist_ids:
                 total = 0
@@ -527,7 +464,6 @@ class WorkSheet(models.Model):
             pdf_path = get_module_resource('beyond_worksheet','static/src/data/CCEW.pdf')
             doc = fitz.open(pdf_path)
             page = doc[0]
-            # Insert the any text
             page.insert_text((440, 72), self.name, fontsize=10, color=(0, 0, 0))
             page.insert_text((47, 180), '', fontsize=10, color=(0, 0, 0))
             page.insert_text((47, 216), '', fontsize=10, color=(0, 0, 0))
@@ -650,13 +586,10 @@ class WorkSheet(models.Model):
                     page.insert_text((451,727), str(license_id.expiry_date), fontsize=10,color=(0, 0, 0))
             page = doc[2]
             page.insert_image((64,88,81,101), filename=image_path)
-            # page.insert_image((64,105,81,118), filename=image_path)
             page.insert_image((64,122,81,136), filename=image_path)
             page.insert_image((64,139,81,153), filename=image_path)
             page.insert_image((64,156,81,169), filename=image_path)
-            # page.insert_image((63,173,81,186), filename=image_path)
             page.insert_image((64,189,81,203), filename=image_path)
-            # page.insert_image((63,207,81,220), filename=image_path)
             if self.task_id.date_deadline:
                 date_deadline = fields.Date.to_date(self.task_id.date_deadline)
                 page.insert_text((219,262), str(date_deadline), fontsize=10,color=(0, 0, 0))
@@ -722,3 +655,7 @@ class WorkSheet(models.Model):
         res = self.env['ir.attachment'].sudo().create(report_vals)
         self.write({'swms_attachment_id': res,
                     'swms_file': res.datas})
+
+    def action_test_swms(self):
+        return self.env.ref(
+            'beyond_worksheet.action_report_swms_report').report_action(self)
