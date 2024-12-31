@@ -34,7 +34,6 @@ class OwnerSignature(http.Controller):
     @http.route('/my/task/<int:task_id>/signature/check', type='json',
                 website=True)
     def task_signature_check(self, task_id, name=None, signature=None, **kwargs):
-        print('aaaaaaaaaaaaaaaaaaaaaaa')
         task = request.env['project.task'].sudo().browse(task_id)
         if not task.exists():
             return http.request.not_found()
