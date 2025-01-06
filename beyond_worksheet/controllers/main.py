@@ -5,14 +5,13 @@ from odoo.http import request
 from datetime import datetime
 from odoo import fields, SUPERUSER_ID
 from math import radians, sin, cos, sqrt, atan2
-
 from odoo.tools import replace_exceptions, str2bool
 
 
 class OwnerSignature(http.Controller):
 
     # Function for checking same location login
-    def haversine(self, lat1, lon1, lat2, lon2):
+    def calculate_distance(self, lat1, lon1, lat2, lon2):
         """ Comparing location """
         R = 6371000  # Earth's radius in meters
         phi1, phi2 = radians(lat1), radians(lat2)
@@ -45,9 +44,9 @@ class OwnerSignature(http.Controller):
         })
 
     # Team member signature
-    @http.route('/my/worksheet/<int:worksheet_id>/<int:survey_id>/signature/check', type='json',
+    @http.route('/my/worksheet/<int:worksheet_id>/<int:survey_id>/signature/check', type='json', auth='public',
                 website=True)
-    def member_signature_check(self, worksheet_id, survey_id, name=None, signature=None, **kwargs):
+    def member_signature_check(self, worksheet_id, survey_id, signature=None, **kwargs):
         survey = request.env['survey.survey'].sudo().browse(survey_id)
         survey.signature = signature
         return {
@@ -195,8 +194,7 @@ class OwnerSignature(http.Controller):
         ])
         if existing_attendance:
             for record in existing_attendance:
-                distance = self.haversine(latitude, longitude, record.in_latitude, record.in_longitude)
-                if distance <= 200:  # Threshold in meters
+                if self.calculate_distance(latitude, longitude, record.in_latitude, record.in_longitude) <= 200:  # Threshold in meters
                     return request.render('beyond_worksheet.portal_team_member_checkin_completed', {
                         'worksheet': worksheet_id,
                         'member': member_id,
@@ -209,7 +207,7 @@ class OwnerSignature(http.Controller):
                 'is_same_location': False
             })
         # Create a new check-in record
-        check_in = Attendance.create({
+        Attendance.create({
             'type': 'check_in',
             'member_id': member_id,
             'worksheet_id': worksheet_id,

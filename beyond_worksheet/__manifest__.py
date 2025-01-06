@@ -9,6 +9,7 @@
     'description': """""",
     'depends': ['base', 'project', 'web', 'sale_project', 'project_beyond_solar', 'hr', 'portal', 'documents_project', 'survey'],
     'data': [
+        'security/beyond_worksheet_groups.xml',
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'data/ir_sequence_data.xml',
@@ -64,13 +65,12 @@
         'web.assets_frontend': [
             'beyond_worksheet/static/src/js/employee_check_in.js',
             'beyond_worksheet/static/src/js/additonal_risk.js',
-            # 'beyond_worksheet/static/src/js/workheet_member_check_in.js',
             'beyond_worksheet/static/src/core/beyond_portal_signature.xml',
             'beyond_worksheet/static/src/core/signature_forum.js'
         ],
-        # 'survey.survey_assets': [
-        #     'beyond_worksheet/static/src/js/worsheet_member_check_out.js',
-        # ],
+        'survey.survey_assets': [
+            'beyond_worksheet/static/src/js/worsheet_member_check_out.js',
+        ],
     },
     'installable': True,
     'application': False,

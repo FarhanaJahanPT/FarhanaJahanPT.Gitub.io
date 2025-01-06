@@ -13,7 +13,7 @@
                 <field name="date"/>
                 <field name="member_id"/>
                 <field name="type"/>
-                <field name="additional_service"/>
+                <field name="additional_service" invisible="1"/>
                 <field name="worksheet_id"/>
                 <field name="in_latitude"/>
                 <field name="in_longitude"/>

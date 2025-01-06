@@ -40,11 +40,6 @@ SurveyFormWidget.include({
             // prevent user from clicking on matrix options when form is submitted
             this.readonly = true;
         }
-        if (options.isFinish){
-                params.survey_id = $form[0].name
-                  this.rpc("/worksheet/values",params
-                                ).then(function(result) {})
-        }
         const submitPromise = this.rpc(
             `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
             params

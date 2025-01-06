@@ -81,6 +81,4 @@ class WorksheetAttendance(models.Model):
                     'date': check_in.date,
                 })
 
-    @api.model
-    def create(self, vals):
-        return super(WorksheetAttendance, self.sudo()).create(vals)
+

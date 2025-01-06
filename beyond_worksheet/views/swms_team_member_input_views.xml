@@ -13,7 +13,7 @@
         </field>
     </record>
     <record id="swms_team_member_input_action" model="ir.actions.act_window">
-        <field name="name">Team Member Input</field>
+        <field name="name">SWMS Risk Input</field>
         <field name="res_model">swms.team.member.input</field>
         <field name="view_mode">tree</field>
     </record>

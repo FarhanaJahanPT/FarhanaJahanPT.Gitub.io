@@ -10,7 +10,7 @@ class ProjectTask(models.Model):
     witness_signature = fields.Char(string="Witness Signature", copy=False)
     witness_signature_date = fields.Datetime(string="Witness Signature Date", copy=False)
     witness_name = fields.Char(string="Witness Name", copy=False)
-    team_lead_id = fields.Many2one('team.member', string='Assigned Installer')
+    team_lead_id = fields.Many2one('team.member', string='Assigned Installer',domain=[('type', '=', 'tl')])
 
     def write(self, vals):
         res = super().write(vals)

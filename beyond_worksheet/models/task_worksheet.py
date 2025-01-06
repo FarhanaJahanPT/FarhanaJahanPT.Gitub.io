@@ -31,7 +31,7 @@ class WorkSheet(models.Model):
                                        readonly=True)
     battery_lot_ids = fields.One2many('stock.lot', 'worksheet_id',
                                       string='Battery Serial Number', domain=[('type', '=', 'battery')], readonly=True)
-    team_member_ids = fields.Many2many('team.member', string='Members')
+    team_member_ids = fields.Many2many('team.member', string='Members',domain=[('type', '=', 'tm')])
     qr_code = fields.Binary("QR Code", copy=False)
     member_question_ids = fields.One2many('worksheet.member.question', 'worksheet_id')
     panel_count = fields.Integer(string='Panel Count', compute='_compute_order_count', store=True, default=0)
@@ -173,7 +173,7 @@ class WorkSheet(models.Model):
                     date_deadline=fields.Datetime.now(),
                     note=_('Need To Generate CES'),
                     user_id=member.id)
-            self.is_ces_activity_created = True if operation_team else False
+            self.is_ces_activity_created = True
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
             license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
@@ -655,7 +655,3 @@ class WorkSheet(models.Model):
         res = self.env['ir.attachment'].sudo().create(report_vals)
         self.write({'swms_attachment_id': res,
                     'swms_file': res.datas})
-
-    def action_test_swms(self):
-        return self.env.ref(
-            'beyond_worksheet.action_report_swms_report').report_action(self)
