@@ -14,6 +14,7 @@ access_worksheet_notification,access.worksheet.notification,model_worksheet_noti
 access_electrical_contract_license_admin,access.electrical.contract.license.admin,model_electrical_contract_license,beyond_worksheet.group_beyond_worksheet_admin,1,1,1,1
 access_electrical_contract_license_user,access.electrical.contract.license.user,model_electrical_contract_license,beyond_worksheet.group_beyond_worksheet_user,1,1,1,0
 access_license_tags,accesslicense.tags,model_license_tags,base.group_user,1,1,1,1
+access_license_type,accesslicense.type,model_license_type,base.group_user,1,1,1,1
 access_work_type,access.work.type,model_work_type,base.group_user,1,1,1,1
 access_swms_risk_register,access.swms.risk.register,model_swms_risk_register,base.group_user,1,1,1,1
 access_swms_risk_work,access.swms.risk.work,model_swms_risk_work,base.group_user,1,1,1,1

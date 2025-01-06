@@ -22,6 +22,7 @@ class Overview extends Component {
             this.state.data.overview = action[0]
             this.state.data.serial_count = action[1]
             this.state.data.images_data = action[2]
+            this.state.data.work_type = action[3]
         });
     }
     checklist(ev){

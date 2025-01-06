@@ -48,12 +48,11 @@
                             <field name="contract_license_ids">
                                 <tree string="Electrical License"
                                       editable="inline">
-                                    <field name="type"/>
+                                    <field name="type_id" options="{'no_create': True}"/>
                                     <field name="number"/>
                                     <field name="expiry_date"/>
-                                    <field name="tag_ids" widget="many2many_tags"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     <field name="document"/>
-                                    <!--                                    <field name="document" widget="image"/>-->
                                     <field name="team_id" column_invisible="1"/>
                                 </tree>
                             </field>

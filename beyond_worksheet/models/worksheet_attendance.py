@@ -31,7 +31,6 @@ class WorksheetAttendance(models.Model):
         res = super(WorksheetAttendance, self).create(vals_list)
         self.env['worksheet.history'].sudo().create({
             'worksheet_id': res.worksheet_id.id,
-            'user_id': res.create_uid.id,
             'member_id': res.member_id.id if res.member_id else False,
             'changes': 'Attendance',
             'details': 'Check In Site Attendance has been updated successfully.' if res.type == 'check_in' else 'Check Out Site Attendance has been updated successfully.',
@@ -80,5 +79,3 @@ class WorksheetAttendance(models.Model):
                     'worksheet_id': check_in.worksheet_id.id,
                     'date': check_in.date,
                 })
-
-

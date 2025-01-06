@@ -39,8 +39,10 @@ class WorkSheet(models.Model):
     battery_count = fields.Integer(string='Battery Count', compute='_compute_order_count', store=True, default=0)
     checklist_item_ids = fields.One2many('installation.checklist.item', 'worksheet_id',
                                          domain=[('checklist_id.selfie_type', '=', 'null')])
+    checklist_ids = fields.Many2many('installation.checklist', string='Installation checklist')
     service_item_ids = fields.One2many('service.checklist.item', 'worksheet_id',
                                        domain=[('service_id.selfie_type', '=', 'null')])
+    service_ids = fields.Many2many('service.checklist', string='Service checklist')
     is_checklist = fields.Boolean(string='Checklist', compute='_compute_is_checklist', store=True)
     checklist_count = fields.Integer(string='Checklist Count', compute='_compute_is_checklist', store=True)
     witness_signature = fields.Char(string="Witness Signature", copy=False)
@@ -111,6 +113,11 @@ class WorkSheet(models.Model):
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('task.worksheet') or _('New')
         res = super(WorkSheet, self).create(vals_list)
+        order_line = res.sale_id.order_line.product_id.categ_id.mapped('id')
+        if res.x_studio_type_of_service == 'New Installation':
+            res.checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)])
+        if res.x_studio_type_of_service == 'Service':
+            res.service_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)])
         self.env['worksheet.history'].sudo().create({
             'worksheet_id': res.id,
             'user_id': self.env.user.id,
@@ -167,13 +174,14 @@ class WorkSheet(models.Model):
         if (self.battery_count or self.inverter_count) and not self.is_ces_activity_created:
             operation_team = self.env['hr.employee'].search(
                 [('department_id', '=', self.env.ref('beyond_worksheet.dep_operations').id)]).user_id
-            for member in operation_team:
-                self.sudo().activity_schedule(
-                    activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
-                    date_deadline=fields.Datetime.now(),
-                    note=_('Need To Generate CES'),
-                    user_id=member.id)
-            self.is_ces_activity_created = True
+            if operation_team:
+                for member in operation_team:
+                    self.sudo().activity_schedule(
+                        activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
+                        date_deadline=fields.Datetime.now(),
+                        note=_('Need To Generate CES'),
+                        user_id=member.id)
+                self.is_ces_activity_created = True
         if self.ccew_file and not self.ccew_sequence:
             seq = self.env['ir.sequence'].next_by_code('ccew.sequence')
             license_id = self.team_lead_id.contract_license_ids.filtered(lambda l: l.type == 'nsw')
@@ -262,14 +270,13 @@ class WorkSheet(models.Model):
         for rec in self:
             rec.is_checklist = False
             rec.checklist_count = 0
-            order_line = rec.sale_id.order_line.product_id.categ_id.mapped('id')
             if rec.x_studio_type_of_service == 'New Installation':
-                checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
+                checklist_ids = rec.checklist_ids.mapped('min_qty')
                 rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.checklist_item_ids):
                     rec.is_checklist = True
             if rec.x_studio_type_of_service == 'Service':
-                checklist_ids = self.env['service.checklist'].search([('category_ids', 'in', order_line)]).mapped('min_qty')
+                checklist_ids = rec.service_ids.mapped('min_qty')
                 rec.checklist_count = sum(checklist_ids)
                 if sum(checklist_ids) == len(rec.service_item_ids):
                     rec.is_checklist = True
@@ -356,50 +363,92 @@ class WorkSheet(models.Model):
         serial_count.append([record.panel_count,len(record.panel_lot_ids), 'panel'])
         serial_count.append([record.inverter_count,len(record.inverter_lot_ids), 'inverter'])
         serial_count.append([record.battery_count,len(record.battery_lot_ids), 'battery'])
-        order_line =record.sale_id.order_line.product_id.categ_id.mapped('id')
         if record.x_studio_type_of_service == 'New Installation':
-            checklist_ids = self.env['installation.checklist'].search([('category_ids', 'in', order_line)])
+            checklist_ids = record.checklist_ids
             checklist_item_ids = self.env['installation.checklist.item'].search([('worksheet_id', '=', vals)])
             for checklist_id in checklist_ids:
                 total = 0
                 for checklist_item_id in checklist_item_ids:
                     if checklist_item_id.checklist_id.id == checklist_id.id:
+                        checklist.append([checklist_item_id.checklist_id.id,
+                                          checklist_item_id.date,
+                                          checklist_item_id.location,
+                                          checklist_item_id.text,
+                                          checklist_item_id.image])
                         total += 1
                 compliant = checklist_item_ids.filtered(lambda c: c.checklist_id == checklist_id)[:1].compliant
-                data.append(
-                    [checklist_id.id, checklist_id.icon, checklist_id.name,
-                     checklist_id.group, checklist_id.min_qty, total,
-                     checklist_id.type, checklist_id.compliant_note,
-                     compliant, 'installation'])
-            for checklist_item_id in checklist_item_ids:
-                checklist.append([checklist_item_id.checklist_id.id,
-                                  checklist_item_id.date,
-                                  checklist_item_id.location,
-                                  checklist_item_id.text,
-                                  checklist_item_id.image])
+                if record.work_type_ids.mapped('id'):
+                    if record.work_type_ids.mapped('id') == [1, 2]:
+                        if 1 in checklist_id.group_ids.mapped('id'):
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,1,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'installation'])
+                        if checklist_id.group_ids.mapped('id') == [2]:
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,2,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'installation'])
+                    elif record.work_type_ids.mapped('id') == [1]:
+                        if 1 in checklist_id.group_ids.mapped('id'):
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,1,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'installation'])
+                    elif record.work_type_ids.mapped('id') == [2]:
+                        if 2 in checklist_id.group_ids.mapped('id'):
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,2,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'installation'])
         elif record.x_studio_type_of_service == 'Service':
-            checklist_ids = self.env['service.checklist'].search(
-                [('category_ids', 'in', order_line)])
+            checklist_ids = record.service_ids
             checklist_item_ids = self.env['service.checklist.item'].search(
                 [('worksheet_id', '=', vals)])
             for checklist_id in checklist_ids:
                 total = 0
                 for checklist_item_id in checklist_item_ids:
                     if checklist_item_id.service_id.id == checklist_id.id:
+                        checklist.append([checklist_item_id.checklist_id.id,
+                                          checklist_item_id.date,
+                                          checklist_item_id.location,
+                                          checklist_item_id.text,
+                                          checklist_item_id.image])
                         total += 1
                 compliant = checklist_item_ids.filtered(lambda c: c.service_id == checklist_id)[:1].compliant
-                data.append(
-                    [checklist_id.id, checklist_id.icon, checklist_id.name,
-                     checklist_id.group, checklist_id.min_qty, total,
-                     checklist_id.type, checklist_id.compliant_note,
-                     compliant, 'service'])
-            for checklist_item_id in checklist_item_ids:
-                checklist.append([checklist_item_id.service_id.id,
-                                  checklist_item_id.date,
-                                  checklist_item_id.location,
-                                  checklist_item_id.text,
-                                  checklist_item_id.image])
-        return data, serial_count, checklist
+                if record.work_type_ids.mapped('id'):
+                    if record.work_type_ids.mapped('id') == [1, 2]:
+                        if 1 in checklist_id.group_ids.mapped('id'):
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,1,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'service'])
+                        if checklist_id.group_ids.mapped('id') == [2]:
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,2,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'service'])
+                    elif record.work_type_ids.mapped('id') == [1]:
+                        if 1 in checklist_id.group_ids.mapped('id'):
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,1,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'service'])
+                    elif record.work_type_ids.mapped('id') == [2]:
+                        if 2 in checklist_id.group_ids.mapped('id'):
+                            data.append([checklist_id.id, checklist_id.icon,
+                                 checklist_id.name,2,
+                                 checklist_id.min_qty, total,
+                                 checklist_id.type, checklist_id.compliant_note,
+                                 compliant, 'service'])
+        return data, serial_count, checklist,record.work_type_ids.mapped('id')
 
     @api.model
     def get_checklist_compliant(self,vals,ev):

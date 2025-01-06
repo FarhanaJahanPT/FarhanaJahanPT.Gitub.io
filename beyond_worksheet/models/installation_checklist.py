@@ -26,7 +26,7 @@ class InstallationChecklist(models.Model):
                               ('fa fa-file-text', 'fa fa-file-text'),
                               ('fa fa-battery-full', 'fa fa-battery-full'),
                               ],string='Icon')
-    group = fields.Selection([('on_site', 'Onsite Data'), ('prc', 'PRC Onsite Data')], string='Group', default='on_site', required=True)
+    group_ids = fields.Many2many('work.type', string='Group', required=True)
     compliant_note = fields.Text(string='Compliant Note')
 
     def get_checklist_count(self):

@@ -1164,33 +1164,23 @@
                                 <tr>
                                     <td><span t-field="risk_id.job_activity"/></td>
                                     <td><span t-field="risk_id.hazard_associated_risk"/></td>
-                                    <td t-att-style="'background-color: ' + (not risk_id.risk_level
-                                                                                  and 'white'
-                                                                                  or risk_id.risk_level.endswith('M')
-                                                                                  and '#fbf01f'
-                                                                                  or risk_id.risk_level.endswith('H')
-                                                                                  and not risk_id.risk_level.endswith('VH')
-                                                                                  and '#ffc107'
-                                                                                  or risk_id.risk_level.endswith('L')
-                                                                                  and '#92d050'
-                                                                                  or risk_id.risk_level.endswith('VH')
-                                                                                  and '#ea452f'
-                                                                                  or 'white')">
+                                    <td t-att-style="'background-color: ' + (
+                                        risk_id.risk_level == 'm' and '#fbf01f' or
+                                        risk_id.risk_level == 'h' and '#ffc107' or
+                                        risk_id.risk_level == 'l' and '#92d050' or
+                                        risk_id.risk_level == 'vh' and '#ea452f' or
+                                        'white'
+                                    )">
                                         <span t-field="risk_id.risk_level"/>
                                     </td>
                                     <td><span t-field="risk_id.risk_control"/></td>
-                                    <td t-att-style="'background-color: ' + (not risk_id.residual_risk_level
-                                                                                  and 'white'
-                                                                                  or risk_id.residual_risk_level.endswith('M')
-                                                                                  and '#fbf01f'
-                                                                                  or risk_id.residual_risk_level.endswith('H')
-                                                                                  and not risk_id.residual_risk_level.endswith('VH')
-                                                                                  and '#ffc107'
-                                                                                  or risk_id.residual_risk_level.endswith('L')
-                                                                                  and '#92d050'
-                                                                                  or risk_id.residual_risk_level.endswith('VH')
-                                                                                  and '#ea452f'
-                                                                                  or 'white')">
+                                    <td t-att-style="'background-color: ' + (
+                                        risk_id.residual_risk_level == 'm' and '#fbf01f' or
+                                        risk_id.residual_risk_level == 'h' and '#ffc107' or
+                                        risk_id.residual_risk_level == 'l' and '#92d050' or
+                                        risk_id.residual_risk_level == 'vh' and '#ea452f' or
+                                        'white'
+                                    )">
                                         <span t-field="risk_id.residual_risk_level"/>
                                     </td>
                                     <td>

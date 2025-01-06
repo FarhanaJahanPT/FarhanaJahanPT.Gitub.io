@@ -21,7 +21,7 @@
                 <field name="compliant_note"/>
                 <field name="is_spv_required"/>
                 <field name="category_ids" widget="many2many_tags"/>
-                <field name="group"/>
+                <field name="group_ids" widget="many2many_tags" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>

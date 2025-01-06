@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="license_type_1" model="license.type">
+        <field name="name">NSW Contractor License</field>
+    </record>
+    <record id="license_type_2" model="license.type">
+        <field name="name">ACT Electrician License</field>
+    </record>
+    <record id="license_type_3" model="license.type">
+        <field name="name">Drivers Licence</field>
+    </record>
+    <record id="license_type_4" model="license.type">
+        <field name="name">NSW General Construction Induction Card (White Card)</field>
+    </record>
+    <record id="license_type_5" model="license.type">
+        <field name="name">EWP Ticket Number (Yellow Card)</field>
+    </record>
+    <record id="license_type_6" model="license.type">
+        <field name="name">Working With Children Check (WWCC)</field>
+    </record>
+    <record id="license_type_7" model="license.type">
+        <field name="name">Working at heights Licence</field>
+    </record>
+    <record id="license_type_8" model="license.type">
+        <field name="name">SAA Accreditation Number</field>
+        <field name="multiple_selection">True</field>
+    </record>
+    <record id="license_type_9" model="license.type">
+        <field name="name">Public Liability Insurance</field>
+    </record>
+</odoo>

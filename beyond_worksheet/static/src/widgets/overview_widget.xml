@@ -4,13 +4,25 @@
         <div>
             <div class="g-col-sm-2">
                 <t t-set="serial_count" t-value="this.state.data.serial_count"/>
-                <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
-                    Onsite Data
-                </div>
-                <table style="width: 100%;border-collapse: separate; border-spacing: 0 25px;">
+                <table style="width: 100%;border-collapse: separate; border-spacing: 0 20px;">
+                    <t t-if="this.state.data.work_type[0] == 1">
+                    <tr>
+                        <th colspan="5">
+                            <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
+                                PV Onsite Data
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Checklist Item</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Requirements</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small" style="text-align: center;">Compliant</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Compliance Notes</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Progress</th>
+                    </tr>
                     <t t-foreach="this.state.data.overview" t-as="overview"
                        t-key="overview_index">
-                        <t t-if="overview[3] == 'on_site'">
+                        <t t-if="overview[3] == 1">
                             <tr>
                                 <td>
                                     <a t-on-click="() => this.checklist(overview)">
@@ -34,7 +46,7 @@
                                         images remaining
                                     </t>
                                 </td>
-                                <td>
+                                <td style="text-align: center;">
                                     <input type="checkbox"
                                            t-on-change="() => this.onChange(overview)"
                                            t-att-checked="overview[8] ? 'checked' : ''"
@@ -119,13 +131,22 @@
 
                         </td>
                     </tr>
-                </table>
-            </div>
-            <div class="g-col-sm-2">
-                <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
-                    PRC Onsite Data
-                </div>
-                <table style="width: 100%;border-collapse: separate; border-spacing: 0 25px;">
+                    </t>
+                    <t t-if="this.state.data.work_type.includes(2)">
+                    <tr>
+                        <th colspan="5">
+                            <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
+                                PRC Onsite Data
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Checklist Item</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Requirements</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small" style="text-align: center;">Compliant</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Compliance Notes</th>
+                        <th class="o_horizontal_separator text-uppercase fw-bolder small">Progress</th>
+                    </tr>
                     <tr t-if="serial_count[2][0]">
                         <td>
                             <a t-on-click="() => this.SerialNumberView(serial_count[2])">
@@ -160,7 +181,7 @@
                     </tr>
                     <t t-foreach="this.state.data.overview" t-as="overview"
                        t-key="overview_index">
-                        <t t-if="overview[3] == 'prc'">
+                        <t t-if="overview[3] == 2">
                             <tr>
                                 <td>
                                     <a t-on-click="() => this.checklist(overview)">
@@ -184,7 +205,7 @@
                                         images remaining
                                     </t>
                                 </td>
-                                <td>
+                                <td style="text-align: center;">
                                     <input type="checkbox"
                                            t-on-change="() => this.onChange(overview)"
                                            t-att-checked="overview[8] ? 'checked' : ''"
@@ -204,6 +225,7 @@
                                 </td>
                             </tr>
                         </t>
+                    </t>
                     </t>
                 </table>
             </div>

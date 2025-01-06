@@ -15,6 +15,7 @@
         'data/ir_sequence_data.xml',
         'data/hr_department_data.xml',
         'data/work_type_data.xml',
+        'data/license_type_data.xml',
         'data/license_tags_data.xml',
         'data/documents_document_data.xml',
         'data/swms_risk_work_data.xml',
@@ -45,6 +46,7 @@
         'views/swms_risk_work_views.xml',
         'views/swms_team_member_input_views.xml',
         'views/swms_report_views.xml',
+        'views/license_type_views.xml',
         'report/swms_pdf_report.xml',
     ],
     'assets': {
