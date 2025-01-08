@@ -78,8 +78,8 @@
                             <field name="panel_lot_ids" invisible="1"/>
                             <field name="inverter_lot_ids" invisible="1"/>
                             <field name="battery_lot_ids" invisible="1"/>
-                            <field name="checklist_ids" widget="many2many_tags"/>
-                            <field name="service_ids" widget="many2many_tags"/>
+                            <field name="checklist_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="service_ids" widget="many2many_tags" invisible="1"/>
                         </group>
                         <group>
                             <field name="solar_panel_layout" widget="image"

@@ -86,7 +86,7 @@ class WorkSheet(models.Model):
     forklift_ids = fields.Many2many('swms.risk.work','task_worksheet_forklift_rel',
                                     'worksheet_id','work_id',
                                     string="Forklift",domain=[('type', '=', 'forklift')])
-    swms_file = fields.Binary(string='SWMS')
+    swms_file = fields.Binary(string='SWMS', readonly=1)
     swms_attachment_id = fields.Many2one(comodel_name='ir.attachment')
     additional_risk_ids = fields.One2many('additional.risk','worksheet_id')
     hi_vis = fields.Selection([('site_entry', 'Required for Site Entry'), ('specific_task', 'Required for Specific Task')], string='Hi-Vis')

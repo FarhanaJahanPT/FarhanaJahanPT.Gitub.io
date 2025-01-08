@@ -51,7 +51,8 @@
                                     <field name="type_id" options="{'no_create': True}"/>
                                     <field name="number"/>
                                     <field name="expiry_date"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    <field name="tag_ids_domain" widget="many2many_tags" column_invisible="1"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('id', 'in', tag_ids_domain)]" />
                                     <field name="document"/>
                                     <field name="team_id" column_invisible="1"/>
                                 </tree>
