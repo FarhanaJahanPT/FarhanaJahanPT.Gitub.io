@@ -1,0 +1,6 @@
+[submodule "Music/session 2/demo"]
+	path = Music/session 2/demo
+	url = https://github.com/FarhanaJahanPT/demo.git
+[submodule "Music/session 2/clone/demo"]
+	path = Music/session 2/clone/demo
+	url = https://github.com/FarhanaJahanPT/demo.git
